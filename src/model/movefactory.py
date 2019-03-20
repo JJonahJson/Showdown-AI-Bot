@@ -9,10 +9,10 @@ class MoveFactory:
 
     def CreateMove(target, moveName:str, moveEffect, accuracy, 
         basePower, category, pp, priority,
-        isZ, critRatio, moveType):
+        isZ, critRatio, moveType, boosts=None):
 
         return MoveFactory.subclasses[target](moveName, 
         moveEffect, accuracy, 
         basePower, category, pp, priority,
-        isZ, critRatio, moveType)
+        isZ, critRatio, moveType, boosts)
 

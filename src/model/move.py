@@ -19,7 +19,7 @@ class Move(ABC):
     
     def __init__(self, moveName:str, moveEffect, accuracy, 
         basePower, category, pp, priority,
-        isZ, critRatio, moveType):
+        isZ, critRatio, moveType, onTarget, onUser):
 
         self.moveName = moveName
         self.moveEffect = moveEffect
@@ -31,6 +31,8 @@ class Move(ABC):
         self.isZ = isZ
         self.critRatio = critRatio
         self.moveType = moveType
+        self.onTarget = onTarget
+        self.onUser = onUser
     
     """
     Args:
