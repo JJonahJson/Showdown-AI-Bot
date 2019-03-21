@@ -1,10 +1,6 @@
 import unittest
 
-import sys
-sys.path.append("..")
-
-from move import SingleMove, MultipleMove
-from movefactory import MoveFactory
+from move import SingleMove, MultipleMove, MoveFactory
 
 class Movetest(unittest.TestCase):
 
