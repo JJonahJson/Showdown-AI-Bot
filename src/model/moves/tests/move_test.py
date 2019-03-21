@@ -10,6 +10,14 @@ from singlemove import SingleMove
 
 class Movetest(unittest.TestCase):
 
+    def testFactory(self):
+        singleMove = MoveFactory.CreateMove("single",
+            "airslash", 95, 75, "special", 15, 0, False, 1, "Flying", None, None)
+        doubleMove = MoveFactory.CreateMove("multiple",
+            "airslash", 95, 75, "special", 15, 0, False, 1, "Flying", None, None)
+        self.assertIsInstance(singleMove, SingleMove, "Should be SingleMove")
+        self.assertIsInstance(doubleMove, MultipleMove, "should be MultipleMove")
+
     def testSingleMoveCreation(self):
         singleMove = MoveFactory.CreateMove("single",
         "airslash", 95, 75, "special", 15, 0, False, 1, "Flying", None, None)
