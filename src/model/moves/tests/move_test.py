@@ -3,10 +3,8 @@ import unittest
 import sys
 sys.path.append("..")
 
+from move import SingleMove, MultipleMove
 from movefactory import MoveFactory
-from multiplemove import MultipleMove
-from singlemove import SingleMove
-
 
 class Movetest(unittest.TestCase):
 

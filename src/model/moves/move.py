@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from secondaryeffect import SecondaryEffect
 
 
 class Move(ABC):
@@ -18,10 +19,10 @@ class Move(ABC):
         onTarget (SecondaryEffect): SecondaryEffect of the move
     """
     
-    def __init__(self, moveName:str, accuracy, 
-        basePower, category, pp, priority,
-        isZ, critRatio, moveType,
-        onUser, onTarget):
+    def __init__(self, moveName:str, accuracy:int, 
+        basePower:int, category:str, pp:int, priority:int,
+        isZ:bool, critRatio:int, moveType:str,
+        onUser:SecondaryEffect, onTarget:SecondaryEffect):
 
         self.moveName = moveName
         self.accuracy = accuracy
@@ -44,3 +45,55 @@ class Move(ABC):
     def invokeMove(self, casterPokemon, targetPokemon):
         pass
 
+
+class SingleMove(Move):
+
+    def __init__(self, moveName:str, accuracy:int, 
+        basePower:int, category:str, pp:int, priority:int,
+        isZ:bool, critRatio:int, moveType:str,
+        onUser:SecondaryEffect, onTarget:SecondaryEffect):
+        Move.__init__(self, moveName, accuracy, 
+        basePower, category, pp, priority,
+        isZ, critRatio, moveType,
+        onUser, onTarget)
+
+    
+    def invokeMove(self, pokemon):
+        # TODO Implement the move, when the merging with the pokemon model is done2
+        pass
+
+
+class MultipleMove(Move):
+
+    def __init__(self, moveName:str, accuracy:int, 
+        basePower:int, category:str, pp:int, priority:int,
+        isZ:bool, critRatio:int, moveType:str,
+        onUser:SecondaryEffect, onTarget:SecondaryEffect):
+        Move.__init__(self, moveName, accuracy, 
+        basePower, category, pp, priority,
+        isZ, critRatio, moveType,
+        onUser, onTarget)
+
+    
+    def invokeMove(self, pokemons):
+        # TODO Implement the move, when the merging with the pokemon model is done
+        pass
+
+
+class MoveFactory:
+    subclasses = {
+        'single': SingleMove,
+        'multiple': MultipleMove
+    }
+
+    @staticmethod
+    def CreateMove(target:str, moveName:str, accuracy:int, 
+        basePower:int, category:str, pp:int, priority:int,
+        isZ:bool, critRatio:int, moveType:str,
+        onUser:SecondaryEffect, onTarget:SecondaryEffect) -> Move:
+
+        return MoveFactory.subclasses[target](moveName, 
+        accuracy, basePower, category,
+        pp, priority,
+        isZ, critRatio, moveType,
+        onUser, onTarget)
