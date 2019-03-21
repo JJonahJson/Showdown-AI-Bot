@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class Move(ABC):
@@ -40,6 +40,7 @@ class Move(ABC):
         casterPokemon(Pokemon): the pokemon that does the move
         targetPokemon(Pokemon): the pokemon who receives the move
     """
+    @abstractmethod
     def invokeMove(self, casterPokemon, targetPokemon):
         pass
 

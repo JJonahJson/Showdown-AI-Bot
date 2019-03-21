@@ -3,7 +3,7 @@ from multiplemove import MultipleMove
 
 class MoveFactory:
     subclasses = {
-        'normal': SingleMove,
+        'single': SingleMove,
         'multiple': MultipleMove
     }
 
@@ -17,4 +17,3 @@ class MoveFactory:
         pp, priority,
         isZ, critRatio, moveType,
         onUser, onTarget)
-

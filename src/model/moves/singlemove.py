@@ -13,5 +13,5 @@ class SingleMove(Move):
 
     
     def invokeMove(self, pokemon):
-        # TODO Implement the move, when the merging with the pokemon model is done
+        # TODO Implement the move, when the merging with the pokemon model is done2
         pass
