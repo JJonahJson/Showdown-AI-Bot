@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from secondaryeffect import SecondaryEffect
+from typing import Union
 
 
 class Move(ABC):
@@ -90,7 +91,7 @@ class MoveFactory:
     def CreateMove(target:str, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
         isZ:bool, critRatio:int, moveType:str,
-        onUser:SecondaryEffect, onTarget:SecondaryEffect) -> Move:
+        onUser:SecondaryEffect, onTarget:SecondaryEffect) -> Union[SingleMove, MultipleMove]:
 
         return MoveFactory.subclasses[target](moveName, 
         accuracy, basePower, category,
