@@ -48,6 +48,9 @@ class Move(ABC):
 
 
 class SingleMove(Move):
+    """Subclass of the Move class.
+    It represents a move with only one target.
+    """
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
@@ -65,6 +68,9 @@ class SingleMove(Move):
 
 
 class MultipleMove(Move):
+    """Subclass of the Move class.
+    It represents a move with multiple targets.
+    """
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
@@ -82,6 +88,8 @@ class MultipleMove(Move):
 
 
 class MoveFactory:
+    """Factory for the Move class hierarchy.
+    """
     subclasses = {
         'single': SingleMove,
         'multiple': MultipleMove
