@@ -1,9 +1,15 @@
+from typing import Tuple
 class Stats:
+
 	"""
 	This class contains pokemon's statistics and methods to  change them.
 
 	"""
 
+	"""
+	Multipliers for statistics changes
+
+	"""
 	multipliers = {
 		-6: 0.25,
 		-5: 0.29,
@@ -20,7 +26,7 @@ class Stats:
 		6: 4
 	}
 	"""
-	Multipliers for accuracy and evasion
+	Multipliers for accuracy and evasion changes
 
 	"""
 	multipliersAE = {
@@ -39,7 +45,7 @@ class Stats:
 		6: 3
 	}
 	
-	def __init__(self, hp, attack, defense, specialAttack, specialDefense, speed):
+	def __init__(self, hp:int, attack:int, defense:int, specialAttack:int, specialDefense:int, speed:int):
 		self.hp = hp
 		self.attack = attack
 		self.defense = defense
@@ -65,6 +71,9 @@ class Stats:
 			"evasion": self.evaMul
 		}
 
+	"""
+	Changes the multipliers from -6 to 6, these are all set to 0 at the start
+	"""
 	def modify(self, type: str, quantity:int):
 		if (self.changes[type] + quantity) > 6:
 			self.changes[type] = 6
@@ -72,8 +81,11 @@ class Stats:
 			self.changes[type] = -6
 		else:
 			self.changes[type] += quantity
-
-	def getActual(self):
+	
+	"""
+	Returns all the changed statistics
+	"""
+	def getActual(self) ->  Tuple[int, int, int, int, int, int, int]:
 		return (
 		Stats.multipliers[self.atkMul]*self.attack, 
 		Stats.multipliers[self.defMul]*self.defense,
