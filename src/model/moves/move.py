@@ -2,6 +2,11 @@ from abc import ABC, abstractmethod
 from secondaryeffect import SecondaryEffect
 from typing import Union
 
+import sys
+sys.path.append("..")
+
+from pokemon import Pokemon
+
 
 class Move(ABC):
     """This class represents a move of a pokemon
@@ -43,7 +48,7 @@ class Move(ABC):
         targetPokemon(Pokemon): the pokemon who receives the move
     """
     @abstractmethod
-    def invokeMove(self, casterPokemon, targetPokemon):
+    def invokeMove(self, casterPokemon: Pokemon, targetPokemon: Pokemon):
         pass
 
 
@@ -62,9 +67,17 @@ class SingleMove(Move):
         onUser, onTarget)
 
     
-    def invokeMove(self, pokemon):
-        # TODO Implement the move, when the merging with the pokemon model is done2
-        pass
+    def invokeMove(self, casterPokemon:Pokemon, targetPokemon:Pokemon):
+
+        # TODO Insert the damage the damage calculation that the move does
+        # TODO Implement the move, when the merging with the pokemon model is done
+        if self.onUser:
+            casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
+
+        if self.onTarget:
+            targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
+        
+       
 
 
 class MultipleMove(Move):
@@ -82,9 +95,14 @@ class MultipleMove(Move):
         onUser, onTarget)
 
     
-    def invokeMove(self, pokemons):
-        # TODO Implement the move, when the merging with the pokemon model is done
-        pass
+    def invokeMove(self, targetPokemons, casterPokemons):
+        # TODO Insert the damage the damage calculation that the move does
+        if self.onUser:
+            for casterPokemon in casterPokemons:
+                casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
+        if self.onTarget:
+            for targetPokemon in targetPokemons:
+                targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
 
 
 class MoveFactory:
