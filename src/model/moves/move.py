@@ -6,6 +6,7 @@ import sys
 sys.path.append("..")
 
 from pokemon import Pokemon
+from pokemontype import PokemonType
 
 
 class Move(ABC):
@@ -20,14 +21,14 @@ class Move(ABC):
         isZ (bool): If the move is Z
         critRatio (int): Critical ratio of the move
         target (str): Which targets are possble in the move
-        moveType (str): Type of the move
+        moveType (PokemonType): Type of the move
         onUser (SecondaryEffect): SecondaryEffect of the move
         onTarget (SecondaryEffect): SecondaryEffect of the move
     """
     
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str,
+        isZ:bool, critRatio:int, moveType:PokemonType,
         onUser:SecondaryEffect, onTarget:SecondaryEffect):
 
         self.moveName = moveName
@@ -59,7 +60,7 @@ class SingleMove(Move):
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str,
+        isZ:bool, critRatio:int, moveType:PokemonType,
         onUser:SecondaryEffect, onTarget:SecondaryEffect):
         Move.__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
@@ -87,7 +88,7 @@ class MultipleMove(Move):
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str,
+        isZ:bool, critRatio:int, moveType:PokemonType,
         onUser:SecondaryEffect, onTarget:SecondaryEffect):
         Move.__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
