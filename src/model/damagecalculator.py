@@ -82,10 +82,8 @@ class DamageCalculator:
         for pkmnType in target.types:
             if move.moveType in TypeMultiplier.weakTo[pkmnType]:
                 mult *= 2
-                continue
             elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
                 mult *= 0.5
-                continue
 
         return baseDamage
 
