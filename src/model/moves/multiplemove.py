@@ -13,4 +13,5 @@ class MultipleMove(Move):
 
     
     def invokeMove(self, pokemons):
+        # TODO Implement the move, when the merging with the pokemon model is done
         pass

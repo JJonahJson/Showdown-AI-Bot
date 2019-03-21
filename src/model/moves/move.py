@@ -37,8 +37,9 @@ class Move(ABC):
     
     """
     Args:
-        pokemon(Pokemon): the target of the move
+        casterPokemon(Pokemon): the pokemon that does the move
+        targetPokemon(Pokemon): the pokemon who receives the move
     """
-    def invokeMove(self, pokemon):
+    def invokeMove(self, casterPokemon, targetPokemon):
         pass
 
