@@ -7,12 +7,14 @@ class MoveFactory:
         'multiple': MultipleMove
     }
 
-    def CreateMove(target, moveName:str, moveEffect, accuracy, 
+    def CreateMove(target, moveName:str, accuracy, 
         basePower, category, pp, priority,
-        isZ, critRatio, moveType, boosts=None):
+        isZ, critRatio, moveType,
+        onUser, onTarget):
 
         return MoveFactory.subclasses[target](moveName, 
-        moveEffect, accuracy, 
-        basePower, category, pp, priority,
-        isZ, critRatio, moveType, boosts)
+        accuracy, basePower, category,
+        pp, priority,
+        isZ, critRatio, moveType,
+        onUser, onTarget)
 

@@ -5,7 +5,6 @@ class Move(ABC):
     """This class represents a move of a pokemon
     Args:
         moveName (str): The name of the move
-        moveEffect Function: the effect of the move
         accuracy (int) or (bool): The accuracy of the move, if true the move is secured to hit.
         basePower (int): The base power of the move
         category (str): Physical if the move is a physical move or special if is a special one
@@ -15,14 +14,16 @@ class Move(ABC):
         critRatio (int): Critical ratio of the move
         target (str): Which targets are possble in the move
         moveType (str): Type of the move
+        onUser (SecondaryEffect): SecondaryEffect of the move
+        onTarget (SecondaryEffect): SecondaryEffect of the move
     """
     
-    def __init__(self, moveName:str, moveEffect, accuracy, 
+    def __init__(self, moveName:str, accuracy, 
         basePower, category, pp, priority,
-        isZ, critRatio, moveType, onTarget, onUser):
+        isZ, critRatio, moveType,
+        onUser, onTarget):
 
         self.moveName = moveName
-        self.moveEffect = moveEffect
         self.accuracy = accuracy
         self.basePower = basePower
         self.category = category
@@ -31,8 +32,8 @@ class Move(ABC):
         self.isZ = isZ
         self.critRatio = critRatio
         self.moveType = moveType
-        self.onTarget = onTarget
         self.onUser = onUser
+        self.onTarget = onTarget
     
     """
     Args:
