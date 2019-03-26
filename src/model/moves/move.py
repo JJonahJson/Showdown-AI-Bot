@@ -2,6 +2,12 @@ from abc import ABC, abstractmethod
 from secondaryeffect import SecondaryEffect
 from typing import Union
 
+import sys
+sys.path.append("..")
+
+from pokemon import Pokemon
+from pokemontype import PokemonType
+
 
 class Move(ABC):
     """This class represents a move of a pokemon
@@ -15,14 +21,14 @@ class Move(ABC):
         isZ (bool): If the move is Z
         critRatio (int): Critical ratio of the move
         target (str): Which targets are possble in the move
-        moveType (str): Type of the move
+        moveType (PokemonType): Type of the move
         onUser (SecondaryEffect): SecondaryEffect of the move
         onTarget (SecondaryEffect): SecondaryEffect of the move
     """
     
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str,
+        isZ:bool, critRatio:int, moveType:PokemonType,
         onUser:SecondaryEffect, onTarget:SecondaryEffect):
 
         self.moveName = moveName
@@ -43,7 +49,7 @@ class Move(ABC):
         targetPokemon(Pokemon): the pokemon who receives the move
     """
     @abstractmethod
-    def invokeMove(self, casterPokemon, targetPokemon):
+    def invokeMove(self, casterPokemon: Pokemon, targetPokemon: Pokemon):
         pass
 
 
@@ -54,7 +60,7 @@ class SingleMove(Move):
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str,
+        isZ:bool, critRatio:int, moveType:PokemonType,
         onUser:SecondaryEffect, onTarget:SecondaryEffect):
         Move.__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
@@ -62,9 +68,17 @@ class SingleMove(Move):
         onUser, onTarget)
 
     
-    def invokeMove(self, pokemon):
-        # TODO Implement the move, when the merging with the pokemon model is done2
-        pass
+    def invokeMove(self, casterPokemon:Pokemon, targetPokemon:Pokemon):
+
+        # TODO Insert the damage the damage calculation that the move does
+        # TODO Implement the move, when the merging with the pokemon model is done
+        if self.onUser:
+            casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
+
+        if self.onTarget:
+            targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
+        
+       
 
 
 class MultipleMove(Move):
@@ -74,7 +88,7 @@ class MultipleMove(Move):
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str,
+        isZ:bool, critRatio:int, moveType:PokemonType,
         onUser:SecondaryEffect, onTarget:SecondaryEffect):
         Move.__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
@@ -82,9 +96,14 @@ class MultipleMove(Move):
         onUser, onTarget)
 
     
-    def invokeMove(self, pokemons):
-        # TODO Implement the move, when the merging with the pokemon model is done
-        pass
+    def invokeMove(self, targetPokemons, casterPokemons):
+        # TODO Insert the damage the damage calculation that the move does
+        if self.onUser:
+            for casterPokemon in casterPokemons:
+                casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
+        if self.onTarget:
+            for targetPokemon in targetPokemons:
+                targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
 
 
 class MoveFactory:

@@ -40,7 +40,7 @@ class Stats:
 			"spe": self.speMul
 		}
 
-	def increase(self, type, quantity):
+	def modify(self, type, quantity):
 		if (self.changes[type] + quantity) > 6:
 			self.changes[type] = 6
 		elif (self.changes[type] + quantity) < -6:
