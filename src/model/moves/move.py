@@ -100,6 +100,7 @@ class MultipleMove(Move):
     
     def invokeMove(self, targetPokemons, casterPokemons):
         # TODO Insert the damage calculation that the move does
+        
         if self.onUser:
             for casterPokemon in casterPokemons:
                 casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
