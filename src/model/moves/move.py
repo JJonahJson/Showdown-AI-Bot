@@ -17,10 +17,10 @@ class Move(ABC):
         basePower (int): The base power of the move
         category (str): Physical if the move is a physical move or special if is a special one
         pp (int): Power points of a move
-        priority (int): The level of a priority of the move
+        priority (int): The level of move's priority
         isZ (bool): If the move is Z
         critRatio (int): Critical ratio of the move
-        target (str): Which targets are possble in the move
+        target (str): Which targets are possible by the move
         moveType (PokemonType): Type of the move
         onUser (SecondaryEffect): SecondaryEffect of the move
         onTarget (SecondaryEffect): SecondaryEffect of the move
@@ -46,7 +46,7 @@ class Move(ABC):
     """
     Args:
         casterPokemon(Pokemon): the pokemon that does the move
-        targetPokemon(Pokemon): the pokemon who receives the move
+        targetPokemon(Pokemon): the pokemon hit by the move
     """
     @abstractmethod
     def invokeMove(self, casterPokemon: Pokemon, targetPokemon: Pokemon):
@@ -54,7 +54,8 @@ class Move(ABC):
 
 
 class SingleMove(Move):
-    """Subclass of the Move class.
+    """
+    Subclass of the Move class.
     It represents a move with only one target.
     """
 
@@ -70,7 +71,7 @@ class SingleMove(Move):
     
     def invokeMove(self, casterPokemon:Pokemon, targetPokemon:Pokemon):
 
-        # TODO Insert the damage the damage calculation that the move does
+        # TODO Insert the damage  calculation that the move does
         # TODO Implement the move, when the merging with the pokemon model is done
         if self.onUser:
             casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
@@ -82,7 +83,8 @@ class SingleMove(Move):
 
 
 class MultipleMove(Move):
-    """Subclass of the Move class.
+    """
+    Subclass of the Move class.
     It represents a move with multiple targets.
     """
 
@@ -97,7 +99,7 @@ class MultipleMove(Move):
 
     
     def invokeMove(self, targetPokemons, casterPokemons):
-        # TODO Insert the damage the damage calculation that the move does
+        # TODO Insert the damage calculation that the move does
         if self.onUser:
             for casterPokemon in casterPokemons:
                 casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
