@@ -1,4 +1,17 @@
 from typing import Tuple
+from enum import Enum, auto
+
+class  StatsType(Enum):
+	HP = auto()
+	Attack= auto()
+	Defense = auto()
+	SpecialAttack = auto()
+	SpecialDefense = auto()
+	Speed = auto()
+	Accuracy = auto()
+	Evasion = auto()
+
+
 class Stats:
 
 	"""
@@ -46,55 +59,45 @@ class Stats:
 	}
 	
 	def __init__(self, hp:int, attack:int, defense:int, specialAttack:int, specialDefense:int, speed:int):
-		self.hp = hp
-		self.attack = attack
-		self.defense = defense
-		self.specialAttack = specialAttack
-		self.specialDefense = specialDefense
-		self.speed = speed
-		self.accuracy = 1
-		self.evasion = 1
-		self.atkMul = 0
-		self.defMul = 0
-		self. spaMul = 0
-		self. spdMul = 0
-		self.speMul = 0
-		self.accMul = 0
-		self.evaMul = 0
-		self.changes = {
-			"atk": self.atkMul,
-			"def": self.defMul,
-			"spa": self.spaMul,
-			"spd": self.spdMul,
-			"spe": self.speMul,
-			"accuracy": self.accMul,
-			"evasion": self.evaMul
+		self.baseStats = {
+			StatsType.HP: hp,
+			StatsType.Attack: attack,
+			StatsType.Defense: defense,
+			StatsType.SpecialAttack: specialAttack,
+			StatsType.SpecialDefense: specialDefense,
+			StatsType.Speed: speed,
+			StatsType.Accuracy: 1,
+			StatsType.Evasion: 1
+		}
+		self.mulStats = {
+			StatsType.Attack: 0,
+			StatsType.Defense: 0,
+			StatsType.SpecialAttack: 0,
+			StatsType.SpecialDefense: 0,
+			StatsType.Speed: 0,
+			StatsType.Accuracy: 0,
+			StatsType.Evasion: 0
 		}
 
 	"""
 	Changes the multipliers from -6 to 6, these are all set to 0 at the start
 	"""
-	def modify(self, type: str, quantity:int):
-		if (self.changes[type] + quantity) > 6:
-			self.changes[type] = 6
-		elif (self.changes[type] + quantity) < -6:
-			self.changes[type] = -6
+	def modify(self, type: StatsType, quantity:int):
+		if (self.mulStats[type] + quantity) > 6:
+			self.mulStats[type] = 6
+		elif (self.mulStats[type] + quantity) < -6:
+			self.mulStats[type] = -6
 		else:
-			self.changes[type] += quantity
+			self.mulStats[type] += quantity
 	
 	"""
 	Returns all the changed statistics
 	"""
-	def getActual(self) ->  Tuple[int, int, int, int, int, int, int]:
-		return (
-		Stats.multipliers[self.atkMul]*self.attack, 
-		Stats.multipliers[self.defMul]*self.defense,
-		Stats.multipliers[self.spaMul]*self.specialAttack,
-		Stats.multipliers[self.spdMul]*self.specialDefense,
-		Stats.multipliers[self.speMul]*self.speed,
-		Stats.multipliersAE[self.accMul]*self.accuracy,
-		Stats.multipliersAE[self.evaMul]*self.evasion
-		)
+	def getActual(self, type: StatsType) :
+		if type is StatsType.Accuracy or type is StatsType.Evasion:
+			return  self.baseStats[type] * self.multipliersAE[self.mulStats[type]]
+		else:
+			return self.baseStats[type] * self.multipliers[self.mulStats[type]]
 
 
 
