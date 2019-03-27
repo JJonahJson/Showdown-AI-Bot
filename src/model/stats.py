@@ -1,6 +1,9 @@
 from typing import Tuple
 from enum import Enum, auto
 
+"""
+Enum class which contains stats' types
+"""
 class  StatsType(Enum):
 	HP = auto()
 	Attack= auto()
@@ -11,17 +14,13 @@ class  StatsType(Enum):
 	Accuracy = auto()
 	Evasion = auto()
 
-
+"""
+This class contains pokemon's statistics and methods to  change them.
+"""
 class Stats:
 
 	"""
-	This class contains pokemon's statistics and methods to  change them.
-
-	"""
-
-	"""
 	Multipliers for statistics changes
-
 	"""
 	multipliers = {
 		-6: 0.25,
@@ -38,9 +37,9 @@ class Stats:
 		5: 3.5,
 		6: 4
 	}
+
 	"""
 	Multipliers for accuracy and evasion changes
-
 	"""
 	multipliersAE = {
 		-6: 0.33,
@@ -59,6 +58,7 @@ class Stats:
 	}
 	
 	def __init__(self, hp:int, attack:int, defense:int, specialAttack:int, specialDefense:int, speed:int):
+		#Initial value of each statistic
 		self.baseStats = {
 			StatsType.HP: hp,
 			StatsType.Attack: attack,
@@ -69,6 +69,7 @@ class Stats:
 			StatsType.Accuracy: 1,
 			StatsType.Evasion: 1
 		}
+		#Initial value of each statistics' multiplier
 		self.mulStats = {
 			StatsType.Attack: 0,
 			StatsType.Defense: 0,
@@ -78,6 +79,8 @@ class Stats:
 			StatsType.Accuracy: 0,
 			StatsType.Evasion: 0
 		}
+		#Initial value of the damage
+		self.damage = 0
 
 	"""
 	Changes the multipliers from -6 to 6, these are all set to 0 at the start
@@ -91,13 +94,37 @@ class Stats:
 			self.mulStats[type] += quantity
 	
 	"""
-	Returns all the changed statistics
+	Increase Pokemon's HP by decreasing the damage
 	"""
-	def getActual(self, type: StatsType) :
+	def increaseHP(self, quantity:int):
+		if(self.damage - quantity) < 0:
+			self.damage = 0
+		else:
+			self.damage -= quantity
+
+	"""
+	Decrease Pokemon's HP by increasing the damage
+	"""
+	def decreaseHP(self, quantity:int):
+		if (self.damage + quantity) > self.baseStats[StatsType.HP]:
+			self.damage = self.baseStats[StatsType.HP]
+		else:
+			self.damage += quantity
+	
+	"""
+	Returns the requested statistic eventually modified 
+	"""
+	def getActual(self, type: StatsType) ->int:
 		if type is StatsType.Accuracy or type is StatsType.Evasion:
 			return  self.baseStats[type] * self.multipliersAE[self.mulStats[type]]
 		else:
 			return self.baseStats[type] * self.multipliers[self.mulStats[type]]
+	
+	"""
+	Returns Pokemon's actual HP value by subtracting the damage to the base HP
+	"""
+	def getActualHP(self)->int:
+		return self.baseStats[StatsType.HP] - self.damage
 
 
 

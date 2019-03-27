@@ -1,3 +1,5 @@
+from stats import Stats
+
 class Pokemon:
 	"""
 	This class represents a Pokémon.
@@ -12,7 +14,7 @@ class Pokemon:
 	level(int) = pokemon's level (from 1 to 100)
 
 	"""
-	def __init__(self, name, types, gender, stats, abilities, weight, status, item, level):
+	def __init__(self, name:str, types:list, gender, stats:Stats, abilities:list, weight:float, status, item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
