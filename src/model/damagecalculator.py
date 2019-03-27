@@ -1,6 +1,8 @@
 from pokemon import Pokemon
 from moves.move import Move
 from pokemontype import PokemonType as t
+from random import uniform
+from field import Weather as w
 
 class TypeMultiplier:
 
@@ -69,14 +71,25 @@ class TypeMultiplier:
         t.Fairy : [t.Dragon]
     }
 
+class WeatherModifiers:
+    modifiers = {
+        (t.Water, w.Rain): 1.5,
+        (t.Water, w.Sun): 0.5,
+        (t.Fire, w.Rain): 0.5,
+        (t.Fire, w.Sun): 2,
+        (t.Electric, w.Wind):0.5,
+        (t.Ice, w.Wind): 0.5,
+        (t.Rock, w.Wind):0.5
+    }
 
 class DamageCalculator:
 
     @staticmethod
-    def calculate(user:Pokemon, move:Move, target:Pokemon) -> int:
+    def calculate(weather:w, user:Pokemon, move:Move, target:Pokemon) -> int:
         baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.basePower) / 250 * target.stats[move.defendsOn]) + 2
-        # TODO Need efficacia, modificatori and N [0.85-1.00]
-        mult = 1
+
+        mult = WeatherModifiers.modifiers[(move.moveType, weather)]
+        roll = uniform(0.85, 1)
 
         # Multiple calculation
         for pkmnType in target.types:
@@ -85,6 +98,5 @@ class DamageCalculator:
             elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
                 mult *= 0.5
 
-        return baseDamage
-
+        return int(baseDamage * mult * roll)
 

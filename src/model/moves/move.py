@@ -1,9 +1,6 @@
 from abc import ABC, abstractmethod
-from secondaryeffect import SecondaryEffect
+from moves.secondaryeffect import SecondaryEffect
 from typing import Union
-
-import sys
-sys.path.append("..")
 
 from pokemon import Pokemon
 from pokemontype import PokemonType
