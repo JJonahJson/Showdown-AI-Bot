@@ -1,4 +1,5 @@
 from enum import Enum
+
 class StatusType(Enum):
 	Normal = auto(),
 	Fainted = auto(),
@@ -14,5 +15,6 @@ class StatusType(Enum):
 	Protected = auto(),
 	Endure = auto(),
 	Fly = auto(),
-	Dig = auto()
+	Dig = auto(),
+	Balloon = auto()
 	
