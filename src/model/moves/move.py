@@ -12,6 +12,11 @@ class MoveCategory(Enum):
     Status = auto()
     Damage = auto()
 
+
+class MoveStatus(Enum):
+    Locked = auto()
+    Available = auto()
+
 class Move(ABC):
     """This class represents a move of a pokemon
     Args:
@@ -47,6 +52,7 @@ class Move(ABC):
         self.moveType = moveType
         self.onUser = onUser
         self.onTarget = onTarget
+        self.moveStatus = MoveStatus.Available
         self.powerMultiply = 1
 
         if defendsOn :

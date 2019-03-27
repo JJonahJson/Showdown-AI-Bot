@@ -24,6 +24,10 @@ class Pokemon:
 		self.status = status
 		self.item = item
 		self.level = level
+		self.damageOutputMultiplier = 1
+		self.damageInputMultiplier = 1
+
+
 
 	
 	

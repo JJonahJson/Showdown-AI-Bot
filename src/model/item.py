@@ -7,9 +7,8 @@ class Item(ABC):
 
     def __init__(self, name):
         self.name = name
-
-    
-    def effect(self, pokemon:Pokemon):
+  
+    def addEffect(self, pokemon:Pokemon):
         pass
 
     def removeEffect(self, pokemon:Pokemon):
@@ -22,8 +21,7 @@ class StatsItem(Item):
         self.statsType = statsType
         self.value = value
     
-
-    def effect(self, pokemon:Pokemon):
+    def addEffect(self, pokemon:Pokemon):
         pokemon.stats.addVolitileMul(self.statsType, self.value)
     
     def removeEffect(self, pokemon:Pokemon):
@@ -37,7 +35,7 @@ class MoveItem(Item):
         self.moveType = moveType
         self.value = value
     
-    def effect(self, pokemon:Pokemon):
+    def addEffect(self, pokemon:Pokemon):
         for move in pokemon.moves:
             if move.moveType is self.moveType:
                 move.moveType.addPowerMultiply(self.value)
@@ -46,3 +44,16 @@ class MoveItem(Item):
         for move in pokemon.moves:
             if move.moveType is self.moveType:
                 move.moveType.removePowerMultiply(self.value)
+
+
+class DamageItem(Item):
+
+    def __init__(self, name, value:float):
+        Item.__init__(self, name)
+        self.value = value
+
+    def addEffect(self, pokemon:Pokemon):
+        pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
+
+    def removeEffect(self, pokemon:Pokemon):
+        pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value

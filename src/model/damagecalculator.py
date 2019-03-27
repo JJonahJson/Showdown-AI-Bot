@@ -86,17 +86,21 @@ class DamageCalculator:
 
     @staticmethod
     def calculate(weather:w, user:Pokemon, move:Move, target:Pokemon) -> int:
-        baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.calculateBasePower()) / 250 * target.stats[move.defendsOn]) + 2
 
-        mult = WeatherModifiers.modifiers[(move.moveType, weather)]
-        roll = uniform(0.85, 1)
+        if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
+            return 0
+        else:
+            baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.calculateBasePower()) / 250 * target.stats[move.defendsOn]) + 2
 
-        # Multiple calculation
-        for pkmnType in target.types:
-            if move.moveType in TypeMultiplier.weakTo[pkmnType]:
-                mult *= 2
-            elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
-                mult *= 0.5
+            mult = WeatherModifiers.modifiers[(move.moveType, weather)]
+            roll = uniform(0.85, 1)
 
-        return int(baseDamage * mult * roll)
+            # Multiple calculation
+            for pkmnType in target.types:
+                if move.moveType in TypeMultiplier.weakTo[pkmnType]:
+                    mult *= 2
+                elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
+                    mult *= 0.5
+
+            return int(baseDamage * mult *  user.damageOutputMultiplier *  target.damageInputMultiplier * roll)
 
