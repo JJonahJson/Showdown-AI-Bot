@@ -1,3 +1,4 @@
+from stats import StatsType
 class SecondaryEffect:
    """
    Class that represents the secondary effect of a move i.e boosts
@@ -7,7 +8,7 @@ class SecondaryEffect:
     value (int): The stage to decrease/increase the stat
    """ 
 
-   def __init__(self, target:str, stat:str, value:int):
+   def __init__(self, target:Pokemon, stat, value:int):
       self.target = target
       self.stat = stat
       self.value = value
