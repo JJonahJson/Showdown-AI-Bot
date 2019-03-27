@@ -30,9 +30,8 @@ class Move(ABC):
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
         isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType,
-        onUser:SecondaryEffect, onTarget:SecondaryEffect,
-        defendsOn:StatsType=None):
+        scaleWith:StatsType, onUser:SecondaryEffect,
+        onTarget:SecondaryEffect, defendsOn:StatsType=None):
 
         self.moveName = moveName
         self.accuracy = accuracy
@@ -70,12 +69,13 @@ class SingleMove(Move):
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
         isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType,
-        onUser:SecondaryEffect, onTarget:SecondaryEffect):
+        scaleWith:StatsType, onUser:SecondaryEffect,
+        onTarget:SecondaryEffect, defendsOn:StatsType=None):
+
         Move.__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
         isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget)
+        onUser, onTarget, defendsOn)
 
     
     def invokeMove(self, casterPokemon:Pokemon, targetPokemon:Pokemon):
@@ -99,12 +99,13 @@ class MultipleMove(Move):
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
         isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType,
-        onUser:SecondaryEffect, onTarget:SecondaryEffect):
+        scaleWith:StatsType, onUser:SecondaryEffect,
+        onTarget:SecondaryEffect, defendsOn:StatsType=None):
+
         Move.__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
         isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget)
+        onUser, onTarget, defendsOn)
 
     
     def invokeMove(self, targetPokemons, casterPokemons):
@@ -126,13 +127,13 @@ class MoveFactory:
     }
 
     @staticmethod
-    def CreateMove(target:str, moveName:str, accuracy:int, 
+    def CreateMove(target:str,self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:str, scaleWith:StatsType,
-        onUser:SecondaryEffect, onTarget:SecondaryEffect) -> Union[SingleMove, MultipleMove]:
+        isZ:bool, critRatio:int, moveType:PokemonType,
+        scaleWith:StatsType, onUser:SecondaryEffect,
+        onTarget:SecondaryEffect, defendsOn:StatsType=None) -> Union[SingleMove, MultipleMove]:
 
         return MoveFactory.subclasses[target](moveName, 
         accuracy, basePower, category,
-        pp, priority,
-        isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget)
+        pp, priority,isZ, critRatio, moveType, scaleWith,
+        onUser, onTarget, defendsOn)

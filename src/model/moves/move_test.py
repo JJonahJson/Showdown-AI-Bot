@@ -4,6 +4,7 @@ from move import SingleMove, MultipleMove, MoveFactory
 
 class Movetest(unittest.TestCase):
 
+    # TODO Refactor test
     def testFactory(self):
         singleMove = MoveFactory.CreateMove("single",
             "airslash", 95, 75, "special", 15, 0, False, 1, "Flying", None, None)
