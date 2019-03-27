@@ -1,5 +1,6 @@
 class SecondaryEffect:
-   """Class that represents the secondary effect of a move i.e boosts
+   """
+   Class that represents the secondary effect of a move i.e boosts
    Args:
     target (str): represents the target i.e: enemy, self, double
     stat (str): The name of the stat affected by the secondary effect
