@@ -86,7 +86,7 @@ class DamageCalculator:
 
     @staticmethod
     def calculate(weather:w, user:Pokemon, move:Move, target:Pokemon) -> int:
-        baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.basePower) / 250 * target.stats[move.defendsOn]) + 2
+        baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.calculateBasePower()) / 250 * target.stats[move.defendsOn]) + 2
 
         mult = WeatherModifiers.modifiers[(move.moveType, weather)]
         roll = uniform(0.85, 1)
