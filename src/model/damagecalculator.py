@@ -74,8 +74,8 @@ class DamageCalculator:
 
     @staticmethod
     def calculate(user:Pokemon, move:Move, target:Pokemon) -> int:
-        baseDamage = (((10 + user.level*2) * user.attack + move.basePower) / 250 * target.defense) + 2
-        # TODO Need efficacia modificatori and N [0.85-1.00]
+        baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.basePower) / 250 * target.stats[move.defendsOn]) + 2
+        # TODO Need efficacia, modificatori and N [0.85-1.00]
         mult = 1
 
         # Multiple calculation
