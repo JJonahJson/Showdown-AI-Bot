@@ -80,7 +80,7 @@ class MoveItem(Item):
             if move.moveType is self.moveType:
                 move.moveType.removePowerMultiply(self.value)
 
-""" Class that represents an item that modifies the total output damage of a pokemon
+"""Class that represents an item that modifies the total output damage of a pokemon
     Args:
     name (str): name of the item
     value (float): multiplier of the damname (str): name of the itemage
@@ -97,7 +97,12 @@ class DamageItem(Item):
     def removeEffect(self, pokemon:Pokemon):
         pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
 
-
+"""Class that represents a choice item
+    Args:
+    name (str): name of the item
+    statsType (StatsType): the stat that it affects
+    value (float): Multiplier of the stat
+"""
 class ChoiceItem(StatsItem):
 
     def __init__(self, name, stats:StatsType, value:float):

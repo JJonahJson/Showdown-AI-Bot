@@ -92,7 +92,7 @@ class SingleMove(Move):
         scaleWith:StatsType, onUser:SecondaryEffect,
         onTarget:SecondaryEffect, defendsOn:StatsType=None):
 
-        Move.__init__(self, moveName, accuracy, 
+        super().__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
         isZ, critRatio, moveType, scaleWith,
         onUser, onTarget, defendsOn)
@@ -123,7 +123,7 @@ class MultipleMove(Move):
         scaleWith:StatsType, onUser:SecondaryEffect,
         onTarget:SecondaryEffect, defendsOn:StatsType=None):
 
-        Move.__init__(self, moveName, accuracy, 
+        super().__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
         isZ, critRatio, moveType, scaleWith,
         onUser, onTarget, defendsOn)
