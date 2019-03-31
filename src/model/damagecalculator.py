@@ -96,7 +96,8 @@ class DamageCalculator:
         else:
             baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.calculateBasePower()) / 250 * target.stats[move.defendsOn]) + 2
 
-            mult = WeatherModifiers.modifiers[(move.moveType, weather)]
+            # Try to get the multiplier based on the weather, if is not in the dict get '1'
+            mult = WeatherModifiers.modifiers.get((w,move.moveType), default=1)
             roll = uniform(0.85, 1)
 
             # Multiple calculation
