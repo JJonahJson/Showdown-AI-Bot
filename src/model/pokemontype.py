@@ -1,5 +1,7 @@
 from enum import Enum, auto
 
+"""Enum that represents all the possibles type of a pokemon and of a pokemon's move
+"""
 class PokemonType(Enum):
     Normal = auto()
     Fire = auto()

@@ -71,6 +71,8 @@ class TypeMultiplier:
         t.Fairy : [t.Dragon]
     }
 
+"""This class contains a static dict for the weather multipliers
+"""
 class WeatherModifiers:
     modifiers = {
         (t.Water, w.Rain): 1.5,
@@ -82,6 +84,8 @@ class WeatherModifiers:
         (t.Rock, w.Wind):0.5
     }
 
+"""This class contains a static method for damage calculation
+"""
 class DamageCalculator:
 
     @staticmethod
