@@ -32,6 +32,7 @@ class Move(ABC):
         moveType (PokemonType): Type of the move
         onUser (SecondaryEffect): SecondaryEffect of the move
         onTarget (SecondaryEffect): SecondaryEffect of the move
+        isLocked (boolean): if the move is locked or not
     """
     
     def __init__(self, moveName:str, accuracy:int, 
@@ -54,6 +55,7 @@ class Move(ABC):
         self.onTarget = onTarget
         self.moveStatus = MoveStatus.Available
         self.powerMultiply = 1
+        self.isUsable = True
 
         if defendsOn :
             self.defendsOn = self.scaleWith

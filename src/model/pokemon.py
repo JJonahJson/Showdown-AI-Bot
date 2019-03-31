@@ -1,4 +1,6 @@
 from stats import Stats
+from typing import List
+from moves.move import Move
 
 class Pokemon:
 	"""
@@ -14,7 +16,7 @@ class Pokemon:
 	level(int) = pokemon's level (from 1 to 100)
 
 	"""
-	def __init__(self, name:str, types:list, gender, stats:Stats, abilities:list, weight:float, status, item, level:int):
+	def __init__(self, name:str, types:list, gender, stats:Stats, moves: List[Move],abilities:list, weight:float, status, item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
@@ -24,9 +26,13 @@ class Pokemon:
 		self.status = status
 		self.item = item
 		self.level = level
+		self.moves = moves
 		self.damageOutputMultiplier = 1
 		self.damageInputMultiplier = 1
 
+
+	def getUsableMoves(self) ->List[Move]:
+		return list(filter(lambda move: move.isUsable, self.moves))
 
 
 	
