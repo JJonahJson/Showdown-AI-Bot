@@ -1,14 +1,23 @@
+from src.model.pokemon import Pokemon
+from src.model.pokemontype import PokemonType
+from src.model.stats import StatsType
+from src.model.moves.secondaryeffect import SecondaryEffect
+
 from abc import ABC, abstractmethod
-from secondaryeffect import SecondaryEffect
 from typing import Union
+from enum import Enum, auto
 
-import sys
-sys.path.append("..")
 
-from pokemon import Pokemon
-from pokemontype import PokemonType
-from stats import StatsType
 
+
+class MoveCategory(Enum):
+    Status = auto()
+    Damage = auto()
+
+
+class MoveStatus(Enum):
+    Locked = auto()
+    Available = auto()
 
 class Move(ABC):
     """This class represents a move of a pokemon
@@ -25,12 +34,13 @@ class Move(ABC):
         moveType (PokemonType): Type of the move
         onUser (SecondaryEffect): SecondaryEffect of the move
         onTarget (SecondaryEffect): SecondaryEffect of the move
+        isLocked (boolean): if the move is locked or not
     """
     
     def __init__(self, moveName:str, accuracy:int, 
-        basePower:int, category:str, pp:int, priority:int,
+        basePower:int, category:MoveCategory, pp:int, priority:int,
         isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType, onUser:SecondaryEffect,
+        moveCategory:Move, scaleWith:StatsType, onUser:SecondaryEffect,
         onTarget:SecondaryEffect, defendsOn:StatsType=None):
 
         self.moveName = moveName
@@ -45,6 +55,9 @@ class Move(ABC):
         self.moveType = moveType
         self.onUser = onUser
         self.onTarget = onTarget
+        self.moveStatus = MoveStatus.Available
+        self.powerMultiply = 1
+        self.isUsable = True
 
         if defendsOn :
             self.defendsOn = self.scaleWith
@@ -60,6 +73,14 @@ class Move(ABC):
     def invokeMove(self, casterPokemon: Pokemon, targetPokemon: Pokemon):
         pass
 
+    def calculateBasePower(self):
+        return self.basePower * self.powerMultiply
+    
+    def addPowerMultiply(self, value:float):
+        self.powerMultiply = self.powerMultiply * value
+
+    def removePowerMultiply(self, value:float):
+        self.powerMultiply = self.powerMultiply / value
 
 class SingleMove(Move):
     """
@@ -73,7 +94,7 @@ class SingleMove(Move):
         scaleWith:StatsType, onUser:SecondaryEffect,
         onTarget:SecondaryEffect, defendsOn:StatsType=None):
 
-        Move.__init__(self, moveName, accuracy, 
+        super().__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
         isZ, critRatio, moveType, scaleWith,
         onUser, onTarget, defendsOn)
@@ -104,7 +125,7 @@ class MultipleMove(Move):
         scaleWith:StatsType, onUser:SecondaryEffect,
         onTarget:SecondaryEffect, defendsOn:StatsType=None):
 
-        Move.__init__(self, moveName, accuracy, 
+        super().__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
         isZ, critRatio, moveType, scaleWith,
         onUser, onTarget, defendsOn)

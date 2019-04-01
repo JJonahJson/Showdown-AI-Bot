@@ -1,6 +1,10 @@
-from pokemon import Pokemon
-from moves.move import Move
-from pokemontype import PokemonType as t
+from src.model.pokemon import Pokemon
+from src.model.moves.move import Move
+from src.model.pokemontype import PokemonType as t
+from src.model.field import Weather as w
+
+from random import uniform
+
 
 class TypeMultiplier:
 
@@ -69,22 +73,41 @@ class TypeMultiplier:
         t.Fairy : [t.Dragon]
     }
 
+"""This class contains a static dict for the weather multipliers
+"""
+class WeatherModifiers:
+    modifiers = {
+        (t.Water, w.Rain): 1.5,
+        (t.Water, w.Sun): 0.5,
+        (t.Fire, w.Rain): 0.5,
+        (t.Fire, w.Sun): 2,
+        (t.Electric, w.Wind):0.5,
+        (t.Ice, w.Wind): 0.5,
+        (t.Rock, w.Wind):0.5
+    }
 
+"""This class contains a static method for damage calculation
+"""
 class DamageCalculator:
 
     @staticmethod
-    def calculate(user:Pokemon, move:Move, target:Pokemon) -> int:
-        baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.basePower) / 250 * target.stats[move.defendsOn]) + 2
-        # TODO Need efficacia, modificatori and N [0.85-1.00]
-        mult = 1
+    def calculate(weather:w, user:Pokemon, move:Move, target:Pokemon) -> int:
 
-        # Multiple calculation
-        for pkmnType in target.types:
-            if move.moveType in TypeMultiplier.weakTo[pkmnType]:
-                mult *= 2
-            elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
-                mult *= 0.5
+        if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
+            return 0
+        else:
+            baseDamage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.calculateBasePower()) / 250 * target.stats[move.defendsOn]) + 2
 
-        return baseDamage
+            # Try to get the multiplier based on the weather, if is not in the dict get '1'
+            mult = WeatherModifiers.modifiers.get((w,move.moveType), default=1)
+            roll = uniform(0.85, 1)
 
+            # Multiple calculation
+            for pkmnType in target.types:
+                if move.moveType in TypeMultiplier.weakTo[pkmnType]:
+                    mult *= 2
+                elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
+                    mult *= 0.5
+
+            return int(baseDamage * mult *  user.damageOutputMultiplier *  target.damageInputMultiplier * roll)
 
