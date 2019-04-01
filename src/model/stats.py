@@ -79,6 +79,16 @@ class Stats:
 			StatsType.Accuracy: 0,
 			StatsType.Evasion: 0
 		}
+
+		self.voltatileMul = {
+			StatsType.Attack: 1,
+			StatsType.Defense: 1,
+			StatsType.SpecialAttack: 1,
+			StatsType.SpecialDefense: 1,
+			StatsType.Accuracy: 1,
+			StatsType.Evasion: 1
+		}
+
 		#Initial value of the damage
 		self.damage = 0
 
@@ -125,6 +135,12 @@ class Stats:
 	"""
 	def getActualHP(self)->int:
 		return self.baseStats[StatsType.HP] - self.damage
+
+	def addVolatileMul(self, statsType:StatsType, value:float):
+		self.voltatileMul[statsType] * value
+	
+	def removeVolatileMul(self, statsType:StatsType, value:float):
+		self.voltatileMul[statsType] / value
 
 
 
