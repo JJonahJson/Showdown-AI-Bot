@@ -3,7 +3,6 @@ from src.model.moves.move import Move
 
 from typing import List
 
-
 class Pokemon:
 	"""
 	This class represents a Pokémon.
@@ -13,12 +12,12 @@ class Pokemon:
 	stats (Stats) = actual pokemon's statistics
 	abilities (list) = list of possible pokemon's abilities
 	weight (int) = pokemon's weight which may influence some moves power
-	status(str) = pokemon's status (poisoned, fainted, ecc.)
+	status(StatusType) = pokemon's status (poisoned, fainted, ecc.)
 	item(str) = pokemon's held item
 	level(int) = pokemon's level (from 1 to 100)
 
 	"""
-	def __init__(self, name:str, types:list, gender, stats:Stats, moves: List[Move],abilities:list, weight:float, status, item, level:int):
+	def __init__(self, name:str, types:list, gender, stats:Stats, moves: List[Move],abilities:list, weight:float, status:StatusType, item:Item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
