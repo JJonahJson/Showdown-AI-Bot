@@ -1,8 +1,9 @@
+from src.model.pokemon import Pokemon
+from src.model.stats import StatsType
+from src.model.pokemontype import PokemonType
+from src.model.moves.move import Move
+
 from abc import ABC, abstractmethod
-from pokemon import Pokemon
-from stats import StatsType
-from pokemontype import PokemonType
-from moves.move import Move
 
 """Abstract class that represents a generic item in game.
     Args:

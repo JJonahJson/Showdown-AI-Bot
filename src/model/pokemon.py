@@ -1,6 +1,8 @@
-from stats import Stats
+from src.model.stats import Stats
+from src.model.moves.move import Move
+
 from typing import List
-from moves.move import Move
+
 
 class Pokemon:
 	"""

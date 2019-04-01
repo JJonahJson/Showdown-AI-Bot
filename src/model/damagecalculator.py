@@ -1,8 +1,10 @@
-from pokemon import Pokemon
-from moves.move import Move
-from pokemontype import PokemonType as t
+from src.model.pokemon import Pokemon
+from src.model.moves.move import Move
+from src.model.pokemontype import PokemonType as t
+from src.model.field import Weather as w
+
 from random import uniform
-from field import Weather as w
+
 
 class TypeMultiplier:
 

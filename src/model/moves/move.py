@@ -1,11 +1,13 @@
+from src.model.pokemon import Pokemon
+from src.model.pokemontype import PokemonType
+from src.model.stats import StatsType
+from src.model.moves.secondaryeffect import SecondaryEffect
+
 from abc import ABC, abstractmethod
-from moves.secondaryeffect import SecondaryEffect
 from typing import Union
 from enum import Enum, auto
 
-from pokemon import Pokemon
-from pokemontype import PokemonType
-from stats import StatsType
+
 
 
 class MoveCategory(Enum):
