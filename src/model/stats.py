@@ -132,8 +132,8 @@ class Stats:
 		return self.baseStats[StatsType.HP] - self.damage
 
 	def addVolatileMul(self, statsType:StatsType, value:float):
-		self.voltatileMul[statsType] * value
+		self.voltatileMul[statsType] *= value
 	
 	def removeVolatileMul(self, statsType:StatsType, value:float):
-		self.voltatileMul[statsType] / value
+		self.voltatileMul[statsType] /= value
 	

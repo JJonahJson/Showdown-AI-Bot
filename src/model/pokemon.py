@@ -1,8 +1,5 @@
-from src.model.stats import Stats
 from src.model.status import StatusType
-from src.model.moves.move import Move
 from src.model.item import Item
-from src.model.field import Weather
 
 from typing import Dict, List
 
@@ -20,7 +17,7 @@ class Pokemon:
 	level(int) = pokemon's level (from 1 to 100)
 
 	"""
-	def __init__(self, name:str, types:list, gender, stats:Stats, moves: Dict[Move],abilities:list, weight:float, status:StatusType, item:Item, level:int):
+	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, status:StatusType, item:Item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
@@ -36,12 +33,12 @@ class Pokemon:
 
 	"""Methods that returns all usable moves
 	"""
-	def getUsableMoves(self) ->List[Move]:
+	def getUsableMoves(self) ->List:
 		return {k:v for k,v in self.moves if v.isUsable()}
 
 	"""Methods that apply a move
 	"""
-	def useMove(self, moveIndex:int, targets: Dict[Pokemon], targetIndex:int, weather:Weather):
+	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather):
 		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather)
 
 

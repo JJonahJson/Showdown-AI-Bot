@@ -1,5 +1,3 @@
-from src.model.pokemon import Pokemon
-from src.model.moves.move import Move
 from src.model.pokemontype import PokemonType as t
 from src.model.field import Weather as w
 
@@ -91,7 +89,7 @@ class WeatherModifiers:
 class DamageCalculator:
 
     @staticmethod
-    def calculate(weather:w, user:Pokemon, move:Move, target:Pokemon) -> int:
+    def calculate(weather:w, user, move, target) -> int:
 
         if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
             return 0

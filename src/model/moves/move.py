@@ -1,9 +1,4 @@
-from src.model.pokemon import Pokemon
-from src.model.pokemontype import PokemonType
-from src.model.stats import StatsType
-from src.model.moves.secondaryeffect import SecondaryEffect
 from src.model.damagecalculator import DamageCalculator
-from src.model.field import Weather
 
 from abc import ABC, abstractmethod
 from typing import Union, Dict
@@ -41,10 +36,10 @@ class Move(ABC):
     """
     
     def __init__(self, moveName:str, accuracy:int, 
-        basePower:int, category:MoveCategory, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:PokemonType,
-        moveCategory:Move, scaleWith:StatsType, onUser:SecondaryEffect,
-        onTarget:SecondaryEffect, defendsOn:StatsType=None):
+        basePower:int, category, pp:int, priority:int,
+        isZ:bool, critRatio:int, moveType,
+        moveCategory, scaleWith, onUser,
+        onTarget, defendsOn=None):
 
         self.moveName = moveName
         self.accuracy = accuracy
@@ -73,7 +68,7 @@ class Move(ABC):
         targetPokemon(Pokemon): the pokemon hit by the move
     """
     @abstractmethod
-    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int):
+    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int):
         pass
 
     def calculateBasePower(self):
@@ -93,9 +88,9 @@ class SingleMove(Move):
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType, onUser:SecondaryEffect,
-        onTarget:SecondaryEffect, defendsOn:StatsType=None):
+        isZ:bool, critRatio:int, moveType,
+        scaleWith, onUser,
+        onTarget, defendsOn=None):
 
         super().__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
@@ -103,7 +98,7 @@ class SingleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int, weather: Weather):
+    def invokeMove(self, casterPokemon, targetPokemons:Dict, indexTarget:int, weather):
         targetPokemon = targetPokemons[indexTarget]
         damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
         targetPokemon.stats.decreaseHP(damage)
@@ -125,9 +120,9 @@ class MultipleMove(Move):
 
     def __init__(self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType, onUser:SecondaryEffect,
-        onTarget:SecondaryEffect, defendsOn:StatsType=None):
+        isZ:bool, critRatio:int, moveType,
+        scaleWith, onUser,
+        onTarget, defendsOn=None):
 
         super().__init__(self, moveName, accuracy, 
         basePower, category, pp, priority,
@@ -135,7 +130,7 @@ class MultipleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int,weather:Weather):
+    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather):
         # TODO Insert the damage calculation that the move does
         for targetPokemon in targetPokemons.items():
             damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
@@ -162,9 +157,9 @@ class MoveFactory:
     @staticmethod
     def CreateMove(target:str,self, moveName:str, accuracy:int, 
         basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType:PokemonType,
-        scaleWith:StatsType, onUser:SecondaryEffect,
-        onTarget:SecondaryEffect, defendsOn:StatsType=None) -> Union[SingleMove, MultipleMove]:
+        isZ:bool, critRatio:int, moveType,
+        scaleWith, onUser,
+        onTarget, defendsOn=None) -> Union[SingleMove, MultipleMove]:
 
         return MoveFactory.subclasses[target](moveName, 
         accuracy, basePower, category,

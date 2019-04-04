@@ -1,6 +1,6 @@
-from src.model.stats import Stats, StatsType
 import unittest
 
+from src.model.stats import Stats, StatsType
 
 class StatsTest(unittest.TestCase):
 
@@ -74,5 +74,3 @@ class StatsTest(unittest.TestCase):
         self.assertEqual(stat.mulStats[StatsType.Attack], 6, "Multiplier should be 6 instead of {}".format(str(stat.mulStats[StatsType.Attack]))) 
 
 
-if __name__ == "__main__":
-    unittest.main()

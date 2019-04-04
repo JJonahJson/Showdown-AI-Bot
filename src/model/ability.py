@@ -13,7 +13,6 @@ class ActCondition(Enum):
     ONSWITCHIN = auto()
     ONSWITCHOUT = auto()
 
-
 class Ability(ABC):
 
     def __init__(self, name:str):
@@ -43,3 +42,5 @@ class WeatherAbility(Ability):
         super().__init__(name)
         self.weather = weather
           
+    def activate(self, field:BattleField, side:int):
+        field.weather = self.weather

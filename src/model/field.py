@@ -1,9 +1,7 @@
-from src.model.pokemon import Pokemon
 from src.model.stats import StatsType
 
 from enum import Enum, auto
 from typing import Dict
-from collections import OrderedDict
 
 """Enum for the possible weathers in game
 """
@@ -28,32 +26,17 @@ class Field(Enum):
 """
 class BattleField():
 
-    def __init__(self):
+    def __init__(self, active1,active2,inactive1,inactive2):
         self.weather = Weather.Normal
         self.field = Field.Normal
         #TODO TERRAIN
         self.terrain = None
-        self.activePokemonSide1 = {}
-        self.activePokemonSide2 = {}
-        self.inactivePokemonSide1 = {}
-        self.inactivePokemonSide2 = {}
-        self.teoreticalOrder = lambda active1,active2: sorted(active1+active2, key=lambda pokemon: pokemon.stats[StatsType.Speed])
+        self.inactivePokemonSide1 = inactive1
+        self.inactivePokemonSide2 = inactive2
+        self.activePokemonSide1 = active1
+        self.activePokemonSide2 = active2
+        self.teoreticalOrder = lambda active1,active2: sorted(list(active1)+list(active2), key=lambda pokemon: pokemon.stats[StatsType.Speed])
 
-    """Sets the leading pokemons
-    """
-    def setLeading(self, side1: Dict[Pokemon], side2:Dict[Pokemon]):
-        self.activepokemonSide1 = side1
-        self.activePokemonSide2 = side2
-
-        for pokemon in self.teoreticalOrder(self.activePokemonSide1, self.activePokemonSide2):
-            pokemon.ability.activateOnField(self)
-            pass # TODO Activate SwitchIn-Ability in order to speed of pokemons
-
-    """Sets the pokemon in the back
-    """
-    def setInactive(self, side1: Dict[Pokemon], side2: Dict[Pokemon]):
-        self.inactivePokemonSide1 = side1
-        self.inactivePokemonSide2 = side2
     
     """Method for switch in a pokemon
     """

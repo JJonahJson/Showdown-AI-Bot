@@ -1,8 +1,4 @@
-from src.model.pokemon import Pokemon
 from src.model.stats import StatsType
-from src.model.pokemontype import PokemonType
-from src.model.moves.move import Move
-
 from abc import ABC, abstractmethod
 
 """Abstract class that represents a generic item in game.
@@ -17,31 +13,31 @@ class Item(ABC):
     """Abstract method used to implement the effect of the item
     """
     @abstractmethod
-    def addEffect(self, pokemon:Pokemon):
+    def addEffect(self, pokemon):
         pass
 
     """Abstract method used to remove the effect of the item
     """
     @abstractmethod
-    def removeEffect(self, pokemon:Pokemon):
+    def removeEffect(self, pokemon):
         pass
 
     """Abstract method for locking a pokemon on a move
     """
     @abstractmethod
-    def addLock(self, pokemon:Pokemon, move:Move):
+    def addLock(self, pokemon, move):
         pass
 
     """Abstract method for removing a lock from pokemon's moves
     """
     @abstractmethod
-    def removeLock(self, pokemon:Pokemon, move:Move):
+    def removeLock(self, pokemon, move):
         pass
 
     """Abstract method for the berry item
     """
     @abstractmethod
-    def activate(self, pokemon:Pokemon):
+    def activate(self, pokemon):
         pass
 
 
@@ -53,15 +49,15 @@ class Item(ABC):
 """
 class StatsItem(Item):
 
-    def __init__(self, name, statsType:StatsType, value:float):
+    def __init__(self, name, statsType, value:float):
         super().__init__(self, name)
         self.statsType = statsType
         self.value = value
     
-    def addEffect(self, pokemon:Pokemon):
+    def addEffect(self, pokemon):
         pokemon.stats.addVolitileMul(self.statsType, self.value)
     
-    def removeEffect(self, pokemon:Pokemon):
+    def removeEffect(self, pokemon):
         pokemon.stats.removeVolitileMul(self.statsType, self.value)
 
 """Class used to represent items that affect a particular move type of a pokemon
@@ -73,17 +69,17 @@ class StatsItem(Item):
 """
 class MoveItem(Item):
     
-    def __init__(self, name, moveType:PokemonType, value:float):
+    def __init__(self, name, moveType, value:float):
         super().__init__(self, name)
         self.moveType = moveType
         self.value = value
     
-    def addEffect(self, pokemon:Pokemon):
+    def addEffect(self, pokemon):
         for move in pokemon.moves:
             if move.moveType is self.moveType:
                 move.moveType.addPowerMultiply(self.value)
     
-    def removeEffect(self, pokemon:Pokemon):
+    def removeEffect(self, pokemon):
         for move in pokemon.moves:
             if move.moveType is self.moveType:
                 move.moveType.removePowerMultiply(self.value)
@@ -99,10 +95,10 @@ class DamageItem(Item):
         super().__init__(self, name)
         self.value = value
 
-    def addEffect(self, pokemon:Pokemon):
+    def addEffect(self, pokemon):
         pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
 
-    def removeEffect(self, pokemon:Pokemon):
+    def removeEffect(self, pokemon):
         pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
 
 """Class that represents a choice item
@@ -113,19 +109,19 @@ class DamageItem(Item):
 """
 class ChoiceItem(StatsItem):
 
-    def __init__(self, name, stats:StatsType, value:float):
+    def __init__(self, name, stats, value:float):
         super().__init__(name, stats, value)
     
 
 
-    def addLock(self, pokemon:Pokemon, move:Move):
+    def addLock(self, pokemon, move):
         for toLock in pokemon.moves:
             if toLock != move:
                 toLock.isUsable = False
     
 
 
-    def removeLock(self, pokemon:Pokemon, move:Move):
+    def removeLock(self, pokemon, move):
         for toLock in pokemon.moves:
             toLock.isUsable = True
 
@@ -143,7 +139,7 @@ class HealingBerry(Item):
         self.threshold = threshold
         self.value = value
 
-    def activate(self, pokemon:Pokemon):
+    def activate(self, pokemon):
         # If under the threshold then activate
         if pokemon.stats.getActualHP() <= (pokemon.stats.baseStats[StatsType.HP] * (self.threshold / 100)):
             pokemon.stats.increaseHP(pokemon.stats.baseStats[StatsType.HP] * (self.value / 100))
