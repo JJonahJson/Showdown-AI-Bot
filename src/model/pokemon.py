@@ -1,5 +1,7 @@
 from src.model.stats import Stats
+from src.model.status import StatusType
 from src.model.moves.move import Move
+from src.model.item import Item
 
 from typing import List
 
