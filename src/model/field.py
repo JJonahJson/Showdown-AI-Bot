@@ -59,8 +59,7 @@ class BattleField():
 
     def doMove(self, player:int, pkmnCIndex:int, moveIndex:int, pkmnTIndex:int):
         if player == 1:
-            self.activePokemonSide1[pkmnCIndex].moves[moveIndex].invokeMove(self.activePokemonSide1[pkmnTIndex], self.activePokemonSide2)
+            self.activePokemonSide1[pkmnCIndex].doMove(moveIndex, self.activePokemonSide2, pkmnTIndex, self.weather)
         else:
-            self.activePokemonSide2[pkmnCIndex].moves[moveIndex].invokeMove(self.activePokemonSide1[pkmnTIndex], self.activePokemonSide1)
-
+            self.activePokemonSide2[pkmnCIndex].doMove(moveIndex, self.activePokemonSide1, pkmnTIndex, self.weather)
 

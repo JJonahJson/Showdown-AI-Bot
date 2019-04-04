@@ -134,10 +134,9 @@ class MultipleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int, weather:Weather):
+    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int,weather:Weather):
         # TODO Insert the damage calculation that the move does
         for targetPokemon in targetPokemons.items():
-            targetPokemon = targetPokemons[indexTarget]
             damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
             targetPokemon.stats.decreaseHP(damage)
 
