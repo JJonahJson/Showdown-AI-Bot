@@ -38,6 +38,13 @@ class Item(ABC):
     def removeLock(self, pokemon:Pokemon, move:Move):
         pass
 
+    """Abstract method for the berry item
+    """
+    @abstractmethod
+    def activate(self, pokemon:Pokemon):
+        pass
+
+
 """Class used to represent an item that affect the stats of a pokemon
     Args:
     name (str): name of the item
@@ -121,3 +128,23 @@ class ChoiceItem(StatsItem):
     def removeLock(self, pokemon:Pokemon, move:Move):
         for toLock in pokemon.moves:
             toLock.isUsable = True
+
+"""Class that represents a berry that heals when the hp go beyond a threshold
+"""
+class HealingBerry(Item):
+
+    """Args:
+        name (str): name of the berry
+        threshold(int): % of the hp that activate the berry
+        value(int): % of the base health to restore
+    """
+    def __init__(self, name:str, threshold:int, value:int):
+        super().__init__(name)
+        self.threshold = threshold
+        self.value = value
+
+    def activate(self, pokemon:Pokemon):
+        # If under the threshold then activate
+        if pokemon.stats.getActualHP() <= (pokemon.stats.baseStats[StatsType.HP] * (self.threshold / 100)):
+            pokemon.stats.increaseHP(pokemon.stats.baseStats[StatsType.HP] * (self.value / 100))
+            
