@@ -136,7 +136,4 @@ class Stats:
 	
 	def removeVolatileMul(self, statsType:StatsType, value:float):
 		self.voltatileMul[statsType] / value
-
-
-
 	

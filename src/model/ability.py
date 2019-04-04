@@ -1,6 +1,8 @@
 from src.model.stats import StatsType
 from src.model.field import Weather
 from src.model.pokemon import Pokemon
+from src.model.moves.secondaryeffect import SecondaryEffect
+from src.model.field import BattleField
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
@@ -12,48 +14,32 @@ class ActCondition(Enum):
     ONSWITCHOUT = auto()
 
 
-class Activation():
-
-    conditions = {
-        ActCondition.HPFULL: (lambda pokemon: pokemon.stats.currentHp() == pokemon.stats.baseStats[StatsType.HP]),
-        ActCondition.STAB: (lambda pokemon, move: move.moveType in pokemon.types), 
-    }
-
 class Ability(ABC):
 
     def __init__(self, name:str):
         self.name = name
 
     @abstractmethod
-    def activateOnField(self, field):
+    def activate(self, field, side:int):
         pass
 
-    @abstractmethod
-    def activateOnPokemon(self, pokemon):
-        pass
+class DebuffEnemyAbility(Ability):
+
+    def __init__(self, name:str, secondaryEffect:SecondaryEffect):
+        super().__init__(name)
+        self.secondaryEffect = secondaryEffect
+
+    def activate(self, field:BattleField, side:int):
+        if side == 1:
+            for pokemon in field.activePokemonSide2.items():
+                pokemon.stats.mulStats[self.secondaryEffect.stat] += self.secondaryEffect.value
+        else:
+            for pokemon in field.activePokemonSide1.items():
+                pokemon.stats.mulStats[self.secondaryEffect.stat] += self.secondaryEffect.value
 
 class WeatherAbility(Ability):
 
     def __init__(self, name:str, weather:Weather):
         super().__init__(name)
         self.weather = weather
-
-    def activateOnField(self, field):
-        # TODO add battlefield parameter
-        if Activation.conditions[ActCondition.ONSWITCHIN]:
-            pass # TODO Set Weather
-
-class DamageReductionAbility(Ability):
-
-    def __init__(self, name:str, condition:ActCondition,reduction:int):
-        super().__init__(name)
-        self.reduction = reduction
-        self.condition = condition
-    
-    def activateOnPokemon(self, pokemon):
-        if Activation.conditions[self.condition](pokemon):
-            pokemon.damageInputMultiplier = (self.reduction / 100)
-        else:
-            pokemon.damageInputMultiplier = 1
-
-                
+          

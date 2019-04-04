@@ -34,10 +34,13 @@ class Pokemon:
 		self.damageOutputMultiplier = 1
 		self.damageInputMultiplier = 1
 
-
+	"""Methods that returns all usable moves
+	"""
 	def getUsableMoves(self) ->List[Move]:
-		return list(filter(lambda move: move.isUsable, self.moves))
+		return {k:v for k,v in self.moves if v.isUsable()}
 
+	"""Methods that apply a move
+	"""
 	def useMove(self, moveIndex:int, targets: Dict[Pokemon], targetIndex:int, weather:Weather):
 		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather)
 

@@ -36,6 +36,7 @@ class Move(ABC):
         moveType (PokemonType): Type of the move
         onUser (SecondaryEffect): SecondaryEffect of the move
         onTarget (SecondaryEffect): SecondaryEffect of the move
+        powerMultiply (int): Used for the items that enhance the damage of a move
         isLocked (boolean): if the move is locked or not
     """
     
