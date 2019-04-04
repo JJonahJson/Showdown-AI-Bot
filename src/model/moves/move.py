@@ -2,9 +2,11 @@ from src.model.pokemon import Pokemon
 from src.model.pokemontype import PokemonType
 from src.model.stats import StatsType
 from src.model.moves.secondaryeffect import SecondaryEffect
+from src.model.damagecalculator import DamageCalculator
+from src.model.field import Weather
 
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Union, Dict
 from enum import Enum, auto
 
 
@@ -70,7 +72,7 @@ class Move(ABC):
         targetPokemon(Pokemon): the pokemon hit by the move
     """
     @abstractmethod
-    def invokeMove(self, casterPokemon: Pokemon, targetPokemon: Pokemon):
+    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int):
         pass
 
     def calculateBasePower(self):
@@ -100,7 +102,10 @@ class SingleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, casterPokemon:Pokemon, targetPokemon:Pokemon):
+    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int, weather: Weather):
+        targetPokemon = targetPokemons[indexTarget]
+        damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
+        targetPokemon.stats.decreaseHP(damage)
 
         # TODO Insert the damage  calculation that the move does
         # TODO Implement the move, when the merging with the pokemon model is done
@@ -110,8 +115,6 @@ class SingleMove(Move):
         if self.onTarget:
             targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
         
-       
-
 
 class MultipleMove(Move):
     """
@@ -131,15 +134,21 @@ class MultipleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, targetPokemons, casterPokemons):
+    def invokeMove(self, casterPokemon: Pokemon, targetPokemons: Dict[Pokemon], indexTarget:int, weather:Weather):
         # TODO Insert the damage calculation that the move does
-        
-        if self.onUser:
-            for casterPokemon in casterPokemons:
+        for targetPokemon in targetPokemons.items():
+            targetPokemon = targetPokemons[indexTarget]
+            damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
+            targetPokemon.stats.decreaseHP(damage)
+
+            if self.onUser:
                 casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
-        if self.onTarget:
-            for targetPokemon in targetPokemons:
+
+            if self.onTarget:
                 targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
+
+           
+                
 
 
 class MoveFactory:
