@@ -24,12 +24,12 @@ class Pokemon:
 		self.stats = stats
 		self.abilities = abilities
 		self.weight = weight
-		self.status = status
 		self.item = item
 		self.level = level
 		self.moves = moves
 		self.damageOutputMultiplier = 1
 		self.damageInputMultiplier = 1
+		self.status = StatusType.Normal
 
 	"""Methods that returns all usable moves
 	"""
@@ -40,6 +40,10 @@ class Pokemon:
 	"""
 	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather, field):
 		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather, field)
+
+	def applyStatus(self, status):
+		if status is not StatusType.Normal:
+			self.status = status
 
 
 	

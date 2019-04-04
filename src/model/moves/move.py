@@ -1,10 +1,10 @@
 from src.model.damagecalculator import DamageCalculator
+from src.model.status import StatusType
 
 from abc import ABC, abstractmethod
 from typing import Union, Dict
 from enum import Enum, auto
-
-
+from random import random
 
 
 class MoveCategory(Enum):
@@ -143,7 +143,32 @@ class MultipleMove(Move):
                 targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
 
            
-                
+
+class StatusMove(SingleMove):
+
+    def __init__(self, moveName:str, accuracy:int, 
+        basePower:int, category:str, pp:int, priority:int,
+        isZ:bool, critRatio:int, moveType,
+        scaleWith, onUser,
+        onTarget, status,defendsOn=None):
+
+        super().__init__(self, moveName, accuracy, 
+        basePower, category, pp, priority,
+        isZ, critRatio, moveType, scaleWith,
+        onUser, onTarget, defendsOn)
+        self.status = status
+
+    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather, field):
+        targetPokemon = targetPokemons[indexTarget]
+        damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
+        targetPokemon.stats.decreaseHP(damage)
+
+        if random() <= self.accuracy:
+            targetPokemon.applyStatus(self.status)
+
+
+
+                    
 
 
 class MoveFactory:
