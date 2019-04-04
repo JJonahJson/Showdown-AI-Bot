@@ -38,8 +38,8 @@ class Pokemon:
 
 	"""Methods that apply a move
 	"""
-	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather):
-		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather)
+	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather, field):
+		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather, field)
 
 
 	

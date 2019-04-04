@@ -1,5 +1,5 @@
 from src.model.stats import StatsType
-from src.model.field import Weather
+from src.model.field import Weather, Field
 from src.model.pokemon import Pokemon
 from src.model.moves.secondaryeffect import SecondaryEffect
 from src.model.field import BattleField
@@ -44,3 +44,12 @@ class WeatherAbility(Ability):
           
     def activate(self, field:BattleField, side:int):
         field.weather = self.weather
+
+    
+class FieldAbility(Ability):
+    def __init__(self, name:str, fieldType: Field):
+        self.name = name
+        self.field = fieldType
+
+    def activate(self, field:BattleField, side:int):
+        field.field = self.field

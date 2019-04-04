@@ -98,9 +98,9 @@ class SingleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, casterPokemon, targetPokemons:Dict, indexTarget:int, weather):
+    def invokeMove(self, casterPokemon, targetPokemons:Dict, indexTarget:int, weather, field):
         targetPokemon = targetPokemons[indexTarget]
-        damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
+        damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
         targetPokemon.stats.decreaseHP(damage)
 
         # TODO Insert the damage  calculation that the move does
@@ -130,10 +130,10 @@ class MultipleMove(Move):
         onUser, onTarget, defendsOn)
 
     
-    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather):
+    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather, field):
         # TODO Insert the damage calculation that the move does
         for targetPokemon in targetPokemons.items():
-            damage = DamageCalculator.calculate(weather, casterPokemon, self, targetPokemon)
+            damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
             targetPokemon.stats.decreaseHP(damage)
 
             if self.onUser:

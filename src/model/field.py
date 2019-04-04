@@ -22,6 +22,12 @@ class Field(Enum):
     Misty = auto()
     Normal = auto()
 
+
+class SpeedCriterion(Enum):
+    Normal = False
+    TrickRoom = True
+
+
 """Represents a battle field
 """
 class BattleField():
@@ -29,13 +35,13 @@ class BattleField():
     def __init__(self, active1,active2,inactive1,inactive2):
         self.weather = Weather.Normal
         self.field = Field.Normal
-        #TODO TERRAIN
+        self.speedControl = SpeedCriterion.Normal
         self.terrain = None
         self.inactivePokemonSide1 = inactive1
         self.inactivePokemonSide2 = inactive2
         self.activePokemonSide1 = active1
         self.activePokemonSide2 = active2
-        self.teoreticalOrder = lambda active1,active2: sorted(list(active1)+list(active2), key=lambda pokemon: pokemon.stats[StatsType.Speed])
+        self.teoreticalOrder = lambda active1,active2: sorted(list(active1)+list(active2), key=lambda pokemon: pokemon.stats[StatsType.Speed], reverse=self.speedControl)
 
     
     """Method for switch in a pokemon
