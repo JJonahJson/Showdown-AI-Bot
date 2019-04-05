@@ -71,6 +71,9 @@ class Move(ABC):
     def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int):
         pass
 
+    def __lt__(self, otherMove):
+        return self.priority > otherMove.priority
+
     def calculateBasePower(self):
         return self.basePower * self.powerMultiply
     
@@ -166,9 +169,6 @@ class StatusMove(SingleMove):
         if random() <= self.accuracy:
             targetPokemon.applyStatus(self.status)
 
-
-
-                    
 
 
 class MoveFactory:

@@ -1,5 +1,6 @@
 from src.model.status import StatusType
 from src.model.item import Item
+from src.model.stats import StatsType
 
 from typing import Dict, List
 
@@ -45,6 +46,8 @@ class Pokemon:
 		if status is not StatusType.Normal:
 			self.status = status
 
-
-	
+	"""More speed 
+	"""
+	def __lt__(self, otherPokemon):
+		return self.stats[StatsType.Speed] > otherPokemon.stats[StatsType.Speed]
 	
