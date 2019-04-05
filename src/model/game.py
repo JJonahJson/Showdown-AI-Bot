@@ -11,6 +11,8 @@ class Action():
     def __lt__(self, otherAction):
         if self.action[Action.MOVE] < otherAction.action[Action.MOVE]:
             return True
+        elif self.action[Action.MOVE] > otherAction.action[Action.MOVE]:
+            return False
         else:
             return self.action[Action.POKEMON] < otherAction[Action.POKEMON]
 
