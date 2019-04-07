@@ -17,7 +17,8 @@ class MoveStatus(Enum):
     Available = auto()
 
 class Move(ABC):
-    """This class represents a move of a pokemon
+    """
+    This class represents a move of a pokemon
     Args:
         moveName (str): The name of the move
         accuracy (int) or (bool): The accuracy of the move, if true the move is secured to hit.
@@ -33,6 +34,7 @@ class Move(ABC):
         onTarget (SecondaryEffect): SecondaryEffect of the move
         powerMultiply (int): Used for the items that enhance the damage of a move
         isLocked (boolean): if the move is locked or not
+
     """
     
     def __init__(self, moveName:str, accuracy:int, 
@@ -62,13 +64,14 @@ class Move(ABC):
         else:
             self.defendsOn = defendsOn
     
-    """
-    Args:
-        casterPokemon(Pokemon): the pokemon that does the move
-        targetPokemon(Pokemon): the pokemon hit by the move
-    """
     @abstractmethod
     def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int):
+        """
+        Args:
+        casterPokemon(Pokemon): the pokemon that does the move
+        targetPokemon(Pokemon): the pokemon hit by the move
+
+        """
         pass
 
     def __lt__(self, otherMove):
@@ -87,6 +90,7 @@ class SingleMove(Move):
     """
     Subclass of the Move class.
     It represents a move with only one target.
+
     """
 
     def __init__(self, moveName:str, accuracy:int, 
@@ -119,6 +123,7 @@ class MultipleMove(Move):
     """
     Subclass of the Move class.
     It represents a move with multiple targets.
+
     """
 
     def __init__(self, moveName:str, accuracy:int, 
@@ -172,8 +177,7 @@ class StatusMove(SingleMove):
 
 
 class MoveFactory:
-    """Factory for the Move class hierarchy.
-    """
+    """Factory for the Move class hierarchy."""
     subclasses = {
         'single': SingleMove,
         'multiple': MultipleMove
@@ -181,12 +185,12 @@ class MoveFactory:
 
     @staticmethod
     def CreateMove(target:str,self, moveName:str, accuracy:int, 
-        basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType,
-        scaleWith, onUser,
-        onTarget, defendsOn=None) -> Union[SingleMove, MultipleMove]:
+	basePower:int, category:str, pp:int, priority:int,
+	isZ:bool, critRatio:int, moveType,
+	scaleWith, onUser,
+	onTarget, defendsOn=None) -> Union[SingleMove, MultipleMove]:
 
-        return MoveFactory.subclasses[target](moveName, 
-        accuracy, basePower, category,
-        pp, priority,isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget, defendsOn)
+	return MoveFactory.subclasses[target](moveName, 
+	accuracy, basePower, category,
+	pp, priority,isZ, critRatio, moveType, scaleWith,
+	onUser, onTarget, defendsOn)

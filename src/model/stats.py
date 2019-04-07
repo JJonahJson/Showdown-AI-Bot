@@ -1,10 +1,9 @@
 from typing import Tuple
 from enum import Enum, auto
 
-"""
-Enum class which contains stats' types
-"""
+
 class  StatsType(Enum):
+	"""Enum class which contains stats' types"""
 	HP = auto()
 	Attack= auto()
 	Defense = auto()
@@ -14,14 +13,10 @@ class  StatsType(Enum):
 	Accuracy = auto()
 	Evasion = auto()
 
-"""
-This class contains pokemon's statistics and methods to  change them.
-"""
 class Stats:
+	"""This class contains pokemon's statistics and methods to  change them."""
 
-	"""
-	Multipliers for statistics changes
-	"""
+	"""Multipliers for statistics changes"""
 	multipliers = {
 		-6: 0.25,
 		-5: 0.29,
@@ -38,9 +33,7 @@ class Stats:
 		6: 4
 	}
 
-	"""
-	Multipliers for accuracy and evasion changes
-	"""
+	"""Multipliers for accuracy and evasion changes	"""
 	multipliersAE = {
 		-6: 0.33,
 		-5: 0.38,
@@ -79,7 +72,7 @@ class Stats:
 			StatsType.Accuracy: 0,
 			StatsType.Evasion: 0
 		}
-
+		#Initial value of each statistics' volatile multiplier
 		self.voltatileMul = {
 			StatsType.Attack: 1,
 			StatsType.Defense: 1,
@@ -88,13 +81,11 @@ class Stats:
 			StatsType.Accuracy: 1,
 			StatsType.Evasion: 1
 		}
-
 		#Initial value of the damage
 		self.damage = 0
 
-	"""Changes the multipliers from -6 to 6, these are all set to 0 at the start
-	"""
 	def modify(self, type: StatsType, quantity:int):
+		"""Changes the multipliers of the specified stat from -6 to 6, these are all set to 0 at the start"""
 		if (self.mulStats[type] + quantity) > 6:
 			self.mulStats[type] = 6
 		elif (self.mulStats[type] + quantity) < -6:
@@ -102,38 +93,36 @@ class Stats:
 		else:
 			self.mulStats[type] += quantity
 	
-	"""Increase Pokemon's HP by decreasing the damage
-	"""
 	def increaseHP(self, quantity:int):
+		"""Increase Pokemon's HP by decreasing the damage"""
 		if(self.damage - quantity) < 0:
 			self.damage = 0
 		else:
 			self.damage -= quantity
 
-	"""Decrease Pokemon's HP by increasing the damage
-	"""
 	def decreaseHP(self, quantity:int):
+		"""Decrease Pokemon's HP by increasing the damage"""
 		if (self.damage + quantity) > self.baseStats[StatsType.HP]:
 			self.damage = self.baseStats[StatsType.HP]
 		else:
 			self.damage += quantity
 	
-	"""Returns the requested statistic eventually modified 
-	"""
 	def getActual(self, type: StatsType) ->int:
+		"""Returns the requested statistic eventually modified"""
 		if type is StatsType.Accuracy or type is StatsType.Evasion:
 			return  self.baseStats[type] * self.multipliersAE[self.mulStats[type]] * self.voltatileMul[type]
 		else:
 			return self.baseStats[type] * self.multipliers[self.mulStats[type]] * self.voltatileMul[type]
 	
-	"""Returns Pokemon's actual HP value by subtracting the damage to the base HP
-	"""
 	def getActualHP(self)->int:
+		"""Returns Pokemon's actual HP value by subtracting the damage to the base HP"""
 		return self.baseStats[StatsType.HP] - self.damage
 
-	def addVolatileMul(self, statsType:StatsType, value:float):
+	def increaseVolatileMul(self, statsType:StatsType, value:float):
+		"""Increases the volatile multiplier of the specified stat by the given value"""
 		self.voltatileMul[statsType] *= value
 	
-	def removeVolatileMul(self, statsType:StatsType, value:float):
+	def decreaseVolatileMul(self, statsType:StatsType, value:float):
+		"""Decreases the volatile multiplier of the specified stat by the given value"""
 		self.voltatileMul[statsType] /= value
 	

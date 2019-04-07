@@ -1,9 +1,3 @@
-
-from src.model.status import StatusType
-from src.model.item import Item
-from src.model.stats import StatsType
-
-
 from typing import Dict, List
 
 class Pokemon:
@@ -23,7 +17,7 @@ class Pokemon:
 
 	"""
 
-	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, nonVolatileStatus:StatusType, volatileStatus:List[StatusType], item:Item, level:int):
+	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, nonVolatileStatus, volatileStatus:list, item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
@@ -37,24 +31,23 @@ class Pokemon:
 		self.moves = moves
 		self.damageOutputMultiplier = 1
 		self.damageInputMultiplier = 1
-		self.status = StatusType.Normal
 
-	"""Methods that returns all usable moves
-	"""
 	def getUsableMoves(self) ->List:
+		"""Methods that returns all usable moves"""
 		return {k:v for k,v in self.moves if v.isUsable()}
 
-	"""Methods that apply a move
-	"""
+	
 	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather, field):
+		"""Methods that apply a move"""
 		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather, field)
 
+	#Duplicato della classe status, vediamo se toglierlo
 	def applyStatus(self, status):
+		from src.model.status import StatusType
 		if status is not StatusType.Normal:
 			self.status = status
 
-	"""More speed 
-	"""
 	def __lt__(self, otherPokemon):
+		"""More speed"""
 		return self.stats[StatsType.Speed] > otherPokemon.stats[StatsType.Speed]
 	
