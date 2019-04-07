@@ -51,7 +51,8 @@ immune = {
 	StatusType.Frozen: [PokemonType.Ice],
 	StatusType.Burned: [PokemonType.Fire],
 	StatusType.Normal: [],
-	StatusType.Fainted: []
+	StatusType.Fainted: [],
+	StatusType.Asleep: []
 }
 
 class Status():
@@ -59,19 +60,19 @@ class Status():
 	def __init__(self, type:StatusType):
 		self.type = type
 
-	def applyNonVolatileStatus(self, status:Status, pokemon) -> bool:
+	def applyNonVolatileStatus(self, type: StatusType, pokemon) -> bool:
 		"""Method which applies a non volatile status, used also to specify when fainted, returns True if succeed, False instead"""
 		for pkmnType in pokemon.types:
-			if pkmnType in immune[type] or pokemon.nonVolatileStatus.type is not StatusType.Normal:
+			if pkmnType in immune[type] or (pokemon.nonVolatileStatus.type is not StatusType.Normal):
 				return	False
 		pokemon.nonVolatileStatus.type = type
 		return True
 	
-	def addVolatileStatus(self, status:Status, pokemon):
+	def addVolatileStatus(self, status, pokemon):
 		"""Method which adds a volatile status to pokemon's volatile status list"""
 		pokemon.volatileStatus.append(status)
 
-	def removeVolatileStatus(self, status:Status, pokemon):
+	def removeVolatileStatus(self, status, pokemon):
 		"""Method which removes a volatile status to pokemon's volatile status list"""
 		pokemon.volatileStatus.remove(status)
 	
