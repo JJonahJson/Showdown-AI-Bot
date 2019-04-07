@@ -1,10 +1,10 @@
-from src.model.stats import Stats
-from src.model.moves.move import Move
-from src.model.pokemontype import PokemonType
-from src.model.status import Status, StatusType
-from src.model.item import Item
 
-from typing import List
+from src.model.status import StatusType
+from src.model.item import Item
+from src.model.stats import StatsType
+
+
+from typing import Dict, List
 
 class Pokemon:
 	"""
@@ -22,7 +22,8 @@ class Pokemon:
 	moves(list) = pokemon's moves
 
 	"""
-	def __init__(self, name:str, types:List[PokemonType], gender:str, stats:Stats, moves: List[Move],abilities:list, weight:float, nonVolatileStatus:StatusType, volatileStatus:List[StatusType], item:Item, level:int):
+
+	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, nonVolatileStatus:StatusType, volatileStatus:List[StatusType], item:Item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
@@ -36,11 +37,24 @@ class Pokemon:
 		self.moves = moves
 		self.damageOutputMultiplier = 1
 		self.damageInputMultiplier = 1
+		self.status = StatusType.Normal
 
+	"""Methods that returns all usable moves
+	"""
+	def getUsableMoves(self) ->List:
+		return {k:v for k,v in self.moves if v.isUsable()}
 
-	def getUsableMoves(self) ->List[Move]:
-		return list(filter(lambda move: move.isUsable, self.moves))
+	"""Methods that apply a move
+	"""
+	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather, field):
+		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather, field)
 
+	def applyStatus(self, status):
+		if status is not StatusType.Normal:
+			self.status = status
 
-	
+	"""More speed 
+	"""
+	def __lt__(self, otherPokemon):
+		return self.stats[StatsType.Speed] > otherPokemon.stats[StatsType.Speed]
 	

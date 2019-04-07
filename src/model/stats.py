@@ -92,8 +92,7 @@ class Stats:
 		#Initial value of the damage
 		self.damage = 0
 
-	"""
-	Changes the multipliers from -6 to 6, these are all set to 0 at the start
+	"""Changes the multipliers from -6 to 6, these are all set to 0 at the start
 	"""
 	def modify(self, type: StatsType, quantity:int):
 		if (self.mulStats[type] + quantity) > 6:
@@ -103,8 +102,7 @@ class Stats:
 		else:
 			self.mulStats[type] += quantity
 	
-	"""
-	Increase Pokemon's HP by decreasing the damage
+	"""Increase Pokemon's HP by decreasing the damage
 	"""
 	def increaseHP(self, quantity:int):
 		if(self.damage - quantity) < 0:
@@ -112,8 +110,7 @@ class Stats:
 		else:
 			self.damage -= quantity
 
-	"""
-	Decrease Pokemon's HP by increasing the damage
+	"""Decrease Pokemon's HP by increasing the damage
 	"""
 	def decreaseHP(self, quantity:int):
 		if (self.damage + quantity) > self.baseStats[StatsType.HP]:
@@ -121,8 +118,7 @@ class Stats:
 		else:
 			self.damage += quantity
 	
-	"""
-	Returns the requested statistic eventually modified 
+	"""Returns the requested statistic eventually modified 
 	"""
 	def getActual(self, type: StatsType) ->int:
 		if type is StatsType.Accuracy or type is StatsType.Evasion:
@@ -130,18 +126,14 @@ class Stats:
 		else:
 			return self.baseStats[type] * self.multipliers[self.mulStats[type]] * self.voltatileMul[type]
 	
-	"""
-	Returns Pokemon's actual HP value by subtracting the damage to the base HP
+	"""Returns Pokemon's actual HP value by subtracting the damage to the base HP
 	"""
 	def getActualHP(self)->int:
 		return self.baseStats[StatsType.HP] - self.damage
 
 	def addVolatileMul(self, statsType:StatsType, value:float):
-		self.voltatileMul[statsType] * value
+		self.voltatileMul[statsType] *= value
 	
 	def removeVolatileMul(self, statsType:StatsType, value:float):
-		self.voltatileMul[statsType] / value
-
-
-
+		self.voltatileMul[statsType] /= value
 	

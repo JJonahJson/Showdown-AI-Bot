@@ -1,7 +1,3 @@
-from src.model.pokemon import Pokemon
-from src.model.pokemontype import PokemonType
-from src.model.stats import StatsType
-
 from enum import Enum, auto
 
 class StatusType(Enum):
@@ -59,7 +55,7 @@ class Status():
 
 	"""Method which applies a non volatile status, used also to specify when fainted, returns True if succeed, False instead
 	"""
-	def applyNonVolatileStatus(self, type:StatusType, pokemon:Pokemon) -> bool:
+	def applyNonVolatileStatus(self, type:StatusType, pokemon) -> bool:
 		for pkmnType in pokemon.types:
 			if pkmnType in immune[type]:
 				return	False
@@ -68,35 +64,35 @@ class Status():
 	
 	"""Method which adds a volatile status to pokemon's volatile status list
 	"""
-	def addVolatileStatus(self, type:StatusType, pokemon:Pokemon):
+	def addVolatileStatus(self, type:StatusType, pokemon):
 		pokemon.volatileStatus.append(type)
 
 	"""Method which removes a volatile status to pokemon's volatile status list
 	"""
-	def removeVolatileStatus(self, type:StatusType, pokemon:Pokemon):
+	def removeVolatileStatus(self, type:StatusType, pokemon):
 		pokemon.volatileStatus.remove(type)
 	
 	"""Method which applies changes to the damage output multiplier
 	"""
-	def addOutputEffect(self, pokemon:Pokemon, stat:Stats, value:float):
+	def addOutputEffect(self, pokemon, stat:Stats, value:float):
 		pokemon.damageOutputMultiplier *= value
 
 	"""Method which removes changes to the damage output multiplier
 	"""	
-	def removeOutputEffect(self, pokemon:Pokemon, value:float):
+	def removeOutputEffect(self, pokemon, value:float):
 		pokemon.damageOutputMultiplier /= value
 
 	"""Method which adds changes to the specified volatile stat
 	"""
-	def addVolatileStatMod(self, pokemon:Pokemon, type:StatsType, value:float):
+	def addVolatileStatMod(self, pokemon, type:StatsType, value:float):
 		pokemon.volatileStatus[type] *= value
 	
 	"""Method which removes changes to the specified volatile stat
 	"""
-	def removeVolatileStatMod(self, pokemon:Pokemon, type:StatsType, value:float):
+	def removeVolatileStatMod(self, pokemon, type:StatsType, value:float):
 		pokemon.volatileStatus[type] /= value
 
 	"""Method which decreases pokemon's hp based on a specified percentage
 	"""
-	def decreaseHP(self, pokemon:Pokemon, percentage: float):
+	def decreaseHP(self, pokemon, percentage: float):
 		pokemon.stats.damage = pokemon.stats.baseStats[StatsType.HP] * percentage
