@@ -2,7 +2,7 @@ import sys
 import json
 import requests
 
-import senders
+import src.senders
 
 
 async def log_in(websocket, challid, chall):
@@ -21,5 +21,5 @@ async def log_in(websocket, challid, chall):
                              'pass': password,
                              'challstr': challid + "%7C" + chall
                          })
-    await senders.sender(websocket, "", "/trn " + username + ",0," + json.loads(resp.text[1:])['assertion'])
-    await senders.sender(websocket, "", "/avatar 158")
+    await src.senders.sender(websocket, "", "/trn " + username + ",0," + json.loads(resp.text[1:])['assertion'])
+    await src.senders.sender(websocket, "", "/avatar 158")
