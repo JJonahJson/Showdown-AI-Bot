@@ -126,9 +126,9 @@ class Stats:
 	"""
 	def getActual(self, type: StatsType) ->int:
 		if type is StatsType.Accuracy or type is StatsType.Evasion:
-			return  self.baseStats[type] * self.multipliersAE[self.mulStats[type]]
+			return  self.baseStats[type] * self.multipliersAE[self.mulStats[type]] * self.voltatileMul[type]
 		else:
-			return self.baseStats[type] * self.multipliers[self.mulStats[type]]
+			return self.baseStats[type] * self.multipliers[self.mulStats[type]] * self.voltatileMul[type]
 	
 	"""
 	Returns Pokemon's actual HP value by subtracting the damage to the base HP
