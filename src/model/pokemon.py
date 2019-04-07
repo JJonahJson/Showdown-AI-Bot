@@ -1,6 +1,8 @@
+
 from src.model.status import StatusType
 from src.model.item import Item
 from src.model.stats import StatsType
+
 
 from typing import Dict, List
 
@@ -12,19 +14,24 @@ class Pokemon:
 	gender( str) = pokemon's gender (male, female or neutral)
 	stats (Stats) = actual pokemon's statistics
 	abilities (list) = list of possible pokemon's abilities
-	weight (int) = pokemon's weight which may influence some moves power
-	status(StatusType) = pokemon's status (poisoned, fainted, ecc.)
-	item(str) = pokemon's held item
+	weight (float) = pokemon's weight which may influence some moves power
+	nonVolatileStatus(StatusType) = pokemon's status (poisoned, fainted, ecc.)
+	volatileStatus(list) = pokemon's list of volatile Status (confused, attracted, ecc.)
+	item(Item) = pokemon's held item
 	level(int) = pokemon's level (from 1 to 100)
+	moves(list) = pokemon's moves
 
 	"""
-	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, status:StatusType, item:Item, level:int):
+
+	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, nonVolatileStatus:StatusType, volatileStatus:List[StatusType], item:Item, level:int):
 		self. name = name
 		self.types = types
 		self.gender = gender
 		self.stats = stats
 		self.abilities = abilities
 		self.weight = weight
+		self.nonVolatileStatus = nonVolatileStatus
+		self.volatileStatus = volatileStatus
 		self.item = item
 		self.level = level
 		self.moves = moves
