@@ -1,4 +1,6 @@
 from typing import Dict, List
+from model.stats import StatsType
+
 
 class Pokemon:
 	"""
@@ -32,17 +34,17 @@ class Pokemon:
 		self.damageOutputMultiplier = 1
 		self.damageInputMultiplier = 1
 
-	def getUsableMoves(self) ->List:
+	def get_usable_moves(self):
 		"""Methods that returns all usable moves"""
-		return {k:v for k,v in self.moves if v.isUsable()}
+		return {k: v for k, v in self.moves if v.isUsable()}
 
 	
-	def useMove(self, moveIndex:int, targets: Dict, targetIndex:int, weather, field):
+	def use_move(self, moveIndex:int, targets: Dict, targetIndex:int, weather, field):
 		"""Methods that apply a move"""
 		self.moves[moveIndex].invokeMove(self, targets, targetIndex, weather, field)
 
 	#Duplicato della classe status, vediamo se toglierlo
-	def applyStatus(self, status):
+	def apply_status(self, status):
 		from src.model.status import StatusType
 		if status is not StatusType.Normal:
 			self.status = status
@@ -50,4 +52,4 @@ class Pokemon:
 	def __lt__(self, otherPokemon):
 		"""More speed"""
 		return self.stats[StatsType.Speed] > otherPokemon.stats[StatsType.Speed]
-	
+

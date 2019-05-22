@@ -1,6 +1,4 @@
-from src.model.stats import StatsType
 from src.model.field import Weather, Field
-from src.model.pokemon import Pokemon
 from src.model.moves.secondaryeffect import SecondaryEffect
 from src.model.field import BattleField
 

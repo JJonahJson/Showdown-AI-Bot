@@ -108,7 +108,7 @@ class SingleMove(Move):
     def invokeMove(self, casterPokemon, targetPokemons:Dict, indexTarget:int, weather, field):
         targetPokemon = targetPokemons[indexTarget]
         damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
-        targetPokemon.stats.decreaseHP(damage)
+        targetPokemon.stats.decrease_hp(damage)
 
         # TODO Insert the damage  calculation that the move does
         # TODO Implement the move, when the merging with the pokemon model is done
@@ -142,7 +142,7 @@ class MultipleMove(Move):
         # TODO Insert the damage calculation that the move does
         for targetPokemon in targetPokemons.items():
             damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
-            targetPokemon.stats.decreaseHP(damage)
+            targetPokemon.stats.decrease_hp(damage)
 
             if self.onUser:
                 casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
@@ -169,10 +169,10 @@ class StatusMove(SingleMove):
     def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather, field):
         targetPokemon = targetPokemons[indexTarget]
         damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
-        targetPokemon.stats.decreaseHP(damage)
+        targetPokemon.stats.decrease_hp(damage)
 
         if random() <= self.accuracy:
-            targetPokemon.applyStatus(self.status)
+            targetPokemon.apply_status(self.status)
 
 
 

@@ -30,7 +30,7 @@ class Game():
         moveTurn = sorted(action1 + action2)
         for pokemon, move, target, player in moveTurn:
             # TODO Modeling as index or using the objects?!
-            self.battlefield.doMove(player, pokemon, move, target)
+            self.battlefield.do_move(player, pokemon, move, target)
         self.turnCounter += 1
         Game.triggerEnd()
     

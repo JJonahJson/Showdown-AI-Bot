@@ -7,3 +7,4 @@ src/model/description.md
 env/
 settings.json
 .env
+.idea/

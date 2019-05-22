@@ -1,7 +1,7 @@
 from src.model.pokemontype import PokemonType
 from src.model.stats import StatsType
-
 from enum import Enum, auto
+
 
 class StatusType(Enum):
 	"""Class that represents all possible statuses of a pokemon"""
@@ -22,6 +22,7 @@ class StatusType(Enum):
 	Fly = auto(),
 	Dig = auto(),
 	Flinched = auto()
+
 
 nonVolatile = {
 	StatusType.Normal: False,
@@ -54,9 +55,10 @@ immune = {
 	StatusType.Fainted: []
 }
 
+
 class Status():
 	"""Class that represents a pokemon's status and the methods applicables"""
-	def __init__(self, type:StatusType):
+	def __init__(self, type: StatusType):
 		self.type = type
 
 	def applyNonVolatileStatus(self, status:Status, pokemon) -> bool:

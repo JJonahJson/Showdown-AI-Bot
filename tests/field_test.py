@@ -15,7 +15,7 @@ class FieldTest(unittest.TestCase):
 		pokemon3 = Pokemon("Qwilfish",[pk.Water, pk.Poison], "Male", stats, None, None, None, None, None,None,50)
 		pokemon4 = Pokemon("Gyarados",[pk.Water, pk.Flying], "Male", stats, None, None, None, None, None, None,50)
 		battleField = BattleField({1:pokemon1, 2:pokemon2}, {1:pokemon3, 2:pokemon4}, {1:pokemon3, 2:pokemon4}, {1:pokemon1, 2:pokemon2})
-		battleField.switchPokemon(1,1,1)
+		battleField.switch_pokemon(1, 1, 1)
 
 		self.assertEqual(battleField.activePokemonSide1[1], pokemon3)
 		self.assertEqual(battleField.inactivePokemonSide1[1], pokemon1)
