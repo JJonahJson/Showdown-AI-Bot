@@ -1,4 +1,7 @@
-class Action():
+class Action:
+    """
+    Model class for an action
+    """
 
     POKEMON = 0
     MOVE = 1
@@ -9,6 +12,11 @@ class Action():
         self.action = (pokemon, move, target, player)
 
     def __lt__(self, otherAction):
+        """
+        Ordering method, order actions based on pokemon speed and priority
+        :param otherAction:
+        :return:
+        """
         if self.action[Action.MOVE] < otherAction.action[Action.MOVE]:
             return True
         elif self.action[Action.MOVE] > otherAction.action[Action.MOVE]:
@@ -16,32 +24,51 @@ class Action():
         else:
             return self.action[Action.POKEMON] < otherAction[Action.POKEMON]
 
-class Game():
+# TODO Implement switch
 
-    triggerAtTurnStarts = []
-    triggerAtTurnEnds = []
+class Game:
+    """
+    Model class for a game
+    """
+
+    turn_start = []
+    turn_end = []
 
     def __init__(self, battlefield):
         self.battlefield = battlefield
         self.turnCounter = 1
 
     def executeTurn(self, action1:list, action2:list):
-        Game.triggerStart()
+        """
+        Simulates a turn based on the actions passed as params
+        :param action1: Chosen actions for team1
+        :param action2: Chosen actions for team2
+        :return:
+        """
+        Game.trigger_start()
         moveTurn = sorted(action1 + action2)
         for pokemon, move, target, player in moveTurn:
             # TODO Modeling as index or using the objects?!
             self.battlefield.do_move(player, pokemon, move, target)
         self.turnCounter += 1
-        Game.triggerEnd()
+        Game.trigger_end()
     
-    # TODO Determinare i parametri dei trigger per queste funzioni "ad eventi" 
+    # TODO Determinare i parametri dei trigger per queste funzioni "ad eventi" ù
     @staticmethod
-    def triggerStart():
-        for function in Game.triggerAtTurnStarts:
+    def trigger_start():
+        """
+        Method that triggers the functions in turn_start
+        :return:
+        """
+        for function in Game.turn_start:
             function()
 
     @staticmethod
-    def triggerEnd():
-        for function in Game.triggerAtTurnEnds:
+    def trigger_end():
+        """
+        Method that triggers the functions in turn_end
+        :return:
+        """
+        for function in Game.turn_end:
             function()
         

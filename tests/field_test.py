@@ -20,6 +20,5 @@ class FieldTest(unittest.TestCase):
 		self.assertEqual(battleField.activePokemonSide1[1], pokemon3)
 		self.assertEqual(battleField.inactivePokemonSide1[1], pokemon1)
 
-
 	if __name__ == "__main__":
 		unittest.main()

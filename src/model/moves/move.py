@@ -1,5 +1,4 @@
 from src.model.damagecalculator import DamageCalculator
-from src.model.status import StatusType
 
 from abc import ABC, abstractmethod
 from typing import Union, Dict
