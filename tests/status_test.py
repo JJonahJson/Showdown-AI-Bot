@@ -1,11 +1,11 @@
 import unittest
 
 from src.model.pokemon import Pokemon
-from src.model.status import Status, StatusType, PokemonType as pk
 from src.model.stats import Stats
-
+from src.model.status import Status, StatusType, PokemonType as pk
 
 class StatusTest(unittest.TestCase):
+
 
     def __init__(self, *args, **kwargs):
         super(StatusTest, self).__init__(*args, **kwargs)

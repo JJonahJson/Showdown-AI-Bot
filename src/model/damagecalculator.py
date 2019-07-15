@@ -92,30 +92,34 @@ class FieldModifiers:
     modifiers = {
         (t.Psychic, f.Psychic): 1.5,
         (t.Electric, f.Electric): 1.5,
-        (t.Grass, f.Grass):1.5
+        (t.Grass, f.Grass): 1.5
     }
 
 
 class DamageCalculator:
     """This class contains a static method for damage calculation"""
     @staticmethod
-    def calculate(weather:w, field,user, move, target) -> int:
+    def calculate(weather: w, field, user, move, target) -> int:
+
 
         if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
             return 0
         else:
-            base_damage = (((10 + user.level*2) * user.stats[move.scaleWith] + move.calculateBasePower()) / 250 * target.stats[move.defendsOn]) + 2
+            base_damage = (((10 + user.level*2) * user.stats.get_actual(move.scaleWith) + move.calculateBasePower())
+                           / 250 *
+                           target.stats.get_actual(move.defends_on)) + 2
 
         # Try to get the multiplier based on the weather, if is not in the dict get '1'
-        mult = WeatherModifiers.modifiers.get((w, move.moveType), default=1)
-        terrain_mult = FieldModifiers.modifiers.get((move.moveType, field), default=1)
+        mult = WeatherModifiers.modifiers.get((weather, move.moveType), 1)
+        terrain_mult = FieldModifiers.modifiers.get((move.moveType, field), 1)
+
         roll = uniform(0.85, 1)
 
         # Multiple calculation
         for pkmnType in target.types:
             if move.moveType in TypeMultiplier.weakTo[pkmnType]:
                 mult *= 2
-            elif move.MoveType in TypeMultiplier.resistsTo[pkmnType]:
+            elif move.moveType in TypeMultiplier.resistsTo[pkmnType]:
                 mult *= 0.5
 
         return int(base_damage * mult * terrain_mult * user.damageOutputMultiplier * target.damageInputMultiplier * roll)
