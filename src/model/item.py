@@ -84,7 +84,7 @@ class MoveItem(Item):
     def remove_effect(self, pokemon):
         for move in pokemon.moves:
             if move.moveType is self.moveType:
-                move.moveType.removePowerMultiply(self.value)
+                move.moveType.removePowedo_moverMultiply(self.value)
 
 
 class DamageItem(Item):

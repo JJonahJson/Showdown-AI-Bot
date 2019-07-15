@@ -38,9 +38,9 @@ class Pokemon:
 		"""Methods that returns all usable moves"""
 		return {k: v for k, v in self.moves if v.isUsable()}
 
-	def use_move(self, moveIndex:int, target, weather, field):
+	def use_move(self, move_index: int, target, weather, field):
 		"""Methods that apply a move"""
-		self.moves[moveIndex].invokeMove(self, target, weather, field)
+		self.moves[move_index].invokeMove(self, target, weather, field)
 
 	#Duplicato della classe status, vediamo se toglierlo
 	def apply_status(self, status):
