@@ -1,5 +1,6 @@
 from typing import Dict
-from model.stats import StatsType
+from src.model.stats import StatsType
+from src.model.status import Status, StatusType
 
 
 class Pokemon:
@@ -41,6 +42,8 @@ class Pokemon:
 	def use_move(self, move_index: int, target, weather, field):
 		"""Methods that apply a move"""
 		self.moves[move_index].invokeMove(self, target, weather, field)
+		if target.stats.get_actual_hp() <= 0 :
+			Status.applyNonVolatileStatus(StatusType.Fainted, target)
 
 	#Duplicato della classe status, vediamo se toglierlo
 	def apply_status(self, status):
