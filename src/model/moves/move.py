@@ -89,7 +89,7 @@ class Move(ABC):
 
 class SingleMove(Move):
     """
-    Subclass of the Move class.
+    Subclasss of the Move class.
     It represents a move with only one target.
 
     """
