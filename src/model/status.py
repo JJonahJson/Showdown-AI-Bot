@@ -56,7 +56,6 @@ immune = {
     StatusType.Asleep: []
 }
 
-
 class Status:
     """Utility class with static methods which modify status and relative stats"""
 
@@ -114,3 +113,4 @@ class Status:
     def decrease_hp(pokemon, percentage: float):
         """Method which decreases pokemon's hp based on a specified percentage"""
         pokemon.stats.damage += pokemon.stats.baseStats[StatsType.HP] * percentage
+
