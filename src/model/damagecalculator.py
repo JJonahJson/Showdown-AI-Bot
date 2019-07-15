@@ -101,6 +101,7 @@ class DamageCalculator:
     @staticmethod
     def calculate(weather: w, field, user, move, target) -> int:
 
+
         if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
             return 0
         else:
@@ -111,6 +112,7 @@ class DamageCalculator:
         # Try to get the multiplier based on the weather, if is not in the dict get '1'
         mult = WeatherModifiers.modifiers.get((weather, move.moveType), 1)
         terrain_mult = FieldModifiers.modifiers.get((move.moveType, field), 1)
+
         roll = uniform(0.85, 1)
 
         # Multiple calculation

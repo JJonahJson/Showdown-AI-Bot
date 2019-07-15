@@ -1,6 +1,6 @@
-from typing import Dict
-from src.model.stats import StatsType
-from src.model.status import Status, StatusType
+from model.stats import StatsType, Stats
+from model.status import StatusType
+from model.item import Item
 
 
 class Pokemon:
@@ -20,7 +20,8 @@ class Pokemon:
 
 	"""
 
-	def __init__(self, name:str, types:list, gender, stats, moves: Dict,abilities:list, weight:float, nonVolatileStatus, volatileStatus:list, item, level:int):
+	def __init__(self, name: str, types: list, gender: str, stats: Stats, moves: Dict, abilities: list, weight: float,
+                 non_volatile_status: StatusType, volatile_status: list, item: Item, level: int):
 		self. name = name
 		self.types = types
 		self.gender = gender
