@@ -64,12 +64,12 @@ class BattleFieldSingle(BattleField):
 
     def switch_pokemon(self, player: int, pokemon_in: int, pokemon_out: int):
         if player == 1:
-            to_replace = pokemon_in
-            self.active_pokemon_bot = self.bench_bot[pokemon_in]
-            self.bench_bot[pokemon_out] = to_replace
+            to_replace = self.active_pokemon_bot
+            self.active_pokemon_bot = self.bench_bot[pokemon_in-1]
+            self.bench_bot[pokemon_in-1] = to_replace
         else:
-            to_replace = pokemon_in
-            self.active_pokemon_oppo = self.bench_oppo[pokemon_in]
-            self.bench_oppo[pokemon_out] = to_replace
+            to_replace = self.active_pokemon_oppo
+            self.active_pokemon_oppo = self.bench_oppo[pokemon_in-1]
+            self.bench_oppo[pokemon_in-1] = to_replace
 
 
