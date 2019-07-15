@@ -1,5 +1,4 @@
 from src.model.damagecalculator import DamageCalculator
-
 from abc import ABC, abstractmethod
 from typing import Union
 from enum import Enum, auto
