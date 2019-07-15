@@ -32,28 +32,27 @@ class BattleField():
     def __init__(self, active1, active2, inactive1, inactive2):
         self.weather = Weather.Normal
         self.field = Field.Normal
-        self.speedControl = SpeedCriterion.Normal
-        self.inactivePokemonSide1 = inactive1
-        self.inactivePokemonSide2 = inactive2
-        self.activePokemonSide1 = active1
-        self.activePokemonSide2 = active2
-    
+        self.speed_control = SpeedCriterion.Normal
+        self.inactive_pokemon_side1 = inactive1
+        self.inactive_pokemon_side2 = inactive2
+        self.active_pokemon_side1 = active1
+        self.active_pokemon_side2 = active2
+
     def switch_pokemon(self, player: int, index_in: int, index_out: int):
         """Method for switch in a pokemon"""
         if player == 1:
             # Reset Buffs
-            for statType in StatsType:
-                self.activePokemonSide1[index_out].stats.mulStats[statType] = 0
-            self.activePokemonSide1[index_out], self.inactivePokemonSide1[index_in] = self.inactivePokemonSide1[index_in], self.activePokemonSide1[index_out]
+            for stat_type in StatsType:
+                self.active_pokemon_side1[index_out].stats.mul_stats[stat_type] = 0
+            self.active_pokemon_side1[index_out], self.inactive_pokemon_side1[index_in] = self.inactive_pokemon_side1[index_in], self.active_pokemon_side1[index_out]
         else:
-            for statType in StatsType:
-                self.activePokemonSide1[index_out].stats.mulStats[statType] = 0
-            self.activePokemonSide2[index_out], self.inactivePokemonSide2[index_in] = self.inactivePokemonSide2[index_in], self.activePokemonSide2[index_out]
+            for stat_type in StatsType:
+                self.active_pokemon_side1[index_out].stats.mul_stats[stat_type] = 0
+            self.active_pokemon_side2[index_out], self.inactive_pokemon_side2[index_in] = self.inactive_pokemon_side2[index_in], self.active_pokemon_side2[index_out]
 
     def do_move(self, player:int, pkmn_ci_ndex: int, move_index: int, pkmn_ti_ndex: int):
         """Method to execute a move"""
         if player == 1:
-            self.activePokemonSide1[pkmn_ci_ndex].do_move(move_index, self.activePokemonSide2, pkmn_ti_ndex, self.weather)
+            self.active_pokemon_side1[pkmn_ci_ndex].do_move(move_index, self.active_pokemon_side2, pkmn_ti_ndex, self.weather)
         else:
-            self.activePokemonSide2[pkmn_ci_ndex].do_move(move_index, self.activePokemonSide1, pkmn_ti_ndex, self.weather)
-
+            self.active_pokemon_side2[pkmn_ci_ndex].do_move(move_index, self.active_pokemon_side1, pkmn_ti_ndex, self.weather)

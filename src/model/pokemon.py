@@ -45,12 +45,6 @@ class Pokemon:
         """Methods that apply a move"""
         self.moves[move_index].invokeMove(self, targets, target_index, weather, field)
 
-    # Duplicato della classe status, vediamo se toglierlo
-    def apply_status(self, status):
-        from src.model.status import StatusType
-        if status is not StatusType.Normal:
-            self.status = status
-
     def __lt__(self, other_pokemon):
         """More speed"""
         return self.stats[StatsType.Speed] > other_pokemon.stats[StatsType.Speed]

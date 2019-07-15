@@ -2,6 +2,7 @@ from src.model.stats import StatsType
 
 from abc import ABC, abstractmethod
 
+
 class Item(ABC):
     """
     Abstract class that represents a generic item in game.
@@ -12,7 +13,7 @@ class Item(ABC):
 
     def __init__(self, name):
         self.name = name
-  
+
     @abstractmethod
     def add_effect(self, pokemon):
         """Abstract method used to implement the effect of the item"""
@@ -51,14 +52,14 @@ class StatsItem(Item):
 
     def __init__(self, name, stats_type, value: float):
         super().__init__(self, name)
-        self.statsType = stats_type
+        self.stats_type = stats_type
         self.value = value
-    
+
     def add_effect(self, pokemon):
-        pokemon.stats.addVolitileMul(self.statsType, self.value)
-    
+        pokemon.stats.addVolitileMul(self.stats_type, self.value)
+
     def remove_effect(self, pokemon):
-        pokemon.stats.removeVolitileMul(self.statsType, self.value)
+        pokemon.stats.removeVolitileMul(self.stats_type, self.value)
 
 
 class MoveItem(Item):
@@ -71,20 +72,20 @@ class MoveItem(Item):
 
     """
 
-    def __init__(self, name, moveType, value: float):
+    def __init__(self, name, move_type, value: float):
         super().__init__(self, name)
-        self.moveType = moveType
+        self.move_type = move_type
         self.value = value
-    
+
     def add_effect(self, pokemon):
         for move in pokemon.moves:
-            if move.moveType is self.moveType:
-                move.moveType.addPowerMultiply(self.value)
-    
+            if move.move_type is self.move_type:
+                move.move_type.addPowerMultiply(self.value)
+
     def remove_effect(self, pokemon):
         for move in pokemon.moves:
-            if move.moveType is self.moveType:
-                move.moveType.removePowerMultiply(self.value)
+            if move.move_type is self.move_type:
+                move.move_type.removePowerMultiply(self.value)
 
 
 class DamageItem(Item):
@@ -101,10 +102,10 @@ class DamageItem(Item):
         self.value = value
 
     def add_effect(self, pokemon):
-        pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
+        pokemon.damage_output_multiplier = pokemon.damage_output_multiplier * self.value
 
     def remove_effect(self, pokemon):
-        pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
+        pokemon.damage_output_multiplier = pokemon.damage_output_multiplier * self.value
 
 
 class ChoiceItem(StatsItem):
@@ -116,17 +117,19 @@ class ChoiceItem(StatsItem):
     value (float): Multiplier of the stat
     
     """
+
     def __init__(self, name, stats, value: float):
         super().__init__(name, stats, value)
-    
+
     def add_lock(self, pokemon, move):
-        for toLock in pokemon.moves:
-            if toLock != move:
-                toLock.isUsable = False
-    
+        for to_lock in pokemon.moves:
+            if to_lock != move:
+                to_lock.isUsable = False
+
     def remove_lock(self, pokemon, move):
-        for toLock in pokemon.moves:
-            toLock.isUsable = True
+        for to_lock in pokemon.moves:
+            to_lock.isUsable = True
+
 
 class HealingBerry(Item):
     """
@@ -145,6 +148,5 @@ class HealingBerry(Item):
 
     def activate(self, pokemon):
         # If under the threshold then activate
-        if pokemon.stats.get_actual_hp() <= (pokemon.stats.baseStats[StatsType.HP] * (self.threshold / 100)):
-            pokemon.stats.increase_hp(pokemon.stats.baseStats[StatsType.HP] * (self.value / 100))
-
+        if pokemon.stats.get_actual_hp() <= (pokemon.stats.base_stats[StatsType.HP] * (self.threshold / 100)):
+            pokemon.stats.increase_hp(pokemon.stats.base_stats[StatsType.HP] * (self.value / 100))
