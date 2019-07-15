@@ -61,7 +61,7 @@ class Status():
 	def __init__(self, type: StatusType):
 		self.type = type
 
-	def applyNonVolatileStatus(self, status:Status, pokemon) -> bool:
+	def applyNonVolatileStatus(self, pokemon) -> bool:
 		"""Method which applies a non volatile status, used also to specify when fainted, returns True if succeed, False instead"""
 		for pkmnType in pokemon.types:
 			if pkmnType in immune[type] or pokemon.nonVolatileStatus.type is not StatusType.Normal:
@@ -69,11 +69,11 @@ class Status():
 		pokemon.nonVolatileStatus.type = type
 		return True
 	
-	def addVolatileStatus(self, status:Status, pokemon):
+	def addVolatileStatus(self, status: StatusType, pokemon):
 		"""Method which adds a volatile status to pokemon's volatile status list"""
 		pokemon.volatileStatus.append(status)
 
-	def removeVolatileStatus(self, status:Status, pokemon):
+	def removeVolatileStatus(self, status: StatusType, pokemon):
 		"""Method which removes a volatile status to pokemon's volatile status list"""
 		pokemon.volatileStatus.remove(status)
 	
@@ -85,11 +85,11 @@ class Status():
 		"""Method which removes changes to the damage output multiplier	"""	
 		pokemon.damageOutputMultiplier /= value
 
-	def addVolatileStatMod(self, pokemon, type:StatsType, value:float):
+	def addVolatileStatMod(self, pokemon, type: StatsType, value:float):
 		"""Method which adds changes to the specified volatile stat"""
 		pokemon.stats.volatileMul[type] *= value
 	
-	def removeVolatileStatMod(self, pokemon, type:StatsType, value:float):
+	def removeVolatileStatMod(self, pokemon, type: StatsType, value:float):
 		"""Method which removes changes to the specified volatile stat"""
 		pokemon.stats.volatileMul[type] /= value
 
