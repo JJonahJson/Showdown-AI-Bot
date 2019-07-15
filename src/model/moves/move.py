@@ -1,8 +1,7 @@
 from src.model.damagecalculator import DamageCalculator
-from src.model.status import StatusType
 
 from abc import ABC, abstractmethod
-from typing import Union, Dict
+from typing import Union
 from enum import Enum, auto
 from random import random
 
@@ -36,12 +35,12 @@ class Move(ABC):
         isLocked (boolean): if the move is locked or not
 
     """
-    
-    def __init__(self, moveName:str, accuracy:int, 
-        basePower:int, category, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType,
-        moveCategory, scaleWith, onUser,
-        onTarget, defendsOn=None):
+
+    def __init__(self, moveName:str, accuracy:int,
+                 basePower:int, category, pp:int, priority:int,
+                 isZ:bool, critRatio:int, moveType,
+                 moveCategory, scaleWith, onUser,
+                 onTarget, defendsOn=None):
 
         self.moveName = moveName
         self.accuracy = accuracy
@@ -63,9 +62,9 @@ class Move(ABC):
             self.defendsOn = self.scaleWith
         else:
             self.defendsOn = defendsOn
-    
+
     @abstractmethod
-    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int):
+    def invokeMove(self, caster_pokemon, target_pokemon, weather, field):
         """
         Args:
         casterPokemon(Pokemon): the pokemon that does the move
@@ -79,12 +78,13 @@ class Move(ABC):
 
     def calculateBasePower(self):
         return self.basePower * self.powerMultiply
-    
+
     def addPowerMultiply(self, value:float):
         self.powerMultiply = self.powerMultiply * value
 
     def removePowerMultiply(self, value:float):
         self.powerMultiply = self.powerMultiply / value
+
 
 class SingleMove(Move):
     """
@@ -93,31 +93,27 @@ class SingleMove(Move):
 
     """
 
-    def __init__(self, moveName:str, accuracy:int, 
-        basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType,
-        scaleWith, onUser,
-        onTarget, defendsOn=None):
+    def __init__(self, moveName:str, accuracy:int,
+                 basePower:int, category:str, pp:int, priority:int,
+                 isZ:bool, critRatio:int, moveType,
+                 scaleWith, onUser,
+                 onTarget, defendsOn=None):
 
-        super().__init__(self, moveName, accuracy, 
-        basePower, category, pp, priority,
-        isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget, defendsOn)
+        super().__init__(self, moveName, accuracy,
+                         basePower, category, pp, priority,
+                         isZ, critRatio, moveType, scaleWith,
+                         onUser, onTarget, defendsOn)
 
-    
-    def invokeMove(self, casterPokemon, targetPokemons:Dict, indexTarget:int, weather, field):
-        targetPokemon = targetPokemons[indexTarget]
-        damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
-        targetPokemon.stats.decrease_hp(damage)
+    def invokeMove(self, caster_pokemon, target_pokemon, weather, field):
+        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
+        target_pokemon.stats.decrease_hp(damage)
 
-        # TODO Insert the damage  calculation that the move does
-        # TODO Implement the move, when the merging with the pokemon model is done
         if self.onUser:
-            casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
+            caster_pokemon.stats.modify(self.onUser.stat, self.onUser.value)
 
         if self.onTarget:
-            targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
-        
+            target_pokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
+
 
 class MultipleMove(Move):
     """
@@ -126,53 +122,48 @@ class MultipleMove(Move):
 
     """
 
-    def __init__(self, moveName:str, accuracy:int, 
-        basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType,
-        scaleWith, onUser,
-        onTarget, defendsOn=None):
+    def __init__(self, moveName:str, accuracy:int,
+                 basePower:int, category:str, pp:int, priority:int,
+                 isZ:bool, critRatio:int, moveType,
+                 scaleWith, onUser,
+                 onTarget, defendsOn=None):
 
-        super().__init__(self, moveName, accuracy, 
-        basePower, category, pp, priority,
-        isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget, defendsOn)
+        super().__init__(self, moveName, accuracy,
+                         basePower, category, pp, priority,
+                         isZ, critRatio, moveType, scaleWith,
+                         onUser, onTarget, defendsOn)
 
-    
-    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather, field):
-        # TODO Insert the damage calculation that the move does
-        for targetPokemon in targetPokemons.items():
-            damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
+    def invokeMove(self, caster_pokemon, target_pokemon, weather, field):
+        for targetPokemon in target_pokemon.items():
+            damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, targetPokemon)
             targetPokemon.stats.decrease_hp(damage)
 
             if self.onUser:
-                casterPokemon.stats.modify(self.onUser.stat, self.onUser.value)
+                caster_pokemon.stats.modify(self.onUser.stat, self.onUser.value)
 
             if self.onTarget:
                 targetPokemon.stats.modify(self.onTarget.stat, self.onTarget.value)
 
-           
 
 class StatusMove(SingleMove):
 
-    def __init__(self, moveName:str, accuracy:int, 
-        basePower:int, category:str, pp:int, priority:int,
-        isZ:bool, critRatio:int, moveType,
-        scaleWith, onUser,
-        onTarget, status,defendsOn=None):
+    def __init__(self, moveName:str, accuracy:int,
+                 basePower:int, category:str, pp:int, priority:int,
+                 isZ:bool, critRatio:int, moveType,
+                 scaleWith, onUser, onTarget, status,defendsOn=None):
 
-        super().__init__(self, moveName, accuracy, 
-        basePower, category, pp, priority,
-        isZ, critRatio, moveType, scaleWith,
-        onUser, onTarget, defendsOn)
+        super().__init__(self, moveName, accuracy,
+                         basePower, category, pp, priority,
+                         isZ, critRatio, moveType, scaleWith,
+                         onUser, onTarget, defendsOn)
         self.status = status
 
-    def invokeMove(self, casterPokemon, targetPokemons: Dict, indexTarget:int,weather, field):
-        targetPokemon = targetPokemons[indexTarget]
-        damage = DamageCalculator.calculate(weather, field,casterPokemon, self, targetPokemon)
-        targetPokemon.stats.decrease_hp(damage)
+    def invokeMove(self, caster_pokemon, target_pokemon, weather, field):
+        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
+        target_pokemon.stats.decrease_hp(damage)
 
         if random() <= self.accuracy:
-            targetPokemon.apply_status(self.status)
+            target_pokemon.apply_status(self.status)
 
 
 
@@ -184,13 +175,13 @@ class MoveFactory:
     }
 
     @staticmethod
-    def CreateMove(target:str,self, moveName:str, accuracy:int, 
-	basePower:int, category:str, pp:int, priority:int,
-	isZ:bool, critRatio:int, moveType,
-	scaleWith, onUser,
-	onTarget, defendsOn=None) -> Union[SingleMove, MultipleMove]:
+    def CreateMove(target:str,self, moveName:str, accuracy:int,
+                   basePower:int, category:str, pp:int, priority:int,
+                   isZ:bool, critRatio:int, moveType,
+                   scaleWith, onUser,
+                   onTarget, defendsOn=None) -> Union[SingleMove, MultipleMove]:
 
-	return MoveFactory.subclasses[target](moveName, 
-	accuracy, basePower, category,
-	pp, priority,isZ, critRatio, moveType, scaleWith,
-	onUser, onTarget, defendsOn)
+        return MoveFactory.subclasses[target](moveName,
+                                              accuracy, basePower, category,
+                                              pp, priority, isZ, critRatio, moveType, scaleWith,
+                                              onUser, onTarget, defendsOn)

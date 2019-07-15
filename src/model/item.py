@@ -50,7 +50,7 @@ class StatsItem(Item):
     """
 
     def __init__(self, name, stats_type, value: float):
-        super().__init__(self, name)
+        super().__init__(name)
         self.statsType = stats_type
         self.value = value
     
@@ -72,7 +72,7 @@ class MoveItem(Item):
     """
 
     def __init__(self, name, moveType, value: float):
-        super().__init__(self, name)
+        super().__init__(name)
         self.moveType = moveType
         self.value = value
     
@@ -97,7 +97,7 @@ class DamageItem(Item):
     """
 
     def __init__(self, name, value: float):
-        super().__init__(self, name)
+        super().__init__(name)
         self.value = value
 
     def add_effect(self, pokemon):
@@ -127,6 +127,7 @@ class ChoiceItem(StatsItem):
     def remove_lock(self, pokemon, move):
         for toLock in pokemon.moves:
             toLock.isUsable = True
+
 
 class HealingBerry(Item):
     """
