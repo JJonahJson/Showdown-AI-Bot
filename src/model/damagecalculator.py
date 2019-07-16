@@ -101,7 +101,6 @@ class DamageCalculator:
     @staticmethod
     def calculate(weather: w, field, user, move, target) -> int:
 
-
         if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
             return 0
         else:
