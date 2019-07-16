@@ -1,6 +1,8 @@
 from src.model.pokemontype import PokemonType as t
 from src.model.field import Weather as w
 from src.model.field import Field as f
+from src.model.stats import StatsType
+from src.model.status import StatusType
 
 from random import uniform
 
@@ -121,6 +123,10 @@ class DamageCalculator:
             elif move.move_type in TypeMultiplier.resistsTo[pkmn_type]:
                 mult *= 0.5
 
+        burn_multiplier = 1
+        if user.non_volatile_status == StatusType.Burned and move.scale_with == StatsType.Attack:
+            burn_multiplier = 0.5
+
         return int(base_damage * mult * terrain_mult * user.damage_output_multiplier * target.damage_input_multiplier *
-                   roll)
+                   roll * burn_multiplier)
 
