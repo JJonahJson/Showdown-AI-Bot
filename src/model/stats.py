@@ -13,6 +13,17 @@ class StatsType(Enum):
     Evasion = auto()
 
 
+    to_string = {
+        "att": Attack,
+        "def": Defense,
+        "spa": SpecialAttack,
+        "spd": SpecialDefense,
+        "spe": Speed,
+        "acc": Accuracy,
+        "eva": Evasion
+    }
+
+
 class Stats:
     """This class contains pokemon's statistics and methods to  change them."""
 
