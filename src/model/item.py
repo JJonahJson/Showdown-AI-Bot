@@ -56,10 +56,10 @@ class StatsItem(Item):
         self.value = value
 
     def add_effect(self, pokemon):
-        pokemon.stats.addVolitileMul(self.stats_type, self.value)
+        pokemon.stats.add_volatile_mul(self.stats_type, self.value)
 
     def remove_effect(self, pokemon):
-        pokemon.stats.removeVolitileMul(self.stats_type, self.value)
+        pokemon.stats.remove_volatile_mul(self.stats_type, self.value)
 
 
 class MoveItem(Item):
@@ -80,12 +80,12 @@ class MoveItem(Item):
     def add_effect(self, pokemon):
         for move in pokemon.moves:
             if move.move_type is self.move_type:
-                move.move_type.addPowerMultiply(self.value)
+                move.move_type.add_power_multiply(self.value)
 
     def remove_effect(self, pokemon):
         for move in pokemon.moves:
             if move.move_type is self.move_type:
-                move.move_type.removePowerMultiply(self.value)
+                move.move_type.remove_power_multiply(self.value)
 
 
 class DamageItem(Item):

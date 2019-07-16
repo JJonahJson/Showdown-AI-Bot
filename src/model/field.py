@@ -71,6 +71,7 @@ class BattleFieldSingle(BattleField):
         :return:
         """
         if player == 1:
+
             self.active_pokemon_bot.use_move(move_index, self.active_pokemon_oppo,
                                              self.weather, self.field)
         else:
