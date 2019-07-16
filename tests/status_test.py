@@ -12,6 +12,8 @@ class StatusTest(unittest.TestCase):
         self.stat = Stats(100, 100, 100, 100, 100, 100)
         self.pokemon = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Male", self.stat, {}, [], 80.50,
                                StatusType.Normal, [], None, 50)
+        self.other_pokemon = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Female", self.stat, {}, [], 80.50,
+                               StatusType.Normal, [], None, 50)
 
     def test_apply_non_volatile_status(self):
         check = Status.apply_non_volatile_status(StatusType.Burned, self.pokemon)
@@ -26,11 +28,23 @@ class StatusTest(unittest.TestCase):
         self.assertNotIn(StatusType.Infatuated, self.pokemon.volatile_status)
         Status.add_volatile_status(StatusType.Infatuated, self.pokemon)
         self.assertIn(StatusType.Infatuated, self.pokemon.volatile_status)
+        check = Status.add_volatile_status(StatusType.Infatuated, self.pokemon)
+        self.assertEqual(False, check)
+
 
     def test_remove_volatile_status(self):
         Status.add_volatile_status(StatusType.Infatuated, self.pokemon)
         Status.remove_volatile_status(StatusType.Infatuated, self.pokemon)
         self.assertNotIn(StatusType.Infatuated, self.pokemon.volatile_status)
+
+    def test_apply_infatuation(self):
+        check=Status.apply_infatuation(self.pokemon, self.other_pokemon)
+        self.assertEqual(True, check)
+        check = Status.apply_infatuation(self.pokemon, self.other_pokemon)
+        self.assertEqual(False, check)
+        Status.remove_volatile_status(StatusType.Infatuated, self.pokemon)
+        check=Status.apply_infatuation(self.pokemon, self.pokemon)
+        self.assertEqual(False, check)
 
     if __name__ == "__main__":
         unittest.main()

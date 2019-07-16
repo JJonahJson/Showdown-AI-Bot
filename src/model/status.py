@@ -35,8 +35,8 @@ non_volatile = {
     StatusType.Flinched: False,
     StatusType.Confused: False,
     StatusType.Protected: False,
-    StatusType.Trapped: False,
-    StatusType.Endure: False,
+    StatusType.Trapped: False
+
 }
 
 immune = {
@@ -68,17 +68,44 @@ class Status:
         :param pokemon:
         :return: True if succeed, False instead
         """
+        if not non_volatile[status]:
+            return False
         for pkmn_type in pokemon.types:
             if pkmn_type in immune[status] or pokemon.non_volatile_status is not StatusType.Normal:
                 return False
         pokemon.non_volatile_status.type = status
+        Status.apply_status_effect[status](pokemon)
         return True
+
+    @staticmethod
+    def remove_non_volatile_status(target):
+        if target.non_volatile_status != StatusType.Normal:
+
+            if target.non_volatile_status == StatusType.Fainted:
+                return False
+
+            if target.non_volatile_status == StatusType.Asleep or target.non_volatile_status == StatusType.Frozen:
+                target.blocked = False
+
+            if target.non_volatile_status == StatusType.Paralyzed:
+                Status.add_volatile_stat_mod(target, StatsType.Speed, 0.5)
+
+            if target.non_volatile_status == StatusType.BPoisoned:
+                target.bad_poison_turn = 0
+
+            target.non_volatile_status = StatusType.Normal
+            return True
+        else:
+            return False
 
     @staticmethod
     def add_volatile_status(status: StatusType, pokemon):
         """Method which adds a volatile status to pokemon's volatile status list"""
         if non_volatile[status]:
             return False
+        if status in pokemon.volatile_status:
+            return False
+
         pokemon.volatile_status.append(status)
         return True
 
@@ -89,16 +116,6 @@ class Status:
             pokemon.volatile_status.remove(status)
         except ValueError:
             pass
-
-    @staticmethod
-    def add_output_effect(pokemon, value: float):
-        """Method which applies changes to the damage output multiplier"""
-        pokemon.damage_output_multiplier *= value
-
-    @staticmethod
-    def remove_output_effect(pokemon, value: float):
-        """Method which removes changes to the damage output multiplier	"""
-        pokemon.damage_output_multiplier /= value
 
     @staticmethod
     def add_volatile_stat_mod(pokemon, stat_type: StatsType, value: float):
@@ -114,3 +131,78 @@ class Status:
     def decrease_hp(pokemon, percentage: float):
         """Method which decreases pokemon's hp based on a specified percentage"""
         pokemon.stats.damage += pokemon.stats.base_stats[StatsType.HP] * percentage
+
+    @staticmethod
+    def apply_infatuation(target, caster):
+        if target.gender == caster.gender or target.gender == "Genderless":
+            return False
+        if Status.add_volatile_status(StatusType.Infatuated, target):
+            return True
+
+        return False
+
+    @staticmethod
+    def apply_paralysis_effect(target):
+        if target.non_volatile_status != StatusType.Paralyzed:
+            return False
+        else:
+            Status.add_volatile_stat_mod(target, StatsType.Speed, 0.5)
+            return True
+
+    @staticmethod
+    def apply_poisoning_effect(target):
+        if target.non_volatile_status != StatusType.Poisoned:
+            return False
+        else:
+            Status.decrease_hp(target, 0.125)
+            return True
+
+    @staticmethod
+    def apply_bad_poisoning_effect(target):
+        if target.non_volatile_status != StatusType.BPoisoned:
+            return False
+        else:
+            target.bad_poison_turn += 1
+            Status.decrease_hp(target, target.bad_poison_heard / 16.0)
+            return True
+
+    @staticmethod
+    def apply_burning_effect(target):
+        if target.non_volatile_status != StatusType.Burned:
+            return False
+        else:
+            Status.decrease_hp(target, 0.0625)
+            return True
+
+    @staticmethod
+    def apply_frozen_effect(target):
+        if target.non_volatile_status != StatusType.Frozen:
+            return False
+        else:
+            target.blocked = True
+            return True
+
+    @staticmethod
+    def apply_sleep_effect(target):
+        if target.non_volatile_status != StatusType.Asleep:
+            return False
+        else:
+            target.blocked = True
+            return True
+
+    @staticmethod
+    def apply_fainted_effect(target):
+        if target.non_volatile_status != StatusType.Fainted:
+            return False
+        else:
+            target.stats.damage = target.stats.base_stats[StatsType.HP]
+
+Status.apply_status_effect = {
+    StatusType.Poisoned: Status.apply_poisoning_effect,
+    StatusType.BPoisoned: Status.apply_bad_poisoning_effect,
+    StatusType.Paralyzed: Status.apply_paralysis_effect,
+    StatusType.Frozen: Status.apply_frozen_effect,
+    StatusType.Burned: Status.apply_burning_effect,
+    StatusType.Asleep: Status.apply_sleep_effect,
+    StatusType.Fainted: Status.apply_fainted_effect
+}
