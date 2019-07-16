@@ -1,9 +1,6 @@
 from src.model.damagecalculator import DamageCalculator
-from src.model.pokemon import Pokemon
 from abc import ABC, abstractmethod
-from typing import Union, Dict
 from enum import Enum, auto
-from random import random
 
 
 class MoveCategory(Enum):
@@ -39,8 +36,7 @@ class Move(ABC):
 
     def __init__(self, move_name: str, accuracy: int,
                  base_power: int, category, pp: int, priority: int,
-                 is_Z: bool, crit_ratio: int, move_type,
-                 move_category, scale_with, on_user,
+                 is_Z: bool, crit_ratio: int, move_type, scale_with, on_user,
                  on_target, defends_on=None):
 
         self.move_name = move_name
@@ -65,7 +61,7 @@ class Move(ABC):
             self.defends_on = defends_on
 
     @abstractmethod
-    def invoke_move(self, caster_pokemon, target_pokemons: Dict, index_target: int):
+    def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
         """
         Args:
         caster_pokemon(Pokemon): the pokemon that does the move
@@ -100,92 +96,18 @@ class SingleMove(Move):
                  scale_with, on_user,
                  on_target, defends_on=None):
 
-        super().__init__(self, move_name, accuracy,
+        super().__init__(move_name, accuracy,
                          base_power, category, pp, priority,
                          is_Z, crit_ratio, move_type, scale_with,
                          on_user, on_target, defends_on)
 
-    def invoke_move(self, caster_pokemon, target_pokemons: Dict, index_target: int, weather, field):
-        targetPokemon = target_pokemons[index_target]
-        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, targetPokemon)
-        targetPokemon.stats.decrease_hp(damage)
+    def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
+        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
+        target_pokemon.stats.decrease_hp(damage)
+        self.pp -= 1
 
-        # TODO Insert the damage  calculation that the move does
-        # TODO Implement the move, when the merging with the pokemon model is done
         if self.on_user:
             caster_pokemon.stats.modify(self.on_user.stat, self.on_user.value)
 
         if self.on_target:
-            targetPokemon.stats.modify(self.on_target.stat, self.on_target.value)
-
-
-class MultipleMove(Move):
-    """
-    Subclass of the Move class.
-    It represents a move with multiple targets.
-
-    """
-
-    def __init__(self, move_name: str, accuracy: int,
-                 base_power: int, category: str, pp: int, priority: int,
-                 is_Z: bool, crit_ratio: int, move_type,
-                 scale_with, on_user,
-                 on_target, defends_on=None):
-
-        super().__init__(self, move_name, accuracy,
-                         base_power, category, pp, priority,
-                         is_Z, crit_ratio, move_type, scale_with,
-                         on_user, on_target, defends_on)
-
-    def invoke_move(self, caster_pokemon, target_pokemons: Dict, index_target: int, weather, field):
-        # TODO Insert the damage calculation that the move does
-        for targetPokemon in target_pokemons.items():
-            damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, targetPokemon)
-            targetPokemon.stats.decrease_hp(damage)
-
-            if self.on_user:
-                caster_pokemon.stats.modify(self.on_user.stat, self.on_user.value)
-
-            if self.on_target:
-                targetPokemon.stats.modify(self.on_target.stat, self.on_target.value)
-
-
-class StatusMove(SingleMove):
-
-    def __init__(self, move_name: str, accuracy: int,
-                 base_power: int, category: str, pp: int, priority: int,
-                 is_Z: bool, crit_ratio: int, move_type,
-                 scale_with, on_user,
-                 on_target, status, defends_on=None):
-        super().__init__(self, move_name, accuracy,
-                         base_power, category, pp, priority,
-                         is_Z, crit_ratio, move_type, scale_with,
-                         on_user, on_target, defends_on)
-        self.status = status
-
-    def invoke_move(self, caster_pokemon, target_pokemons: Dict, index_target: int, weather, field):
-        targetPokemon = target_pokemons[index_target]
-        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, targetPokemon)
-        targetPokemon.stats.decrease_hp(damage)
-
-        if random() <= self.accuracy:
-            targetPokemon.apply_status(self.status)
-
-
-class MoveFactory:
-    """Factory for the Move class hierarchy."""
-    subclasses = {
-        'single': SingleMove,
-        'multiple': MultipleMove
-    }
-
-    @staticmethod
-    def create_move(target: str, self, move_name: str, accuracy: int,
-                    base_power: int, category: str, pp: int, priority: int,
-                    is_Z: bool, crit_ratio: int, move_type,
-                    scale_with, on_user,
-                    on_target, defends_on=None) -> Union[SingleMove, MultipleMove]:
-        return MoveFactory.subclasses[target](move_name,
-                                              accuracy, base_power, category,
-                                              pp, priority, is_Z, crit_ratio, move_type, scale_with,
-                                              on_user, on_target, defends_on)
+            target_pokemon.stats.modify(self.on_target.stat, self.on_target.value)

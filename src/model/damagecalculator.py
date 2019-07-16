@@ -101,25 +101,26 @@ class DamageCalculator:
     @staticmethod
     def calculate(weather: w, field, user, move, target) -> int:
 
-        if target.types in TypeMultiplier.ineffectiveTo[move.moveType]:
+        if target.types in TypeMultiplier.ineffectiveTo[move.move_type]:
             return 0
         else:
-            base_damage = (((10 + user.level*2) * user.stats.get_actual(move.scaleWith) + move.calculateBasePower())
+            base_damage = (((10 + user.level*2) * user.stats.get_actual(move.scale_with) + move.calculate_base_power())
                            / 250 *
                            target.stats.get_actual(move.defends_on)) + 2
 
         # Try to get the multiplier based on the weather, if is not in the dict get '1'
-        mult = WeatherModifiers.modifiers.get((weather, move.moveType), 1)
-        terrain_mult = FieldModifiers.modifiers.get((move.moveType, field), 1)
+        mult = WeatherModifiers.modifiers.get((weather, move.move_type), 1)
+        terrain_mult = FieldModifiers.modifiers.get((move.move_type, field), 1)
 
         roll = uniform(0.85, 1)
 
         # Multiple calculation
-        for pkmnType in target.types:
-            if move.moveType in TypeMultiplier.weakTo[pkmnType]:
+        for pkmn_type in target.types:
+            if move.move_type in TypeMultiplier.weakTo[pkmn_type]:
                 mult *= 2
-            elif move.moveType in TypeMultiplier.resistsTo[pkmnType]:
+            elif move.move_type in TypeMultiplier.resistsTo[pkmn_type]:
                 mult *= 0.5
 
-        return int(base_damage * mult * terrain_mult * user.damageOutputMultiplier * target.damageInputMultiplier * roll)
+        return int(base_damage * mult * terrain_mult * user.damage_output_multiplier * target.damage_input_multiplier *
+                   roll)
 

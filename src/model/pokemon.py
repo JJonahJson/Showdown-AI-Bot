@@ -41,9 +41,9 @@ class Pokemon:
         """Methods that returns all usable moves"""
         return {k: v for k, v in self.moves if v.isUsable()}
 
-    def use_move(self, move_index: int, targets: Dict, target_index: int, weather, field):
+    def use_move(self, move_index: int, target, weather, field):
         """Methods that apply a move"""
-        self.moves[move_index].invokeMove(self, targets, target_index, weather, field)
+        self.moves[move_index].invoke_move(self, target, weather, field)
 
     def __lt__(self, other_pokemon):
         """More speed"""
