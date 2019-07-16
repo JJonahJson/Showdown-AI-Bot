@@ -4,6 +4,5 @@ src/.vscode/.ropeproject/objectdb
 src/model/moves/__pycache__
 src/model/description.md
 *pyc
-env/
 settings.json
-.env
+.idea/

@@ -2,6 +2,7 @@ from src.model.stats import StatsType
 
 from abc import ABC, abstractmethod
 
+
 class Item(ABC):
     """
     Abstract class that represents a generic item in game.
@@ -12,24 +13,24 @@ class Item(ABC):
 
     def __init__(self, name):
         self.name = name
-  
+
     @abstractmethod
-    def addEffect(self, pokemon):
+    def add_effect(self, pokemon):
         """Abstract method used to implement the effect of the item"""
         pass
 
     @abstractmethod
-    def removeEffect(self, pokemon):
+    def remove_effect(self, pokemon):
         """Abstract method used to remove the effect of the item"""
         pass
 
     @abstractmethod
-    def addLock(self, pokemon, move):
+    def add_lock(self, pokemon, move):
         """Abstract method for locking a pokemon on a move"""
         pass
 
     @abstractmethod
-    def removeLock(self, pokemon, move):
+    def remove_lock(self, pokemon, move):
         """Abstract method for removing a lock from pokemon's moves"""
         pass
 
@@ -37,6 +38,7 @@ class Item(ABC):
     def activate(self, pokemon):
         """Abstract method for the berry item"""
         pass
+
 
 class StatsItem(Item):
     """
@@ -48,16 +50,17 @@ class StatsItem(Item):
 
     """
 
-    def __init__(self, name, statsType, value:float):
+    def __init__(self, name, stats_type, value: float):
         super().__init__(self, name)
-        self.statsType = statsType
+        self.stats_type = stats_type
         self.value = value
-    
-    def addEffect(self, pokemon):
-        pokemon.stats.addVolitileMul(self.statsType, self.value)
-    
-    def removeEffect(self, pokemon):
-        pokemon.stats.removeVolitileMul(self.statsType, self.value)
+
+    def add_effect(self, pokemon):
+        pokemon.stats.addVolitileMul(self.stats_type, self.value)
+
+    def remove_effect(self, pokemon):
+        pokemon.stats.removeVolitileMul(self.stats_type, self.value)
+
 
 class MoveItem(Item):
     """
@@ -69,20 +72,21 @@ class MoveItem(Item):
 
     """
 
-    def __init__(self, name, moveType, value:float):
+    def __init__(self, name, move_type, value: float):
         super().__init__(self, name)
-        self.moveType = moveType
+        self.move_type = move_type
         self.value = value
-    
-    def addEffect(self, pokemon):
+
+    def add_effect(self, pokemon):
         for move in pokemon.moves:
-            if move.moveType is self.moveType:
-                move.moveType.addPowerMultiply(self.value)
-    
-    def removeEffect(self, pokemon):
+            if move.move_type is self.move_type:
+                move.move_type.addPowerMultiply(self.value)
+
+    def remove_effect(self, pokemon):
         for move in pokemon.moves:
-            if move.moveType is self.moveType:
-                move.moveType.removePowerMultiply(self.value)
+            if move.move_type is self.move_type:
+                move.move_type.removePowerMultiply(self.value)
+
 
 class DamageItem(Item):
     """
@@ -93,15 +97,16 @@ class DamageItem(Item):
 
     """
 
-    def __init__(self, name, value:float):
+    def __init__(self, name, value: float):
         super().__init__(self, name)
         self.value = value
 
-    def addEffect(self, pokemon):
-        pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
+    def add_effect(self, pokemon):
+        pokemon.damage_output_multiplier = pokemon.damage_output_multiplier * self.value
 
-    def removeEffect(self, pokemon):
-        pokemon.damageOutputMultiplier = pokemon.damageOutputMultiplier * self.value
+    def remove_effect(self, pokemon):
+        pokemon.damage_output_multiplier = pokemon.damage_output_multiplier * self.value
+
 
 class ChoiceItem(StatsItem):
     """
@@ -112,17 +117,19 @@ class ChoiceItem(StatsItem):
     value (float): Multiplier of the stat
     
     """
-    def __init__(self, name, stats, value:float):
+
+    def __init__(self, name, stats, value: float):
         super().__init__(name, stats, value)
-    
-    def addLock(self, pokemon, move):
-        for toLock in pokemon.moves:
-            if toLock != move:
-                toLock.isUsable = False
-    
-    def removeLock(self, pokemon, move):
-        for toLock in pokemon.moves:
-            toLock.isUsable = True
+
+    def add_lock(self, pokemon, move):
+        for to_lock in pokemon.moves:
+            if to_lock != move:
+                to_lock.isUsable = False
+
+    def remove_lock(self, pokemon, move):
+        for to_lock in pokemon.moves:
+            to_lock.isUsable = True
+
 
 class HealingBerry(Item):
     """
@@ -134,13 +141,12 @@ class HealingBerry(Item):
 
     """
 
-    def __init__(self, name:str, threshold:int, value:int):
+    def __init__(self, name: str, threshold: int, value: int):
         super().__init__(name)
         self.threshold = threshold
         self.value = value
 
     def activate(self, pokemon):
         # If under the threshold then activate
-        if pokemon.stats.getActualHP() <= (pokemon.stats.baseStats[StatsType.HP] * (self.threshold / 100)):
-            pokemon.stats.increaseHP(pokemon.stats.baseStats[StatsType.HP] * (self.value / 100))
-            
+        if pokemon.stats.get_actual_hp() <= (pokemon.stats.base_stats[StatsType.HP] * (self.threshold / 100)):
+            pokemon.stats.increase_hp(pokemon.stats.base_stats[StatsType.HP] * (self.value / 100))
