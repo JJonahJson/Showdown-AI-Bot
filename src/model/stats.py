@@ -20,7 +20,7 @@ class Stats:
     multipliers = {
         -6: 0.25,
         -5: 0.29,
-        -4:  0.33,
+        -4: 0.33,
         -3: 0.4,
         -2: 0.5,
         -1: 0.67,
@@ -50,20 +50,20 @@ class Stats:
         6: 3
     }
 
-    def __init__(self, hp: int, attack: int, defense: int, specialAttack: int, specialDefense: int, speed: int):
+    def __init__(self, hp: int, attack: int, defense: int, special_attack: int, special_defense: int, speed: int):
         # Initial value of each statistic
-        self.baseStats = {
+        self.base_stats = {
             StatsType.HP: hp,
             StatsType.Attack: attack,
             StatsType.Defense: defense,
-            StatsType.SpecialAttack: specialAttack,
-            StatsType.SpecialDefense: specialDefense,
+            StatsType.SpecialAttack: special_attack,
+            StatsType.SpecialDefense: special_defense,
             StatsType.Speed: speed,
             StatsType.Accuracy: 1,
             StatsType.Evasion: 1
         }
         # Initial value of each statistics' multiplier
-        self.mulStats = {
+        self.mul_stats = {
             StatsType.Attack: 0,
             StatsType.Defense: 0,
             StatsType.SpecialAttack: 0,
@@ -73,7 +73,7 @@ class Stats:
             StatsType.Evasion: 0
         }
         # Initial value of each statistics' volatile multiplier
-        self.voltatileMul = {
+        self.voltatile_mul = {
             StatsType.Attack: 1,
             StatsType.Defense: 1,
             StatsType.SpecialAttack: 1,
@@ -84,45 +84,44 @@ class Stats:
         # Initial value of the damage
         self.damage = 0
 
-    def modify(self, type: StatsType, quantity: int):
+    def modify(self, stat_type: StatsType, quantity: int):
         """Changes the multipliers of the specified stat from -6 to 6, these are all set to 0 at the start"""
-        if (self.mulStats[type] + quantity) > 6:
-            self.mulStats[type] = 6
-        elif (self.mulStats[type] + quantity) < -6:
-            self.mulStats[type] = -6
+        if (self.mul_stats[stat_type] + quantity) > 6:
+            self.mul_stats[stat_type] = 6
+        elif (self.mul_stats[stat_type] + quantity) < -6:
+            self.mul_stats[stat_type] = -6
         else:
-            self.mulStats[type] += quantity
+            self.mul_stats[stat_type] += quantity
 
-    def increase_hp(self, quantity:int):
+    def increase_hp(self, quantity: int):
         """Increase Pokemon's HP by decreasing the damage"""
-        if(self.damage - quantity) < 0:
+        if (self.damage - quantity) < 0:
             self.damage = 0
         else:
             self.damage -= quantity
 
-    def decrease_hp(self, quantity:int):
+    def decrease_hp(self, quantity: int):
         """Decrease Pokemon's HP by increasing the damage"""
-        if (self.damage + quantity) > self.baseStats[StatsType.HP]:
-            self.damage = self.baseStats[StatsType.HP]
+        if (self.damage + quantity) > self.base_stats[StatsType.HP]:
+            self.damage = self.base_stats[StatsType.HP]
         else:
             self.damage += quantity
 
-    def get_actual(self, type: StatsType) ->int:
+    def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
-        if type is StatsType.Accuracy or type is StatsType.Evasion:
-            return  self.baseStats[type] * self.multipliersAE[self.mulStats[type]] * self.voltatileMul[type]
+        if stat_type is StatsType.Accuracy or type is StatsType.Evasion:
+            return self.base_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.voltatile_mul[stat_type]
         else:
-            return self.baseStats[type] * self.multipliers[self.mulStats[type]] * self.voltatileMul[type]
+            return self.base_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.voltatile_mul[stat_type]
 
-    def get_actual_hp(self)->int:
+    def get_actual_hp(self) -> int:
         """Returns Pokemon's actual HP value by subtracting the damage to the base HP"""
-        return self.baseStats[StatsType.HP] - self.damage
+        return self.base_stats[StatsType.HP] - self.damage
 
     def increase_volatile_mul(self, stats_type: StatsType, value: float):
         """Increases the volatile multiplier of the specified stat by the given value"""
-        self.voltatileMul[stats_type] *= value
+        self.voltatile_mul[stats_type] *= value
 
-    def decrease_volatile_mul(self, stats_type:StatsType, value: float):
+    def decrease_volatile_mul(self, stats_type: StatsType, value: float):
         """Decreases the volatile multiplier of the specified stat by the given value"""
-        self.voltatileMul[stats_type] /= value
-	
+        self.voltatile_mul[stats_type] /= value

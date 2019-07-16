@@ -56,6 +56,7 @@ immune = {
     StatusType.Asleep: []
 }
 
+
 class Status:
     """Utility class with static methods which modify status and relative stats"""
 
@@ -102,15 +103,14 @@ class Status:
     @staticmethod
     def add_volatile_stat_mod(pokemon, stat_type: StatsType, value: float):
         """Method which adds changes to the specified volatile stat"""
-        pokemon.stats.volatileMul[stat_type] *= value
+        pokemon.stats.volatile_mul[stat_type] *= value
 
     @staticmethod
     def remove_volatile_stat_mod(pokemon, stat_type: StatsType, value: float):
         """Method which removes changes to the specified volatile stat"""
-        pokemon.stats.volatileMul[stat_type] /= value
+        pokemon.stats.volatile_mul[stat_type] /= value
 
     @staticmethod
     def decrease_hp(pokemon, percentage: float):
         """Method which decreases pokemon's hp based on a specified percentage"""
-        pokemon.stats.damage += pokemon.stats.baseStats[StatsType.HP] * percentage
-
+        pokemon.stats.damage += pokemon.stats.base_stats[StatsType.HP] * percentage

@@ -13,11 +13,12 @@ class StatusTest(unittest.TestCase):
         self.pokemon = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Male", self.stat, {}, [], 80.50,
                                StatusType.Normal, [], None, 50)
 
-    def test_apply_non_volatile_status(self):
-        check = Status.apply_non_volatile_status(StatusType.Burned, self.pokemon)
-        self.assertEqual(False, check)
-
-        self.assertEqual(self.pokemon.non_volatile_status, StatusType.Normal)
+		stat = Stats(100, 100, 100, 100, 100, 100)
+		pokemon = Pokemon("Incineroar",[pk.Fire, pk.Dark], "Male", stat, None, None, 80.50, Status(StatusType.Normal), [],None, 50)
+		check = pokemon.nonVolatileStatus.applyNonVolatileStatus(Status(StatusType.Burned), pokemon)
+		
+		self.assertEqual(False, check)
+		self.assertEqual(pokemon.nonVolatileStatus.type, StatusType.Normal)
 
         Status.apply_non_volatile_status(StatusType.Asleep, self.pokemon)
         self.assertNotEqual(self.pokemon.non_volatile_status, StatusType.Asleep)
