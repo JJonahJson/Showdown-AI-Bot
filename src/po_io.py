@@ -1,4 +1,4 @@
-import senders
+from protocol import senders
 import login
 
 
@@ -70,8 +70,8 @@ async def stringing(websocket, message, usage=0):
     elif string_tab[1] == "pm" and "SuchTestBot" not in string_tab[2]:
         if string_tab[4] == ".info":
             await senders.sender(websocket, "", "/pm " + string_tab[2] + ", Showdown Battle Bot. Active for "
-                                                                       + ", ".join(formats[:-1]) + " and "
-                                                                       + formats[-1] + ".")
+                                 + ", ".join(formats[:-1]) + " and "
+                                 + formats[-1] + ".")
             await senders.sender(websocket, "", "/pm " + string_tab[2] + ", Please challenge me to test your skills.")
         else:
             await senders.sender(websocket, "", "/pm " + string_tab[2] + ", Unknown command, type \".info\" for help.")

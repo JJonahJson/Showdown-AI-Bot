@@ -1,10 +1,9 @@
 import json
 import requests
+import protocol.senders
 
-import src.senders
 
-
-async def log_in(websocket, challid, chall):
+def log_in(websocket, challid, chall):
     """
     Login in function. Send post request to showdown server.
     :param websocket: Websocket stream
@@ -20,5 +19,5 @@ async def log_in(websocket, challid, chall):
                              'pass': password,
                              'challstr': challid + "%7C" + chall
                          })
-    await src.senders.sender(websocket, "", "/trn " + username + ",0," + json.loads(resp.text[1:])['assertion'])
-    await src.senders.sender(websocket, "", "/avatar 158")
+    await protocol.senders.sender(websocket, "", "/trn " + username + ",0," + json.loads(resp.text[1:])['assertion'])
+    await protocol.senders.sender(websocket, "", "/avatar 158")

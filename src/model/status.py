@@ -56,6 +56,12 @@ immune = {
     StatusType.Asleep: []
 }
 
+to_string = {
+    "tox": StatusType.Poisoned,
+    "brn": StatusType.Burned,
+    "par": StatusType.Paralyzed,
+    "slp": StatusType.Asleep
+}
 
 class Status:
     """Utility class with static methods which modify status and relative stats"""
