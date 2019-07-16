@@ -57,7 +57,7 @@ class BattleField(ABC):
         self.player_id = ""
 
     @abstractmethod
-    def switch_pokemon(self, player: int, pokemon_in: int, pokemon_out: int):
+    def switch_pokemon(self, player: int, pokemon_in: int):
         pass
 
     @abstractmethod
@@ -84,6 +84,10 @@ class BattleField(ABC):
     def update_damage(self, damage):
         pass
 
+    @abstractmethod
+    def get_pokemon_index_by_name(self, side, pkmn_name):
+        pass
+
 
 class BattleFieldSingle(BattleField):
     """Represents a battle field for a battle in single"""
@@ -100,7 +104,13 @@ class BattleFieldSingle(BattleField):
         self.active_pokemon_oppo = active_pokemon_oppo
         self.bench_bot = bench_bot
         self.bench_oppo = bench_oppo
-        self.selector_side = {1:active_pokemon_bot, 2:active_pokemon_oppo}
+        self.active_selector_side = {1:active_pokemon_bot, 2:active_pokemon_oppo}
+        self.bench_selector_side = {1: bench_bot, 2:bench_oppo}
+
+    def get_pokemon_index_by_name(self, side, pkmn_name):
+        for k, v in self.bench_selector_side[side]:
+            if v in pkmn_name:
+                return k
 
     def do_move(self, player: int, pokemon_caster: int, move_index: int, pokemon_target):
         """Apply move to the target
@@ -118,7 +128,7 @@ class BattleFieldSingle(BattleField):
             self.active_pokemon_oppo.use_move(move_index, self.active_pokemon_bot,
                                               self.weather, self.field)
 
-    def switch_pokemon(self, player: int, pokemon_in: int, pokemon_out: int):
+    def switch_pokemon(self, player: int, pokemon_in: int):
         """Switch pokemon
         :param player:
         :param pokemon_in: Not used
@@ -141,12 +151,12 @@ class BattleFieldSingle(BattleField):
         :return:
         """
         if status == "":
-            Status.remove_non_volatile_status(self.selector_side[side])
+            Status.remove_non_volatile_status(self.active_selector_side[side])
         else:
-            Status.apply_non_volatile_status(StatusType.to_string[status], self.selector_side[side])
+            Status.apply_non_volatile_status(StatusType.to_string[status], self.active_selector_side[side])
 
     def update_buff(self, side, type, level):
-        self.selector_side[side].stats.modify(type, level)
+        self.active_selector_side[side].stats.modify(type, level)
 
     def update_weather(self, weather):
         self.weather = weather
@@ -155,7 +165,7 @@ class BattleFieldSingle(BattleField):
         self.field = terrain
 
     def update_damage(self, side, damage):
-        self.selector_side[side].stats.decrease_hp(damage)
+        self.active_selector_side[side].stats.decrease_hp(damage)
 
 
 

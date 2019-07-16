@@ -17,7 +17,7 @@ class GameLoop:
             #TODO: Set battle_id
             elif current[1] == "request":
                 if current[2] == '':
-                    continue;
+                    continue
                 # Maj team bot
                 if len(current[2]) == 1:
                     try:
