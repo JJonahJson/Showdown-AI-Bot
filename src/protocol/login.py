@@ -3,7 +3,7 @@ import requests
 import protocol.senders
 
 
-def log_in(websocket, challid, chall):
+async def log_in(websocket, challid, chall):
     """
     Login in function. Send post request to showdown server.
     :param websocket: Websocket stream

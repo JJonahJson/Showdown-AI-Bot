@@ -1,6 +1,4 @@
-from protocol import senders
-import login
-
+from protocol import senders, login
 
 battles = []
 nb_fights_max = 20

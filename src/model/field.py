@@ -88,6 +88,7 @@ class BattleFieldSingle(BattleField):
         self.active_pokemon_bot = active_pokemon_bot
         self.active_pokemon_oppo = active_pokemon_oppo
         self.bench_bot = bench_bot
+        self.room_name = ""
         self.bench_oppo = bench_oppo
         self.active_selector_side = {1: self.active_pokemon_bot, 2: self.active_pokemon_oppo}
         self.bench_selector_side = {1: self.bench_bot, 2: self.bench_oppo}
