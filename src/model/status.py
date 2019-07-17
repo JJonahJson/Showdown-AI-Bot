@@ -1,59 +1,60 @@
+from enum import Enum, auto
+
 from src.model.pokemontype import PokemonType
 from src.model.stats import StatsType
-from enum import Enum, auto
 
 
 class StatusType(Enum):
     """Class that represents all possible statuses of a pokemon"""
     Normal = auto(),
     Fainted = auto(),
-    Poisoned = auto(),
-    BPoisoned = auto(),
-    Burned = auto(),
-    Paralyzed = auto(),
-    Frozen = auto(),
-    Asleep = auto(),
-    Infatuated = auto(),
-    Confused = auto(),
+    Psn = auto(),
+    Tox = auto(),
+    Brn = auto(),
+    Par = auto(),
+    Frz = auto(),
+    Slp = auto(),
+    Attract = auto(),
+    Confusion = auto(),
     Trapped = auto(),
-    Protected = auto(),
+    Protect = auto(),
     Endure = auto(),
-    Flinched = auto()
+    Flinch = auto()
 
 
 non_volatile = {
-    StatusType.Normal: False,
-    StatusType.Fainted: True,
-    StatusType.Poisoned: True,
-    StatusType.BPoisoned: True,
-    StatusType.Burned: True,
-    StatusType.Paralyzed: True,
-    StatusType.Frozen: True,
-    StatusType.Asleep: True,
+    StatusType.Normal   : False,
+    StatusType.Fainted  : True,
+    StatusType.Psn      : True,
+    StatusType.Tox      : True,
+    StatusType.Brn      : True,
+    StatusType.Par      : True,
+    StatusType.Frz      : True,
+    StatusType.Slp      : True,
 
-    StatusType.Infatuated: False,
-    StatusType.Flinched: False,
-    StatusType.Confused: False,
-    StatusType.Protected: False,
-    StatusType.Trapped: False
+    StatusType.Attract  : False,
+    StatusType.Flinch   : False,
+    StatusType.Confusion: False,
+    StatusType.Protect  : False,
+    StatusType.Trapped  : False
 
 }
 
 immune = {
-    StatusType.Poisoned: [PokemonType.Poison, PokemonType.Steel],
-    StatusType.BPoisoned: [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Paralyzed: [PokemonType.Electric],
-    StatusType.Frozen: [PokemonType.Ice],
-    StatusType.Burned: [PokemonType.Fire],
-    StatusType.Normal: [],
-    StatusType.Fainted: [],
-    StatusType.Infatuated: [],
-    StatusType.Flinched: [],
-    StatusType.Confused: [],
-    StatusType.Protected: [],
-    StatusType.Trapped: [],
-    StatusType.Endure: [],
-    StatusType.Asleep: []
+    StatusType.Psn      : [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Tox      : [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Par      : [PokemonType.Electric],
+    StatusType.Frz      : [PokemonType.Ice],
+    StatusType.Brn      : [PokemonType.Fire],
+    StatusType.Normal   : [],
+    StatusType.Fainted  : [],
+    StatusType.Attract  : [],
+    StatusType.Flinch   : [],
+    StatusType.Confusion: [],
+    StatusType.Protect  : [],
+    StatusType.Trapped  : [],
+    StatusType.Endure   : [],
+    StatusType.Slp      : []
 }
 
 
@@ -71,10 +72,11 @@ class Status:
         if not non_volatile[status]:
             return False
         for pkmn_type in pokemon.types:
-            if pkmn_type in immune[status] or pokemon.non_volatile_status is not StatusType.Normal:
+            if pkmn_type in immune[status] or (pokemon.non_volatile_status is not StatusType.Normal and
+            pokemon.non_volatile_status):
                 return False
         pokemon.non_volatile_status = status
-        if status in [StatusType.Poisoned, StatusType.BPoisoned, StatusType.Burned]:
+        if status in [StatusType.Psn, StatusType.Tox, StatusType.Brn]:
             return True
         if Status.apply_status_effect[status](pokemon):
             return True
@@ -88,13 +90,13 @@ class Status:
             if target.non_volatile_status == StatusType.Fainted:
                 return False
 
-            if target.non_volatile_status in [StatusType.Asleep, StatusType.Frozen]:
+            if target.non_volatile_status in [StatusType.Slp, StatusType.Frz]:
                 target.blocked = False
 
-            if target.non_volatile_status == StatusType.Paralyzed:
+            if target.non_volatile_status == StatusType.Par:
                 Status.remove_volatile_stat_mod(target, StatsType.Spe, 0.5)
 
-            if target.non_volatile_status == StatusType.BPoisoned:
+            if target.non_volatile_status == StatusType.Tox:
                 target.bad_poison_turn = 0
 
             target.non_volatile_status = StatusType.Normal
@@ -140,14 +142,14 @@ class Status:
     def apply_infatuation(target, caster):
         if target.gender == caster.gender or target.gender == "Genderless":
             return False
-        if Status.add_volatile_status(StatusType.Infatuated, target):
+        if Status.add_volatile_status(StatusType.Attract, target):
             return True
 
         return False
 
     @staticmethod
     def apply_paralysis_effect(target):
-        if target.non_volatile_status is not StatusType.Paralyzed:
+        if target.non_volatile_status is not StatusType.Par:
             return False
         else:
             Status.add_volatile_stat_mod(target, StatsType.Spe, 0.5)
@@ -155,7 +157,7 @@ class Status:
 
     @staticmethod
     def apply_poisoning_effect(target):
-        if target.non_volatile_status != StatusType.Poisoned:
+        if target.non_volatile_status != StatusType.Psn:
             return False
         else:
             Status.decrease_hp(target, 0.125)
@@ -163,7 +165,7 @@ class Status:
 
     @staticmethod
     def apply_bad_poisoning_effect(target):
-        if target.non_volatile_status != StatusType.BPoisoned:
+        if target.non_volatile_status != StatusType.Tox:
             return False
         else:
             target.bad_poison_turn += 1
@@ -172,7 +174,7 @@ class Status:
 
     @staticmethod
     def apply_burning_effect(target):
-        if target.non_volatile_status != StatusType.Burned:
+        if target.non_volatile_status != StatusType.Brn:
             return False
         else:
             Status.decrease_hp(target, 0.0625)
@@ -180,7 +182,7 @@ class Status:
 
     @staticmethod
     def apply_frozen_effect(target):
-        if target.non_volatile_status != StatusType.Frozen:
+        if target.non_volatile_status != StatusType.Frz:
             return False
         else:
             target.blocked = True
@@ -188,7 +190,7 @@ class Status:
 
     @staticmethod
     def apply_sleep_effect(target):
-        if target.non_volatile_status != StatusType.Asleep:
+        if target.non_volatile_status != StatusType.Slp:
             return False
         else:
             target.blocked = True
@@ -203,8 +205,8 @@ class Status:
 
 
 Status.apply_status_effect = {
-    StatusType.Paralyzed: Status.apply_paralysis_effect,
-    StatusType.Frozen: Status.apply_frozen_effect,
-    StatusType.Asleep: Status.apply_sleep_effect,
+    StatusType.Par    : Status.apply_paralysis_effect,
+    StatusType.Frz    : Status.apply_frozen_effect,
+    StatusType.Slp    : Status.apply_sleep_effect,
     StatusType.Fainted: Status.apply_fainted_effect
 }

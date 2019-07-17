@@ -46,10 +46,10 @@ class StatusUpdateTest(unittest.TestCase):
 
     def test_status(self):
         su.update_state(build_string("-status", "tox"), self.battle_field)
-        self.assertEqual(self.battle_field.active_pokemon_bot.non_volatile_status, StatusType.Poisoned)
+        self.assertEqual(self.battle_field.active_pokemon_bot.non_volatile_status, StatusType.Tox)
 
     def test_curestatus(self):
-        self.battle_field.active_pokemon_bot.non_volatile_status = StatusType.Poisoned
+        self.battle_field.active_pokemon_bot.non_volatile_status = StatusType.Psn
         su.update_state(build_string("-curestatus", "bau"), self.battle_field)
         self.assertEqual(self.battle_field.active_pokemon_bot.non_volatile_status, StatusType.Normal)
 
