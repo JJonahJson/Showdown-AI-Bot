@@ -51,15 +51,15 @@ class StatsItem(Item):
     """
 
     def __init__(self, name, stats_type, value: float):
-        super().__init__(self, name)
+        super().__init__(name)
         self.stats_type = stats_type
         self.value = value
 
     def add_effect(self, pokemon):
-        pokemon.stats.add_volatile_mul(self.stats_type, self.value)
+        pokemon.stats.increase_volatile_mul(self.stats_type, self.value)
 
     def remove_effect(self, pokemon):
-        pokemon.stats.remove_volatile_mul(self.stats_type, self.value)
+        pokemon.stats.decrease_volatile_mul(self.stats_type, self.value)
 
 
 class MoveItem(Item):
@@ -73,19 +73,19 @@ class MoveItem(Item):
     """
 
     def __init__(self, name, move_type, value: float):
-        super().__init__(self, name)
+        super().__init__(name)
         self.move_type = move_type
         self.value = value
 
     def add_effect(self, pokemon):
         for move in pokemon.moves:
             if move.move_type is self.move_type:
-                move.move_type.add_power_multiply(self.value)
+                move.add_power_multiply(self.value)
 
     def remove_effect(self, pokemon):
         for move in pokemon.moves:
             if move.move_type is self.move_type:
-                move.move_type.remove_power_multiply(self.value)
+                move.remove_power_multiply(self.value)
 
 
 class DamageItem(Item):
@@ -93,19 +93,19 @@ class DamageItem(Item):
     Class that represents an item that modifies the total output damage of a pokemon
     Args:
     name (str): name of the item
-    value (float): multiplier of the damname (str): name of the itemage
+    value (float): multiplier of the damage (str): name of the item
 
     """
 
     def __init__(self, name, value: float):
-        super().__init__(self, name)
+        super().__init__(name)
         self.value = value
 
     def add_effect(self, pokemon):
         pokemon.damage_output_multiplier = pokemon.damage_output_multiplier * self.value
 
     def remove_effect(self, pokemon):
-        pokemon.damage_output_multiplier = pokemon.damage_output_multiplier * self.value
+        pokemon.damage_output_multiplier = pokemon.damage_output_multiplier / self.value
 
 
 class ChoiceItem(StatsItem):
