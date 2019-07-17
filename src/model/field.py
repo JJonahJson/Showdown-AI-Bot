@@ -61,7 +61,7 @@ class BattleField(ABC):
         pass
 
     @abstractmethod
-    def update_buff(self, side):
+    def update_buff(self, side, qta, level):
         pass
 
     @abstractmethod
@@ -155,8 +155,8 @@ class BattleFieldSingle(BattleField):
         else:
             Status.apply_non_volatile_status(StatusType.to_string[status], self.active_selector_side[side])
 
-    def update_buff(self, side, type, level):
-        self.active_selector_side[side].stats.modify(type, level)
+    def update_buff(self, side, qta, level):
+        self.active_selector_side[side].stats.modify(qta, level)
 
     def update_weather(self, weather):
         self.weather = Weather.to_string[weather]
