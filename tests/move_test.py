@@ -1,7 +1,7 @@
 import unittest
 
 from src.model.field import Weather as w, Field as f
-from src.model.moves.move import SingleMove, MoveCategory
+from src.model.move import SingleMove, MoveCategory
 from src.model.pokemon import Pokemon
 from src.model.pokemontype import PokemonType as pk
 from src.model.stats import StatsType, Stats
