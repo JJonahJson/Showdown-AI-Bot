@@ -125,10 +125,14 @@ class BattleFieldSingle(BattleField):
             to_replace = self.active_pokemon_bot
             self.active_pokemon_bot = self.bench_bot[pokemon_in]
             self.bench_bot[pokemon_in] = to_replace
+            self.active_selector_side[1] = self.active_pokemon_bot
+
         else:
             to_replace = self.active_pokemon_oppo
             self.active_pokemon_oppo = self.bench_oppo[pokemon_in]
             self.bench_oppo[pokemon_in] = to_replace
+            self.active_selector_side[2] = self.active_pokemon_oppo
+
 
     def update_status(self, side, status=""):
         # TODO fix after merge, rename enum
