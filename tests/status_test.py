@@ -66,6 +66,5 @@ class StatusTest(unittest.TestCase):
         Status.apply_non_volatile_status(StatusType.Fainted, self.pokemon)
         self.assertEqual(0, self.pokemon.stats.get_actual_hp())
 
-
     if __name__ == "__main__":
         unittest.main()

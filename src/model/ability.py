@@ -1,7 +1,7 @@
 from src.model.field import Weather, Field
-from src.model.moves.secondaryeffect import SecondaryEffect
-from src.model.field import BattleField
-from src.model.stats import Stats
+from src.model.stats import StatsType
+from src.model.field import BattleFieldSingle
+
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
@@ -31,17 +31,13 @@ class DebuffEnemyAbility(Ability):
     """Ability that debuffs a stat of the enemy
     """
 
-    def __init__(self, name: str, secondary_effect: SecondaryEffect):
+    def __init__(self, name: str, stat: StatsType, value:int):
         super().__init__(name)
-        self.secondary_effect = secondary_effect
+        self.stat = stat
+        self.value = value
 
-    def activate(self, field: BattleField, side: int):
-        if side == 1:
-            for pokemon in field.active_pokemon_side2.items():
-                pokemon.stats.mul_stats[self.secondary_effect.stat] += self.secondary_effect.value
-        else:
-            for pokemon in field.active_pokemon_side1.items():
-                pokemon.stats.mul_stats[self.secondary_effect.stat] += self.secondary_effect.value
+    def activate(self, field: BattleFieldSingle, side: int):
+        field.active_selector_side[side].stats.mul_stats[self.stat] += self.value
 
 
 class WeatherAbility(Ability):
@@ -53,7 +49,7 @@ class WeatherAbility(Ability):
         super().__init__(name)
         self.weather = weather
 
-    def activate(self, field: BattleField, side: int):
+    def activate(self, field: BattleFieldSingle, side: int):
         field.weather = self.weather
 
 
@@ -64,7 +60,7 @@ class FieldAbility(Ability):
 
     def __init__(self, name: str, field_type: Field):
         self.name = name
-        self.field = field_type
+        self.field_type = field_type
 
-    def activate(self, field: BattleField, side: int):
-        field.field = self.field
+    def activate(self, field: BattleFieldSingle, side: int):
+        field.field = self.field_type

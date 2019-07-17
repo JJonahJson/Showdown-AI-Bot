@@ -160,6 +160,3 @@ class BattleFieldSingle(BattleField):
 
     def update_heal(self, side, heal):
         self.active_selector_side[side].stats.increase_hp(heal)
-
-
-

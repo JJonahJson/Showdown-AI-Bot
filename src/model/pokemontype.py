@@ -21,4 +21,3 @@ class PokemonType(Enum):
     Dark = auto()
     Steel = auto()
     Fairy = auto()
-

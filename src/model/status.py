@@ -23,38 +23,38 @@ class StatusType(Enum):
 
 
 non_volatile = {
-    StatusType.Normal   : False,
-    StatusType.Fainted  : True,
-    StatusType.Psn      : True,
-    StatusType.Tox      : True,
-    StatusType.Brn      : True,
-    StatusType.Par      : True,
-    StatusType.Frz      : True,
-    StatusType.Slp      : True,
+    StatusType.Normal: False,
+    StatusType.Fainted: True,
+    StatusType.Psn: True,
+    StatusType.Tox: True,
+    StatusType.Brn: True,
+    StatusType.Par: True,
+    StatusType.Frz: True,
+    StatusType.Slp: True,
 
-    StatusType.Attract  : False,
-    StatusType.Flinch   : False,
+    StatusType.Attract: False,
+    StatusType.Flinch: False,
     StatusType.Confusion: False,
-    StatusType.Protect  : False,
-    StatusType.Trapped  : False
+    StatusType.Protect: False,
+    StatusType.Trapped: False
 
 }
 
 immune = {
-    StatusType.Psn      : [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Tox      : [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Par      : [PokemonType.Electric],
-    StatusType.Frz      : [PokemonType.Ice],
-    StatusType.Brn      : [PokemonType.Fire],
-    StatusType.Normal   : [],
-    StatusType.Fainted  : [],
-    StatusType.Attract  : [],
-    StatusType.Flinch   : [],
+    StatusType.Psn: [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Tox: [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Par: [PokemonType.Electric],
+    StatusType.Frz: [PokemonType.Ice],
+    StatusType.Brn: [PokemonType.Fire],
+    StatusType.Normal: [],
+    StatusType.Fainted: [],
+    StatusType.Attract: [],
+    StatusType.Flinch: [],
     StatusType.Confusion: [],
-    StatusType.Protect  : [],
-    StatusType.Trapped  : [],
-    StatusType.Endure   : [],
-    StatusType.Slp      : []
+    StatusType.Protect: [],
+    StatusType.Trapped: [],
+    StatusType.Endure: [],
+    StatusType.Slp: []
 }
 
 
@@ -73,7 +73,7 @@ class Status:
             return False
         for pkmn_type in pokemon.types:
             if pkmn_type in immune[status] or (pokemon.non_volatile_status is not StatusType.Normal and
-            pokemon.non_volatile_status):
+                                               pokemon.non_volatile_status):
                 return False
         pokemon.non_volatile_status = status
         if status in [StatusType.Psn, StatusType.Tox, StatusType.Brn]:
@@ -205,8 +205,8 @@ class Status:
 
 
 Status.apply_status_effect = {
-    StatusType.Par    : Status.apply_paralysis_effect,
-    StatusType.Frz    : Status.apply_frozen_effect,
-    StatusType.Slp    : Status.apply_sleep_effect,
+    StatusType.Par: Status.apply_paralysis_effect,
+    StatusType.Frz: Status.apply_frozen_effect,
+    StatusType.Slp: Status.apply_sleep_effect,
     StatusType.Fainted: Status.apply_fainted_effect
 }
