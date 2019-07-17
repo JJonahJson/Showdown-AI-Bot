@@ -47,9 +47,9 @@ def update_state(line, field):
         else:
             field.update_buff(2, line[2], - int(line[3]))
     elif line[0] == "-weather":
-        field.update_weather(Weather.to_string[line[2]])
+        field.update_weather(line[2])
     elif line[0] == "-fieldstart":
-        field.update_field(Field.to_string[line[2]])
+        field.update_field(line[2])
     elif line[0] == "-fieldend":
         field.update_field(Field.Normal)
     elif line[0] == "-supereffective":

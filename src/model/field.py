@@ -159,10 +159,10 @@ class BattleFieldSingle(BattleField):
         self.active_selector_side[side].stats.modify(type, level)
 
     def update_weather(self, weather):
-        self.weather = weather
+        self.weather = Weather.to_string[weather]
 
     def update_field(self, terrain):
-        self.field = terrain
+        self.field = Field.to_string[terrain]
 
     def update_damage(self, side, damage):
         self.active_selector_side[side].stats.decrease_hp(damage)
