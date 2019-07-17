@@ -13,7 +13,6 @@ class StatsType(Enum):
     Eva = auto()
 
 
-
 class Stats:
     """This class contains pokemon's statistics and methods to  change them."""
 
@@ -54,7 +53,7 @@ class Stats:
     def __init__(self, hp: int, attack: int, defense: int, special_attack: int, special_defense: int, speed: int):
         # Initial value of each statistic
         self.base_stats = {
-            StatsType.HP : hp,
+            StatsType.HP: hp,
             StatsType.Att: attack,
             StatsType.Def: defense,
             StatsType.Spa: special_attack,
@@ -74,11 +73,12 @@ class Stats:
             StatsType.Eva: 0
         }
         # Initial value of each statistics' volatile multiplier
-        self.voltatile_mul = {
+        self.volatile_mul = {
             StatsType.Att: 1,
             StatsType.Def: 1,
             StatsType.Spa: 1,
             StatsType.Spd: 1,
+            StatsType.Spe: 1,
             StatsType.Acc: 1,
             StatsType.Eva: 1
         }
@@ -111,9 +111,11 @@ class Stats:
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
         if stat_type is StatsType.Acc or type is StatsType.Eva:
-            return self.base_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.voltatile_mul[stat_type]
+            return self.base_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
+                stat_type]
         else:
-            return self.base_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.voltatile_mul[stat_type]
+            return self.base_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.volatile_mul[
+                stat_type]
 
     def get_actual_hp(self) -> int:
         """Returns Pokemon's actual HP value by subtracting the damage to the base HP"""
@@ -121,8 +123,8 @@ class Stats:
 
     def increase_volatile_mul(self, stats_type: StatsType, value: float):
         """Increases the volatile multiplier of the specified stat by the given value"""
-        self.voltatile_mul[stats_type] *= value
+        self.volatile_mul[stats_type] *= value
 
     def decrease_volatile_mul(self, stats_type: StatsType, value: float):
         """Decreases the volatile multiplier of the specified stat by the given value"""
-        self.voltatile_mul[stats_type] /= value
+        self.volatile_mul[stats_type] /= value
