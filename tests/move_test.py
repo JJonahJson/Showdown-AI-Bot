@@ -14,14 +14,14 @@ class MoveTest(unittest.TestCase):
         stats = Stats(100, 100, 100, 100, 100, 100)
 
         move1 = SingleMove("Lanciafiamme", 100, 100, MoveCategory.Damage, 10, 0, False, 15, pk.Fire,
-                           StatsType.SpecialAttack,
+                           StatsType.Spa,
                            None, None,
-                           StatsType.SpecialDefense)
+                           StatsType.Spd)
 
         move2 = SingleMove("Idropompa", 100, 100, MoveCategory.Damage, 10, 0, False, 15, pk.Water,
-                           StatsType.SpecialAttack,
+                           StatsType.Spa,
                            None, None,
-                           StatsType.SpecialDefense)
+                           StatsType.Spd)
 
         moves = {1: move1,
                  2: move2}

@@ -80,13 +80,13 @@ class TypeMultiplier:
 class WeatherModifiers:
     """This class contains a static dict for the weather multipliers"""
     modifiers = {
-        (t.Water, w.Rain): 1.5,
-        (t.Water, w.Sun): 0.5,
-        (t.Fire, w.Rain): 0.5,
-        (t.Fire, w.Sun): 2,
-        (t.Electric, w.Wind): 0.5,
-        (t.Ice, w.Wind): 0.5,
-        (t.Rock, w.Wind): 0.5
+        (t.Water, w.Raindance): 1.5,
+        (t.Water, w.Sunnyday) : 0.5,
+        (t.Fire, w.Raindance) : 0.5,
+        (t.Fire, w.Sunnyday)  : 2,
+        (t.Electric, w.Wind)  : 0.5,
+        (t.Ice, w.Wind)       : 0.5,
+        (t.Rock, w.Wind)      : 0.5
     }
 
 
@@ -124,7 +124,7 @@ class DamageCalculator:
                 mult *= 0.5
 
         burn_multiplier = 1
-        if user.non_volatile_status == StatusType.Burned and move.scale_with == StatsType.Attack:
+        if user.non_volatile_status == StatusType.Burned and move.scale_with == StatsType.Att:
             burn_multiplier = 0.5
 
         return int(base_damage * mult * terrain_mult * user.damage_output_multiplier * target.damage_input_multiplier *

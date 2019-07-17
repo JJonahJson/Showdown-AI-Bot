@@ -23,7 +23,10 @@ def update_state(line, field):
         else:
             field.update_damage(2, int(line[2].split("/")[0]))
     elif line[0] == "-heal":
-        pass
+        if field.player_id in line[1]:
+            field.update_heal(1, int(line[2].split("/")[0]))
+        else:
+            field.update_heal(2, int(line[2].split("/")[0]))
     elif line[0] == "-status":
         if field.player_id in line[1]:
             field.update_status(1, line[2])

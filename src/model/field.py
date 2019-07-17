@@ -1,4 +1,5 @@
 from src.model.status import StatusType, Status
+from src.model.stats import StatsType
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 
@@ -7,23 +8,14 @@ from src.model.pokemon import Pokemon
 
 class Weather(Enum):
     """Enum for the possible weathers in game"""
-    Rain = auto()
-    Sun = auto()
+    Raindance = auto()
+    Sunnyday = auto()
     Wind = auto()
     Hail = auto()
     Sandstorm = auto()
     Normal = auto()
 
-    #TODO: Primordial and desolate multipliers needs to be reworked
-    to_string = {
-        "raindance": Rain,
-        "sunnyday": Sun,
-        "hail": Hail,
-        "sandstorm": Sandstorm,
-        "primordialsea": Rain,
-        "desolatesand": Sun
-
-    }
+    # TODO: Primordial and desolate multipliers needs to be reworked
 
 
 class Field(Enum):
@@ -33,13 +25,6 @@ class Field(Enum):
     Grass = auto()
     Misty = auto()
     Normal = auto()
-
-    to_string = {
-        "grassyterrain": Grass,
-        "electricterrain": Electric,
-        "mistyterrain": Misty,
-        "psychicterrain":Psychic
-    }
 
 
 class SpeedCriterion(Enum):
@@ -81,7 +66,7 @@ class BattleField(ABC):
         pass
 
     @abstractmethod
-    def update_damage(self, damage):
+    def update_damage(self, side, damage):
         pass
 
     @abstractmethod
@@ -104,13 +89,13 @@ class BattleFieldSingle(BattleField):
         self.active_pokemon_oppo = active_pokemon_oppo
         self.bench_bot = bench_bot
         self.bench_oppo = bench_oppo
-        self.active_selector_side = {1:active_pokemon_bot, 2:active_pokemon_oppo}
-        self.bench_selector_side = {1: bench_bot, 2:bench_oppo}
+        self.active_selector_side = {1: self.active_pokemon_bot, 2: self.active_pokemon_oppo}
+        self.bench_selector_side = {1: self.bench_bot, 2: self.bench_oppo}
 
     def get_pokemon_index_by_name(self, side, pkmn_name):
-        for k, v in self.bench_selector_side[side]:
-            if v in pkmn_name:
-                return k
+        for item in self.bench_selector_side[side]:
+            if pkmn_name in self.bench_selector_side[side][item].name:
+                return item
 
     def do_move(self, player: int, pokemon_caster: int, move_index: int, pokemon_target):
         """Apply move to the target
@@ -145,6 +130,7 @@ class BattleFieldSingle(BattleField):
             self.bench_oppo[pokemon_in] = to_replace
 
     def update_status(self, side, status=""):
+        # TODO fix after merge, rename enum
         """Update the status of a pokemon
         :param side:
         :param status:
@@ -153,19 +139,22 @@ class BattleFieldSingle(BattleField):
         if status == "":
             Status.remove_non_volatile_status(self.active_selector_side[side])
         else:
-            Status.apply_non_volatile_status(StatusType.to_string[status], self.active_selector_side[side])
+            Status.apply_non_volatile_status(StatusType[status.capitalize()], self.active_selector_side[side])
 
-    def update_buff(self, side, qta, level):
-        self.active_selector_side[side].stats.modify(qta, level)
+    def update_buff(self, side, stat, level):
+        self.active_selector_side[side].stats.modify(StatsType[stat.capitalize()], level)
 
     def update_weather(self, weather):
-        self.weather = Weather.to_string[weather]
+        self.weather = Weather[weather.capitalize()]
 
     def update_field(self, terrain):
-        self.field = Field.to_string[terrain]
+        self.field = Field[terrain.capitalize()]
 
     def update_damage(self, side, damage):
         self.active_selector_side[side].stats.decrease_hp(damage)
+
+    def update_heal(self, side, heal):
+        self.active_selector_side[side].stats.increase_hp(heal)
 
 
 

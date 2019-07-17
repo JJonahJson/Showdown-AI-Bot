@@ -56,12 +56,7 @@ immune = {
     StatusType.Asleep: []
 }
 
-to_string = {
-    "tox": StatusType.Poisoned,
-    "brn": StatusType.Burned,
-    "par": StatusType.Paralyzed,
-    "slp": StatusType.Asleep
-}
+
 
 class Status:
     """Utility class with static methods which modify status and relative stats"""
@@ -94,7 +89,7 @@ class Status:
                 target.blocked = False
 
             if target.non_volatile_status == StatusType.Paralyzed:
-                Status.add_volatile_stat_mod(target, StatsType.Speed, 0.5)
+                Status.add_volatile_stat_mod(target, StatsType.Spe, 0.5)
 
             if target.non_volatile_status == StatusType.BPoisoned:
                 target.bad_poison_turn = 0
@@ -152,7 +147,7 @@ class Status:
         if target.non_volatile_status != StatusType.Paralyzed:
             return False
         else:
-            Status.add_volatile_stat_mod(target, StatsType.Speed, 0.5)
+            Status.add_volatile_stat_mod(target, StatsType.Spe, 0.5)
             return True
 
     @staticmethod
