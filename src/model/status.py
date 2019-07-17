@@ -73,9 +73,13 @@ class Status:
         for pkmn_type in pokemon.types:
             if pkmn_type in immune[status] or pokemon.non_volatile_status is not StatusType.Normal:
                 return False
-        pokemon.non_volatile_status.type = status
-        Status.apply_status_effect[status](pokemon)
-        return True
+        pokemon.non_volatile_status = status
+        if status in [StatusType.Poisoned, StatusType.BPoisoned, StatusType.Burned]:
+            return True
+        if Status.apply_status_effect[status](pokemon):
+            return True
+        else:
+            return False
 
     @staticmethod
     def remove_non_volatile_status(target):
@@ -84,11 +88,11 @@ class Status:
             if target.non_volatile_status == StatusType.Fainted:
                 return False
 
-            if target.non_volatile_status == StatusType.Asleep or target.non_volatile_status == StatusType.Frozen:
+            if target.non_volatile_status in [StatusType.Asleep, StatusType.Frozen]:
                 target.blocked = False
 
             if target.non_volatile_status == StatusType.Paralyzed:
-                Status.add_volatile_stat_mod(target, StatsType.Speed, 0.5)
+                Status.remove_volatile_stat_mod(target, StatsType.Spe, 0.5)
 
             if target.non_volatile_status == StatusType.BPoisoned:
                 target.bad_poison_turn = 0
@@ -143,10 +147,10 @@ class Status:
 
     @staticmethod
     def apply_paralysis_effect(target):
-        if target.non_volatile_status != StatusType.Paralyzed:
+        if target.non_volatile_status is not StatusType.Paralyzed:
             return False
         else:
-            Status.add_volatile_stat_mod(target, StatsType.Speed, 0.5)
+            Status.add_volatile_stat_mod(target, StatsType.Spe, 0.5)
             return True
 
     @staticmethod
@@ -197,12 +201,10 @@ class Status:
         else:
             target.stats.damage = target.stats.base_stats[StatsType.HP]
 
+
 Status.apply_status_effect = {
-    StatusType.Poisoned: Status.apply_poisoning_effect,
-    StatusType.BPoisoned: Status.apply_bad_poisoning_effect,
     StatusType.Paralyzed: Status.apply_paralysis_effect,
     StatusType.Frozen: Status.apply_frozen_effect,
-    StatusType.Burned: Status.apply_burning_effect,
     StatusType.Asleep: Status.apply_sleep_effect,
     StatusType.Fainted: Status.apply_fainted_effect
 }

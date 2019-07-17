@@ -4,13 +4,13 @@ from enum import Enum, auto
 class StatsType(Enum):
     """Enum class which contains stats' types"""
     HP = auto()
-    Attack = auto()
-    Defense = auto()
-    SpecialAttack = auto()
-    SpecialDefense = auto()
-    Speed = auto()
-    Accuracy = auto()
-    Evasion = auto()
+    Att = auto()
+    Def = auto()
+    Spa = auto()
+    Spd = auto()
+    Spe = auto()
+    Acc = auto()
+    Eva = auto()
 
 
 class Stats:
@@ -54,32 +54,33 @@ class Stats:
         # Initial value of each statistic
         self.base_stats = {
             StatsType.HP: hp,
-            StatsType.Attack: attack,
-            StatsType.Defense: defense,
-            StatsType.SpecialAttack: special_attack,
-            StatsType.SpecialDefense: special_defense,
-            StatsType.Speed: speed,
-            StatsType.Accuracy: 1,
-            StatsType.Evasion: 1
+            StatsType.Att: attack,
+            StatsType.Def: defense,
+            StatsType.Spa: special_attack,
+            StatsType.Spd: special_defense,
+            StatsType.Spe: speed,
+            StatsType.Acc: 1,
+            StatsType.Eva: 1
         }
         # Initial value of each statistics' multiplier
         self.mul_stats = {
-            StatsType.Attack: 0,
-            StatsType.Defense: 0,
-            StatsType.SpecialAttack: 0,
-            StatsType.SpecialDefense: 0,
-            StatsType.Speed: 0,
-            StatsType.Accuracy: 0,
-            StatsType.Evasion: 0
+            StatsType.Att: 0,
+            StatsType.Def: 0,
+            StatsType.Spa: 0,
+            StatsType.Spd: 0,
+            StatsType.Spe: 0,
+            StatsType.Acc: 0,
+            StatsType.Eva: 0
         }
         # Initial value of each statistics' volatile multiplier
-        self.voltatile_mul = {
-            StatsType.Attack: 1,
-            StatsType.Defense: 1,
-            StatsType.SpecialAttack: 1,
-            StatsType.SpecialDefense: 1,
-            StatsType.Accuracy: 1,
-            StatsType.Evasion: 1
+        self.volatile_mul = {
+            StatsType.Att: 1,
+            StatsType.Def: 1,
+            StatsType.Spa: 1,
+            StatsType.Spd: 1,
+            StatsType.Spe: 1,
+            StatsType.Acc: 1,
+            StatsType.Eva: 1
         }
         # Initial value of the damage
         self.damage = 0
@@ -109,10 +110,12 @@ class Stats:
 
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
-        if stat_type is StatsType.Accuracy or type is StatsType.Evasion:
-            return self.base_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.voltatile_mul[stat_type]
+        if stat_type is StatsType.Acc or type is StatsType.Eva:
+            return self.base_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
+                stat_type]
         else:
-            return self.base_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.voltatile_mul[stat_type]
+            return self.base_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.volatile_mul[
+                stat_type]
 
     def get_actual_hp(self) -> int:
         """Returns Pokemon's actual HP value by subtracting the damage to the base HP"""
@@ -120,8 +123,8 @@ class Stats:
 
     def increase_volatile_mul(self, stats_type: StatsType, value: float):
         """Increases the volatile multiplier of the specified stat by the given value"""
-        self.voltatile_mul[stats_type] *= value
+        self.volatile_mul[stats_type] *= value
 
     def decrease_volatile_mul(self, stats_type: StatsType, value: float):
         """Decreases the volatile multiplier of the specified stat by the given value"""
-        self.voltatile_mul[stats_type] /= value
+        self.volatile_mul[stats_type] /= value

@@ -124,7 +124,7 @@ class DamageCalculator:
                 mult *= 0.5
 
         burn_multiplier = 1
-        if user.non_volatile_status == StatusType.Burned and move.scale_with == StatsType.Attack:
+        if user.non_volatile_status == StatusType.Burned and move.scale_with == StatsType.Att:
             burn_multiplier = 0.5
 
         return int(base_damage * mult * terrain_mult * user.damage_output_multiplier * target.damage_input_multiplier *
