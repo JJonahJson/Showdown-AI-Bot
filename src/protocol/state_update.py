@@ -1,4 +1,5 @@
-from src.model.field import Weather, Field
+from src.model.field import Field
+from src.model.status import StatusType
 
 
 def update_state(line, field):
@@ -14,7 +15,10 @@ def update_state(line, field):
     elif line[0] == "cant":
         pass
     elif line[0] == "faint":
-        pass
+        if field.player_id not in line[1]:
+            field.active_pokemon_bot.status = StatusType.Fainted
+        else:
+            field.active_pokemon_oppo.status = StatusType.Fainted
     if line[0] == "-fail":
         pass
     elif line[0] == "-damage":
