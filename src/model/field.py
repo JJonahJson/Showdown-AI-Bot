@@ -87,11 +87,11 @@ class BattleFieldSingle(BattleField):
         super().__init__()
         self.active_pokemon_bot = active_pokemon_bot
         self.active_pokemon_oppo = active_pokemon_oppo
-        self.bench_bot = bench_bot
+        self.all_pkmns_bot = bench_bot
         self.room_name = ""
-        self.bench_oppo = bench_oppo
+        self.all_pkmns_oppo = bench_oppo
         self.active_selector_side = {1: self.active_pokemon_bot, 2: self.active_pokemon_oppo}
-        self.bench_selector_side = {1: self.bench_bot, 2: self.bench_oppo}
+        self.bench_selector_side = {1: self.all_pkmns_bot, 2: self.all_pkmns_oppo}
 
     def get_pokemon_index_by_name(self, side, pkmn_name):
         for item in self.bench_selector_side[side]:
@@ -123,16 +123,15 @@ class BattleFieldSingle(BattleField):
         """
         if player == 1:
             to_replace = self.active_pokemon_bot
-            self.active_pokemon_bot = self.bench_bot[pokemon_in]
-            self.bench_bot[pokemon_in] = to_replace
+            self.active_pokemon_bot = self.all_pkmns_bot[pokemon_in]
+            self.all_pkmns_bot[pokemon_in] = to_replace
             self.active_selector_side[1] = self.active_pokemon_bot
 
         else:
             to_replace = self.active_pokemon_oppo
-            self.active_pokemon_oppo = self.bench_oppo[pokemon_in]
-            self.bench_oppo[pokemon_in] = to_replace
+            self.active_pokemon_oppo = self.all_pkmns_oppo[pokemon_in]
+            self.all_pkmns_oppo[pokemon_in] = to_replace
             self.active_selector_side[2] = self.active_pokemon_oppo
-
 
     def update_status(self, side, status=""):
         # TODO fix after merge, rename enum
