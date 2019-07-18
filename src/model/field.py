@@ -118,7 +118,6 @@ class BattleFieldSingle(BattleField):
         """Switch pokemon
         :param player:
         :param pokemon_in: Not used
-        :param pokemon_out: Index of the pokemon to remove
         :return:
         """
         if player == 1:

@@ -1,5 +1,5 @@
 from src.model.field import Field
-from src.model.status import StatusType
+from src.model.status import StatusType, Status
 
 
 def update_state(line, field):
@@ -16,9 +16,9 @@ def update_state(line, field):
         pass
     elif line[0] == "faint":
         if field.player_id not in line[1]:
-            field.active_pokemon_bot.status = StatusType.Fainted
+            Status.apply_non_volatile_status(StatusType.Fainted, field.active_pokemon_bot)
         else:
-            field.active_pokemon_oppo.status = StatusType.Fainted
+            Status.apply_non_volatile_status(StatusType.Fainted, field.active_pokemon_oppo)
     if line[0] == "-fail":
         pass
     elif line[0] == "-damage":
