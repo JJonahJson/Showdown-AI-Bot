@@ -1,6 +1,7 @@
 import src.protocol.senders as sender
 import json
 import time
+import random
 import src.protocol.login as login
 import src.protocol.state_update as su
 
@@ -10,6 +11,7 @@ class GameLoop:
     def __init__(self, ws, field):
         self.ws = ws
         self.field = field
+        self.standard_answers = open("standard_answers", "r").readlines()
 
     async def challenge_loop(self, message):
         string_tab = message.split("|")
@@ -58,7 +60,8 @@ class GameLoop:
                 continue
             current = line.split('|')
             if current[1] == "init":
-                await sender.sender(self.ws, self.field.room_name, "Welcome")
+                num_answer = random.randint(0, len(self.standard_answers))
+                await sender.sender(self.ws, self.field.room_name, self.standard_answers[num_answer])
                 time.sleep(3)
                 await sender.sender(self.ws, self.field.room_name, "/timer on")
             elif current[1] == "player" and len(current) > 3 and current[3].lower() == "tapulabu":
@@ -97,7 +100,8 @@ class GameLoop:
                 await sender.leaving(self.ws, self.field.player_id)
             elif current[1] == "c":
                 # This is a message
-                pass
+                num_answer = random.randint(0, len(self.standard_answers))
+                await sender.sender(self.ws, self.field.room_name, self.standard_answers[num_answer])
             else:
                 su.update_state(current, self.field)
                 pass
