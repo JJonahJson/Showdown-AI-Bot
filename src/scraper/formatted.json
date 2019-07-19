@@ -6651,7 +6651,7 @@
     "abilities": {"0": "Shield Dust", "1": "Compound Eyes", "H": "Friend Guard"},
     "weightkg": 2.5
   },
-  "spe:wpa": {
+  "spewpa": {
     "num": 665,
     "species": "Spewpa",
     "types": ["Bug"],
