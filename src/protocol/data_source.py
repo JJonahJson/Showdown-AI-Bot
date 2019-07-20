@@ -40,6 +40,5 @@ class DatabaseDataSource(AbstractDataSource):
         # TODO: Return Enum value
         # TODO: Tests
         return PokemonType[result[0][0]]
-2
 
 
