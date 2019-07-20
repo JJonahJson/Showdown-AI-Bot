@@ -2,7 +2,6 @@ from src.model.field import Weather, Field
 from src.model.stats import StatsType
 from src.model.field import BattleFieldSingle
 
-
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 
@@ -27,11 +26,24 @@ class Ability(ABC):
         pass
 
 
+class BuffUserAbility(Ability):
+    """Ability that buffs a stat of the user
+    """
+
+    def __init__(self, name: str, stat: StatsType, value: int):
+        super().__init__(name)
+        self.stat = stat
+        self.value = value
+
+    def activate(self, field: BattleFieldSingle, side: int):
+        field.active_selector_side[side].stats.volatile_mul[self.stat] *= self.value
+
+
 class DebuffEnemyAbility(Ability):
     """Ability that debuffs a stat of the enemy
     """
 
-    def __init__(self, name: str, stat: StatsType, value:int):
+    def __init__(self, name: str, stat: StatsType, value: int):
         super().__init__(name)
         self.stat = stat
         self.value = value
