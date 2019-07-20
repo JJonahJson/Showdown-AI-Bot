@@ -13,6 +13,14 @@ class AbstractDataSource(ABC):
     def get_pokemontype_by_name(self, name):
         pass
 
+    @abstractmethod
+    def get_move_by_name(self, name):
+        pass
+
+    @abstractmethod
+    def get_movetype_by_name(self, name):
+        pass
+
 
 class DatabaseDataSource(AbstractDataSource):
 
@@ -41,4 +49,18 @@ class DatabaseDataSource(AbstractDataSource):
         # TODO: Tests
         return PokemonType[result[0][0]]
 
+    def get_move_by_name(self, name):
+        cursor = self.db_connection.cursor(prepared=True)
+        parametric_query = "SELECT * FROM Moves as mv where mv.name = %s"
+        cursor.execute(parametric_query, name)
+        result = cursor.fetchall()
+        # TODO: Return move object
 
+    def get_movetype_by_name(self, name):
+        cursor = self.db_connection.cursor(prepared=True)
+        parametric_query = "SELECT mv.type FROM Moves as mv.name = %s"
+        cursor.execute(parametric_query, name)
+        result = cursor.fetchall()
+        # TODO: Return Enum value
+        # TODO: Tests
+        return PokemonType[result[0][0]]
