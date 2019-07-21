@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
+
 import mysql.connector
 
-from src.model.pokemontype import PokemonType
-from src.model.status import StatusType
-from src.model.stats import Stats
+from src.model.move import SingleMove
 from src.model.pokemon import Pokemon
+from src.model.pokemontype import PokemonType
+from src.model.stats import Stats, StatsType
+from src.model.status import StatusType
+
 
 class AbstractDataSource(ABC):
 
@@ -52,10 +55,6 @@ class DatabaseDataSource(AbstractDataSource):
 
         return Pokemon(pkmn_name, type_list, "", stats, None, None, weight_kg, StatusType.Normal, [], None, 50)
 
-
-        return Pok
-        # TODO: Create and return pokemon object
-
     def get_pokemontype_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT type_1, type_2 FROM Pokemon as pkmn WHERE pkmn.name = %s"
@@ -68,21 +67,63 @@ class DatabaseDataSource(AbstractDataSource):
         else:
             return [PokemonType[result[0][0]], PokemonType[result[0][1]]]
 
-
     # num,name, id_name, acc, base_power, category, pp, priority, chance, volatileStatus, nonvolatileStatus
     # all_boost, target, movetype
     def get_move_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT * FROM Moves as mv where mv.name = %s"
         cursor.execute(parametric_query, (name,))
-        result = cursor.fetchall()
-        # TODO: Return move object
+        result = cursor.fetchall()[0]
+
+        move_name = result[1]
+        id_name = result[2]
+        accuracy = result[3]
+        base_power = result[4]
+        category = result[5]
+
+        if category == 'Physical':
+            scale_with = StatsType.Att
+            defends_on = StatsType.Def
+        else:
+            scale_with = StatsType.Spa
+            defends_on = StatsType.Spd
+
+        pp = result[6]
+        priority = result[7]
+        chance = result[8]
+        volatile_status = StatusType[result[9]]
+        non_volatile_status = StatusType[result[10]]
+        boost_atk = result[11]
+        boost_def = result[12]
+        boost_spa = result[13]
+        boost_spd = result[14]
+        boost_spe = result[15]
+        boost_acc = result[16]
+        boost_eva = result[17]
+        target = result[18]
+
+        boosts = [
+            (StatsType.att, boost_atk),
+            (StatsType.Def, boost_def),
+            (StatsType.Spa, boost_spa),
+            (StatsType.Spd, boost_spd),
+            (StatsType.Spe, boost_spe),
+            (StatsType.Acc, boost_acc),
+            (StatsType.Eva, boost_eva)
+        ]
+
+        move_type = PokemonType[result[19]]
+
+        if target == 'self':
+            return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
+                              boosts, [], defends_on, chance, (target, volatile_status), (target, non_volatile_status))
+        else:
+            return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
+                              [], boosts, defends_on, chance, (target, volatile_status), (target, non_volatile_status))
 
     def get_movetype_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)
-        parametric_query = "SELECT mv.type FROM Moves as mv.name = %s"
-        cursor.execute(parametric_query, name)
+        parametric_query = "SELECT mv.move_type FROM Moves as mv WHERE mv.name = %s"
+        cursor.execute(parametric_query, (name,))
         result = cursor.fetchall()
-        # TODO: Return Enum value
-        # TODO: Tests
         return PokemonType[result[0][0]]

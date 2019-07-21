@@ -31,6 +31,11 @@ class DBTest(unittest.TestCase):
         self.assertEqual(pokemon_obj.stats.base_stats[s.Spe], 80)
         self.assertEqual(pokemon_obj.weight, 52.0)
 
+    def test_get_move_type(self):
+        db = ds.DatabaseDataSource()
+        move_type = db.get_movetype_by_name("Flamethrower")
+        self.assertEqual(move_type, pk.Fire)
+
 
 
 if __name__ == '__main__':
