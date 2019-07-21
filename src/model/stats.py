@@ -51,7 +51,7 @@ class Stats:
     }
 
     def __init__(self, hp: int, attack: int, defense: int, special_attack: int, special_defense: int, speed: int,
-                 level=50):
+                 level=50, is_base=True):
         # Initial value of each statistic
         self.base_stats = {
             StatsType.HP: hp,
@@ -64,16 +64,19 @@ class Stats:
             StatsType.Eva: 1
         }
 
-        self.real_stats = {
-            StatsType.HP: ((31+2*hp+0)*level/100)+10+level/100,
-            StatsType.Att: ((31+2*attack+0)*level/100)+5,
-            StatsType.Def: ((31+2*defense+0)*level/100)+5,
-            StatsType.Spa: ((31+2*special_attack+0)*level/100)+5,
-            StatsType.Spd: ((31+2*special_defense+0)*level/100)+5,
-            StatsType.Spe: ((31+2*speed+0)*level/100)+5,
-            StatsType.Acc: 1,
-            StatsType.Eva: 1
-        }
+        if is_base:
+            self.real_stats = {
+                StatsType.HP: ((31+2*hp+0)*level/100)+10+level/100,
+                StatsType.Att: ((31+2*attack+0)*level/100)+5,
+                StatsType.Def: ((31+2*defense+0)*level/100)+5,
+                StatsType.Spa: ((31+2*special_attack+0)*level/100)+5,
+                StatsType.Spd: ((31+2*special_defense+0)*level/100)+5,
+                StatsType.Spe: ((31+2*speed+0)*level/100)+5,
+                StatsType.Acc: 1,
+                StatsType.Eva: 1
+            }
+        else:
+            self.real_stats = self.base_stats
 
         # Initial value of each statistics' multiplier
         self.mul_stats = {
@@ -121,7 +124,7 @@ class Stats:
 
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
-        if stat_type is StatsType.Acc or type is StatsType.Eva:
+        if stat_type is StatsType.Acc or stat_type is StatsType.Eva:
             return self.real_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
                 stat_type]
         else:

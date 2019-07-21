@@ -77,6 +77,13 @@ class Move(ABC):
         """
         pass
 
+    def calculate_base_power(self, types):
+        stab = 1
+        if self.move.move_type in types:
+            stab = 1.5
+        return self.move.base_power*stab
+
+
     def __lt__(self, other_move):
         return self.priority > other_move.priority
 
@@ -92,7 +99,7 @@ class Move(ABC):
 
 class SingleMove(Move):
     """
-    Subclasss of the Move class.
+    Subclass of the Move class.
     It represents a move with only one target.
 
     """
@@ -101,12 +108,12 @@ class SingleMove(Move):
                  base_power: int, category: str, pp: int, priority: int,
                  is_Z: bool, crit_ratio: int, move_type,
                  scale_with, on_user,
-                 on_target, defends_on=None):
+                 on_target, defends_on, chance: int, volatile_status, non_volatile_status):
 
         super().__init__(move_name, accuracy,
                          base_power, category, pp, priority,
                          is_Z, crit_ratio, move_type, scale_with,
-                         on_user, on_target, defends_on)
+                         on_user, on_target, defends_on, chance, volatile_status, non_volatile_status)
 
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
         damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
