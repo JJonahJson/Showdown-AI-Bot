@@ -136,7 +136,7 @@ class Status:
     @staticmethod
     def decrease_hp(pokemon, percentage: float):
         """Method which decreases pokemon's hp based on a specified percentage"""
-        pokemon.stats.damage += pokemon.stats.base_stats[StatsType.HP] * percentage
+        pokemon.stats.damage += pokemon.stats.real_stats[StatsType.HP] * percentage
 
     @staticmethod
     def apply_infatuation(target, caster):
@@ -201,7 +201,7 @@ class Status:
         if target.non_volatile_status != StatusType.Fainted:
             return False
         else:
-            target.stats.damage = target.stats.base_stats[StatsType.HP]
+            target.stats.damage = target.stats.real_stats[StatsType.HP]
 
 
 Status.apply_status_effect = {

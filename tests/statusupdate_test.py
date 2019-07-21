@@ -17,7 +17,7 @@ class StatusUpdateTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(StatusUpdateTest, self).__init__(*args, **kwargs)
-        stats = Stats(100, 100, 100, 100, 100, 100)
+        stats = Stats(100, 100, 100, 100, 100, 100, )
 
         self.pokemon1 = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Male", stats, None, None, None, None, None, None, 50)
         self.pokemon2 = Pokemon("Kyogre", [pk.Water], "", stats, None, None, None, None, None, None, 50)

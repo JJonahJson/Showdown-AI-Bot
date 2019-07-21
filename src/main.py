@@ -13,7 +13,7 @@ async def main():
     """
     websocket = create_connection(
         'ws://sim.smogon.com:8000/showdown/websocket')
-    stats = Stats(100, 100, 100, 100, 100, 100)
+    stats = Stats(100, 100, 100, 100, 100, 100, )
     pokemon1 = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Male", stats, None, None, None, None, None, None, 50)
     pokemon2 = Pokemon("Kyogre", [pk.Water], "", stats, None, None, None, None, None, None, 50)
     pokemon3 = Pokemon("Qwilfish", [pk.Water, pk.Poison], "Male", stats, None, None, None, None, None, None, 50)

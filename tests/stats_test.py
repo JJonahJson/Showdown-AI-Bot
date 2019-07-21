@@ -6,7 +6,7 @@ from src.model.stats import Stats, StatsType
 class StatsTest(unittest.TestCase):
 
     def testIncreaseStat(self):
-        stat = Stats(100, 100, 100, 100, 100, 100)
+        stat = Stats(100, 100, 100, 100, 100, 100, )
         counter = 1
         stat.modify(StatsType.Att, counter)
         should_be = stat.base_stats[StatsType.Att] * Stats.multipliers[counter]
@@ -20,7 +20,7 @@ class StatsTest(unittest.TestCase):
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testIncreaseAccuracyOrEvasiveness(self):
-        stat = Stats(100, 100, 100, 100, 100, 100)
+        stat = Stats(100, 100, 100, 100, 100, 100, )
         counter = 1
         stat.modify(StatsType.Eva, counter)
         should_be = stat.base_stats[StatsType.Eva] * Stats.multipliersAE[counter]
@@ -34,7 +34,7 @@ class StatsTest(unittest.TestCase):
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testDecreaseStat(self):
-        stat = Stats(100, 100, 100, 100, 100, 100)
+        stat = Stats(100, 100, 100, 100, 100, 100, )
         counter = -1
         stat.modify(StatsType.Att, counter)
         should_be = stat.base_stats[StatsType.Att] * Stats.multipliers[counter]
@@ -48,7 +48,7 @@ class StatsTest(unittest.TestCase):
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testDecreaseAccuracyOrEvasiveness(self):
-        stat = Stats(100, 100, 100, 100, 100, 100)
+        stat = Stats(100, 100, 100, 100, 100, 100, )
         counter = (-1)
         stat.modify(StatsType.Eva, counter)
         should_be = stat.base_stats[StatsType.Eva] * Stats.multipliersAE[counter]
@@ -62,7 +62,7 @@ class StatsTest(unittest.TestCase):
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testOverflowBuff(self):
-        stat = Stats(100, 100, 100, 100, 100, 100)
+        stat = Stats(100, 100, 100, 100, 100, 100, )
         counter = 7
         stat.modify(StatsType.Att, counter)
         should_be = stat.base_stats[StatsType.Att] * Stats.multipliers[6]
