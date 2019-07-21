@@ -17,9 +17,7 @@ def get_active_moves(moves_list, db_connection):
 
 def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
     active_pokemon_bot = None
-    active_pokemon_oppo = None
     bench_bot = {}
-    bench_oppo = {}
     counter = 1
 
     for pokemon in pokemon_list["pokemon"]:
@@ -73,7 +71,7 @@ def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
                 bench_bot[counter] = pokemon
                 counter += 1
 
-    return active_pokemon_bot, active_pokemon_oppo
+    return active_pokemon_bot, bench_bot
 
 
 def parse_and_set(message, db_connection):
