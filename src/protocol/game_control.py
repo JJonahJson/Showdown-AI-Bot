@@ -14,7 +14,8 @@ class GameLoop:
     def __init__(self, ws):
         self.ws = ws
         self.field = BattleFieldSingle(None, None, None, None)
-        self.standard_answers = open("standard_answers", "r").readlines()
+        with open("standard_answers", "r") as file:
+            self.standard_answers = file.readlines()
         self.db = DatabaseDataSource()
 
     async def challenge_loop(self, message):
@@ -100,7 +101,7 @@ class GameLoop:
 
             elif current[1] == "teampreview":
                 # TODO: IA Knapsack which pokemon do we carry
-                await battle.make_team_order(self.ws)
+                #await battle.make_team_order(self.ws)
 
             elif current[1] == "turn":
                 # TODO: Call IA to decide which action to do
