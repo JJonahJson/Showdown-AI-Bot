@@ -1,0 +1,54 @@
+{
+    	"deltastream": {
+        "id": "deltastream",
+		"name": "Delta Stream",
+        "weather": "Wind",
+            "type": "WeatherAbility"
+	    },
+        "desolateland": {
+            "name": "Desolate Land",
+            "id": "desolateland",
+            "weather": "desolateland",
+            "type": "WeatherAbility"
+        },
+        "hugepower": {
+            "name" : "Huge Power",
+            "id": "hugepower",
+            "modify_stat": "atk",
+            "multiplier": 2,
+            "target": "self",
+            "type": "BuffUserAbility"
+        },
+        "primordialsea": {
+            "name": "PrimordialSea",
+            "id": "primordialsea",
+            "weather": "primordialsea",
+            "type": "WeatherAbility"
+        },
+         "purepower": {
+            "name": "Pure Power",
+            "id": "purepower",
+            "modify_stat": "atk",
+            "multiplier": 2
+         },
+        "drizzle": {
+            "name": "Drizzle",
+            "id": "drizzle",
+            "type": "WeatherAbility",
+            "weather": "raindance"
+        },
+        "drought": {
+            "name": "Drought",
+            "id": "drought",
+            "type": "WeatherAbility",
+            "weather": "sunnyday"
+        },
+        "intimidate": {
+            "name": "Intimidate" ,
+            "id": "intimidate" ,
+            "stat": "atk" ,
+            "value": -1 ,
+            "type": "DebuffEnemyAbility",
+            "target": "enemy"
+        }
+}

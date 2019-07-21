@@ -1,6 +1,8 @@
 from src.model.damagecalculator import DamageCalculator
+from src.model.status import Status
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+import random
 
 
 class MoveCategory(Enum):
@@ -36,8 +38,8 @@ class Move(ABC):
 
     def __init__(self, move_name: str, accuracy: int,
                  base_power: int, category, pp: int, priority: int,
-                 is_Z: bool, crit_ratio: int, move_type, scale_with, on_user,
-                 on_target, defends_on=None):
+                 is_Z: bool, crit_ratio: int, move_type, scale_with, on_user_stats,
+                 on_target_stats, defends_on, chance: int, volatile_status, non_volatile_status):
 
         self.move_name = move_name
         self.accuracy = accuracy
@@ -49,8 +51,8 @@ class Move(ABC):
         self.is_Z = is_Z
         self.crit_ratio = crit_ratio
         self.move_type = move_type
-        self.on_user = on_user
-        self.on_target = on_target
+        self.on_user_stats = on_user_stats
+        self.on_target_stats = on_target_stats
         self.moveStatus = MoveStatus.Available
         self.power_multiply = 1
         self.isUsable = True
@@ -59,6 +61,11 @@ class Move(ABC):
             self.defends_on = self.scale_with
         else:
             self.defends_on = defends_on
+
+        self.chance = chance
+        self.volatile_status = volatile_status
+        self.non_volatile_status = non_volatile_status
+
 
     @abstractmethod
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
@@ -106,8 +113,25 @@ class SingleMove(Move):
         target_pokemon.stats.decrease_hp(damage)
         self.pp -= 1
 
-        if self.on_user:
-            caster_pokemon.stats.modify(self.on_user.stat, self.on_user.value)
+        if random.randint(0,100) <= self.chance:
 
-        if self.on_target:
-            target_pokemon.stats.modify(self.on_target.stat, self.on_target.value)
+            for tupla in self.on_user_stats:
+                caster_pokemon.stats.modify(tupla[0], tupla[1])
+
+            for tupla in self.on_target_stats:
+                target_pokemon.stats.modify(tupla[0], tupla[1])
+
+            if self.volatile_status[1]:
+                if self.volatile_status[0] == 'self':
+                    Status.add_volatile_status(self.volatile_status[1], caster_pokemon)
+                else:
+                    Status.add_volatile_status(self.volatile_status[1], target_pokemon)
+
+            if self.non_volatile_status[1]:
+                if self.non_volatile_status[0] == 'self':
+                    Status.apply_non_volatile_status(self.non_volatile_status[1], caster_pokemon)
+                else:
+                    Status.apply_non_volatile_status(self.non_volatile_status[1], target_pokemon)
+
+
+
