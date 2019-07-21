@@ -116,10 +116,13 @@ class DatabaseDataSource(AbstractDataSource):
 
         if target == 'self':
             return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
-                              boosts, [], defends_on, chance, (target, volatile_status), (target, non_volatile_status))
+                              filter(lambda x: x[1] != 0, boosts), [], defends_on, chance, (target, volatile_status),
+                              (target,
+                               non_volatile_status))
         else:
             return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
-                              [], boosts, defends_on, chance, (target, volatile_status), (target, non_volatile_status))
+                              [], filter(lambda x: x[1] != 0, boosts), defends_on, chance, (target, volatile_status),
+                              (target, non_volatile_status))
 
     def get_movetype_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)
