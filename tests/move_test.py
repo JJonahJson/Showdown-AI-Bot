@@ -11,7 +11,7 @@ class MoveTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(MoveTest, self).__init__(*args, **kwargs)
-        stats = Stats(100, 100, 100, 100, 100, 100)
+        stats = Stats(100, 100, 100, 100, 100, 100, )
 
         move1 = SingleMove("Lanciafiamme", 100, 100, MoveCategory.Damage, 10, 0, False, 15, pk.Fire,
                            StatsType.Spa,

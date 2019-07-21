@@ -9,7 +9,7 @@ from src.model.pokemontype import PokemonType as pk
 class ItemTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(ItemTest, self).__init__(*args, **kwargs)
-        self.stat = Stats(100, 100, 100, 100, 100, 100)
+        self.stat = Stats(100, 100, 100, 100, 100, 100, )
         self.pokemon = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Male", self.stat, {}, [], 80.50,
                                StatusType.Normal, [], None, 50)
 

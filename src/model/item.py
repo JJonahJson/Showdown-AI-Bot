@@ -148,5 +148,5 @@ class HealingBerry(Item):
 
     def activate(self, pokemon):
         # If under the threshold then activate
-        if pokemon.stats.get_actual_hp() <= (pokemon.stats.base_stats[StatsType.HP] * (self.threshold / 100)):
-            pokemon.stats.increase_hp(pokemon.stats.base_stats[StatsType.HP] * (self.value / 100))
+        if pokemon.stats.get_actual_hp() <= (pokemon.stats.get_actual(StatsType.HP) * (self.threshold / 100)):
+            pokemon.stats.increase_hp(pokemon.stats.get_actual(StatsType.HP) * (self.value / 100))

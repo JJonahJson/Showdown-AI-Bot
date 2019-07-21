@@ -9,7 +9,7 @@ class StatusTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(StatusTest, self).__init__(*args, **kwargs)
-        self.stat = Stats(100, 100, 100, 100, 100, 100)
+        self.stat = Stats(100, 100, 100, 100, 100, 100, )
         self.pokemon = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Male", self.stat, {}, [], 80.50,
                                StatusType.Normal, [], None, 50)
         self.other_pokemon = Pokemon("Incineroar", [pk.Fire, pk.Dark], "Female", self.stat, {}, [], 80.50,

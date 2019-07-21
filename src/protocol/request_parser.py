@@ -27,7 +27,7 @@ def parse_and_set(message):
         spd = pokemon["stats"]["spd"]
         spe = pokemon["stats"]["spe"]
 
-        stat = Stats(hp, atk, defense, spa, spd, spe)
+        stat = Stats(hp, atk, defense, spa, spd, spe, )
 
         # Item & Ability
         ability_name = pokemon["baseAbility"]
