@@ -7,7 +7,7 @@ from src.model.stats import StatsType
 class StatusType(Enum):
     """Class that represents all possible statuses of a pokemon"""
     Normal = auto(),
-    Fainted = auto(),
+    Fnt = auto(),
     Psn = auto(),
     Tox = auto(),
     Brn = auto(),
@@ -23,38 +23,38 @@ class StatusType(Enum):
 
 
 non_volatile = {
-    StatusType.Normal: False,
-    StatusType.Fainted: True,
-    StatusType.Psn: True,
-    StatusType.Tox: True,
-    StatusType.Brn: True,
-    StatusType.Par: True,
-    StatusType.Frz: True,
-    StatusType.Slp: True,
+    StatusType.Normal   : False,
+    StatusType.Fnt      : True,
+    StatusType.Psn      : True,
+    StatusType.Tox      : True,
+    StatusType.Brn      : True,
+    StatusType.Par      : True,
+    StatusType.Frz      : True,
+    StatusType.Slp      : True,
 
-    StatusType.Attract: False,
-    StatusType.Flinch: False,
+    StatusType.Attract  : False,
+    StatusType.Flinch   : False,
     StatusType.Confusion: False,
-    StatusType.Protect: False,
-    StatusType.Trapped: False
+    StatusType.Protect  : False,
+    StatusType.Trapped  : False
 
 }
 
 immune = {
-    StatusType.Psn: [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Tox: [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Par: [PokemonType.Electric],
-    StatusType.Frz: [PokemonType.Ice],
-    StatusType.Brn: [PokemonType.Fire],
-    StatusType.Normal: [],
-    StatusType.Fainted: [],
-    StatusType.Attract: [],
-    StatusType.Flinch: [],
+    StatusType.Psn      : [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Tox      : [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Par      : [PokemonType.Electric],
+    StatusType.Frz      : [PokemonType.Ice],
+    StatusType.Brn      : [PokemonType.Fire],
+    StatusType.Normal   : [],
+    StatusType.Fnt      : [],
+    StatusType.Attract  : [],
+    StatusType.Flinch   : [],
     StatusType.Confusion: [],
-    StatusType.Protect: [],
-    StatusType.Trapped: [],
-    StatusType.Endure: [],
-    StatusType.Slp: []
+    StatusType.Protect  : [],
+    StatusType.Trapped  : [],
+    StatusType.Endure   : [],
+    StatusType.Slp      : []
 }
 
 
@@ -87,7 +87,7 @@ class Status:
     def remove_non_volatile_status(target):
         if target.non_volatile_status != StatusType.Normal:
 
-            if target.non_volatile_status == StatusType.Fainted:
+            if target.non_volatile_status == StatusType.Fnt:
                 return False
 
             if target.non_volatile_status in [StatusType.Slp, StatusType.Frz]:
@@ -198,7 +198,7 @@ class Status:
 
     @staticmethod
     def apply_fainted_effect(target):
-        if target.non_volatile_status != StatusType.Fainted:
+        if target.non_volatile_status != StatusType.Fnt:
             return False
         else:
             target.stats.damage = target.stats.real_stats[StatsType.HP]
@@ -208,5 +208,5 @@ Status.apply_status_effect = {
     StatusType.Par: Status.apply_paralysis_effect,
     StatusType.Frz: Status.apply_frozen_effect,
     StatusType.Slp: Status.apply_sleep_effect,
-    StatusType.Fainted: Status.apply_fainted_effect
+    StatusType.Fnt: Status.apply_fainted_effect
 }

@@ -116,10 +116,8 @@ class Stats:
 
     def decrease_hp(self, quantity: int):
         """Decrease Pokemon's HP by increasing the damage"""
-        if (self.damage + quantity) > self.real_stats[StatsType.HP]:
-            self.damage = self.real_stats[StatsType.HP]
-        else:
-            self.damage += quantity
+        self.damage = self.real_stats[StatsType.HP] - quantity
+
 
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""

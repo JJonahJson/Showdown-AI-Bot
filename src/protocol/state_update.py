@@ -16,9 +16,9 @@ def update_state(line, field):
         pass
     elif line[0] == "faint":
         if field.player_id not in line[1]:
-            Status.apply_non_volatile_status(StatusType.Fainted, field.active_pokemon_bot)
+            Status.apply_non_volatile_status(StatusType.Fnt, field.active_pokemon_bot)
         else:
-            Status.apply_non_volatile_status(StatusType.Fainted, field.active_pokemon_oppo)
+            Status.apply_non_volatile_status(StatusType.Fnt, field.active_pokemon_oppo)
     if line[0] == "-fail":
         pass
     elif line[0] == "-damage":
@@ -26,6 +26,7 @@ def update_state(line, field):
             field.update_damage(1, int(line[2].split("/")[0]))
         else:
             field.update_damage(2, int(line[2].split("/")[0]))
+            
     elif line[0] == "-heal":
         if field.player_id in line[1]:
             field.update_heal(1, int(line[2].split("/")[0]))

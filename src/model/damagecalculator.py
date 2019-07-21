@@ -1,10 +1,9 @@
+from random import uniform
+
+from src.model.field import Weather as w, Field as f
 from src.model.pokemontype import PokemonType as t
-from src.model.field import Weather as w
-from src.model.field import Field as f
 from src.model.stats import StatsType
 from src.model.status import StatusType
-
-from random import uniform
 
 
 class TypeMultiplier:
@@ -15,65 +14,65 @@ class TypeMultiplier:
     """
 
     weakTo = {
-        t.Normal: [t.Fighting],
-        t.Fire: [t.Water, t.Ground, t.Rock],
-        t.Water: [t.Electric, t.Grass],
+        t.Normal  : [t.Fighting],
+        t.Fire    : [t.Water, t.Ground, t.Rock],
+        t.Water   : [t.Electric, t.Grass],
         t.Electric: [t.Ground],
-        t.Grass: [t.Fire, t.Ice, t.Poison, t.Flying, t.Bug],
-        t.Ice: [t.Fire, t.Fighting, t.Rock],
+        t.Grass   : [t.Fire, t.Ice, t.Poison, t.Flying, t.Bug],
+        t.Ice     : [t.Fire, t.Fighting, t.Rock],
         t.Fighting: [t.Flying, t.Psychic, t.Fairy],
-        t.Poison: [t.Ground, t.Psychic],
-        t.Ground: [t.Water, t.Grass, t.Ice],
-        t.Flying: [t.Electric, t.Ice, t.Rock],
-        t.Psychic: [t.Bug, t.Dark, t.Ghost],
-        t.Bug: [t.Fire, t.Flying, t.Rock],
-        t.Rock: [t.Water, t.Grass, t.Fighting, t.Steel],
-        t.Ghost: [t.Ghost, t.Dark],
-        t.Dragon: [t.Dragon, t.Ice, t.Fairy],
-        t.Dark: [t.Bug, t.Fighting, t.Fairy],
-        t.Steel: [t.Fire, t.Fighting, t.Ground],
-        t.Fairy: [t.Poison, t.Steel]
+        t.Poison  : [t.Ground, t.Psychic],
+        t.Ground  : [t.Water, t.Grass, t.Ice],
+        t.Flying  : [t.Electric, t.Ice, t.Rock],
+        t.Psychic : [t.Bug, t.Dark, t.Ghost],
+        t.Bug     : [t.Fire, t.Flying, t.Rock],
+        t.Rock    : [t.Water, t.Grass, t.Fighting, t.Steel],
+        t.Ghost   : [t.Ghost, t.Dark],
+        t.Dragon  : [t.Dragon, t.Ice, t.Fairy],
+        t.Dark    : [t.Bug, t.Fighting, t.Fairy],
+        t.Steel   : [t.Fire, t.Fighting, t.Ground],
+        t.Fairy   : [t.Poison, t.Steel]
     }
 
     resistsTo = {
-        t.Normal: [],
-        t.Fire: [t.Fire, t.Grass, t.Ice, t.Bug, t.Steel, t.Fairy],
-        t.Water: [t.Fire, t.Water, t.Ice, t.Steel],
+        t.Normal  : [],
+        t.Fire    : [t.Fire, t.Grass, t.Ice, t.Bug, t.Steel, t.Fairy],
+        t.Water   : [t.Fire, t.Water, t.Ice, t.Steel],
         t.Electric: [t.Electric, t.Flying, t.Steel],
-        t.Grass: [t.Water, t.Electric, t.Grass, t.Ground],
-        t.Ice: [t.Ice],
+        t.Grass   : [t.Water, t.Electric, t.Grass, t.Ground],
+        t.Ice     : [t.Ice],
         t.Fighting: [t.Bug, t.Rock, t.Dark],
-        t.Poison: [t.Grass, t.Fighting, t.Poison, t.Bug, t.Rock, t.Dark],
-        t.Ground: [t.Poison, t.Rock],
-        t.Flying: [t.Ground, t.Grass, t.Bug],
-        t.Psychic: [t.Fighting, t.Psychic],
-        t.Bug: [t.Grass, t.Fighting, t.Ground],
-        t.Rock: [t.Normal, t.Fire, t.Poison, t.Flying],
-        t.Ghost: [t.Poison, t.Bug],
-        t.Dragon: [t.Fire, t.Grass, t.Water],
-        t.Dark: [t.Ghost, t.Dark],
-        t.Steel: [t.Normal, t.Grass, t.Ice, t.Flying, t.Psychic, t.Bug, t.Rock, t.Dragon, t.Steel, t.Fairy],
-        t.Fairy: [t.Fighting, t.Bug, t.Dark]
+        t.Poison  : [t.Grass, t.Fighting, t.Poison, t.Bug, t.Rock, t.Dark],
+        t.Ground  : [t.Poison, t.Rock],
+        t.Flying  : [t.Ground, t.Grass, t.Bug],
+        t.Psychic : [t.Fighting, t.Psychic],
+        t.Bug     : [t.Grass, t.Fighting, t.Ground],
+        t.Rock    : [t.Normal, t.Fire, t.Poison, t.Flying],
+        t.Ghost   : [t.Poison, t.Bug],
+        t.Dragon  : [t.Fire, t.Grass, t.Water],
+        t.Dark    : [t.Ghost, t.Dark],
+        t.Steel   : [t.Normal, t.Grass, t.Ice, t.Flying, t.Psychic, t.Bug, t.Rock, t.Dragon, t.Steel, t.Fairy],
+        t.Fairy   : [t.Fighting, t.Bug, t.Dark]
     }
     ineffectiveTo = {
-        t.Normal: [t.Ghost],
-        t.Fire: [],
-        t.Water: [],
+        t.Normal  : [t.Ghost],
+        t.Fire    : [],
+        t.Water   : [],
         t.Electric: [],
-        t.Grass: [],
-        t.Ice: [],
+        t.Grass   : [],
+        t.Ice     : [],
         t.Fighting: [],
-        t.Poison: [],
-        t.Ground: [t.Electric],
-        t.Flying: [t.Ground],
-        t.Psychic: [],
-        t.Bug: [],
-        t.Rock: [],
-        t.Ghost: [t.Normal, t.Fighting],
-        t.Dragon: [],
-        t.Dark: [t.Psychic],
-        t.Steel: [t.Poison],
-        t.Fairy: [t.Dragon]
+        t.Poison  : [],
+        t.Ground  : [t.Electric],
+        t.Flying  : [t.Ground],
+        t.Psychic : [],
+        t.Bug     : [],
+        t.Rock    : [],
+        t.Ghost   : [t.Normal, t.Fighting],
+        t.Dragon  : [],
+        t.Dark    : [t.Psychic],
+        t.Steel   : [t.Poison],
+        t.Fairy   : [t.Dragon]
     }
 
 
@@ -92,21 +91,23 @@ class WeatherModifiers:
 
 class FieldModifiers:
     modifiers = {
-        (t.Psychic, f.Psychic): 1.5,
+        (t.Psychic, f.Psychic)  : 1.5,
         (t.Electric, f.Electric): 1.5,
-        (t.Grass, f.Grass): 1.5
+        (t.Grass, f.Grass)      : 1.5
     }
 
 
 class DamageCalculator:
     """This class contains a static method for damage calculation"""
+
     @staticmethod
     def calculate(weather: w, field, user, move, target) -> int:
 
         if target.types in TypeMultiplier.ineffectiveTo[move.move_type]:
             return 0
         else:
-            base_damage = (((10 + user.level*2) * user.stats.get_actual(move.scale_with) + move.calculate_base_power())
+            base_damage = (((10 + user.level * 2) * user.stats.get_actual(move.scale_with) + move.calculate_base_power(
+                user.types))
                            / 250 *
                            target.stats.get_actual(move.defends_on)) + 2
 
@@ -129,4 +130,3 @@ class DamageCalculator:
 
         return int(base_damage * mult * terrain_mult * user.damage_output_multiplier * target.damage_input_multiplier *
                    roll * burn_multiplier)
-

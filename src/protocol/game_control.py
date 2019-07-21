@@ -2,16 +2,20 @@ import src.protocol.senders as sender
 import json
 import time
 import random
+from src.model.field import BattleFieldSingle
 import src.protocol.login as login
 import src.protocol.state_update as su
+import src.protocol.request_parser as rp
+from src.protocol.data_source import DatabaseDataSource
 
 
 class GameLoop:
 
-    def __init__(self, ws, field):
+    def __init__(self, ws):
         self.ws = ws
-        self.field = field
+        self.field = BattleFieldSingle(None, None, None, None)
         self.standard_answers = open("standard_answers", "r").readlines()
+        self.db = DatabaseDataSource()
 
     async def challenge_loop(self, message):
         string_tab = message.split("|")
@@ -67,19 +71,32 @@ class GameLoop:
             elif current[1] == "player" and len(current) > 3 and current[3].lower() == "tapulabu":
                 # init del player id
                 self.field.player_id = "p1"
+
+            elif current[1] == "switch" and self.field.battle_id not in current[2]:
+                # Handle the pokemons of the opponent
+                pass
             elif current[1] == "request":
                 if current[2] == '':
                     continue
                 if len(current[2]) == 1:
                     try:
                         # Populate the team
-                        await battle.req_loader(current[3].split('\n')[1], self.ws)
+                        # await battle.req_loader(current[3].split('\n')[1], self.ws)
+                        active, bench = rp.parse_and_set(current[3].splitlines()[1], self.db)
+                        self.field.active_pokemon_bot = active
+                        self.field.all_pkmns_bot = bench
+                        self.field.bench_selector_side[1] = bench
+                        self.field.active_selector_side[1] = active
                     except KeyError as e:
                         print(e)
                         print(current[3])
                 else:
                     # Populate team
-                    await battle.req_loader(current[2], self.ws)
+                    active, bench = rp.parse_and_set(current[3].splitlines()[1], self.db)
+                    self.field.active_pokemon_bot = active
+                    self.field.all_pkmns_bot = bench
+                    self.field.bench_selector_side[1] = bench
+                    self.field.active_selector_side[1] = active
 
             elif current[1] == "teampreview":
                 # TODO: IA Knapsack which pokemon do we carry

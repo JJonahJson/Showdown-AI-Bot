@@ -153,8 +153,12 @@ class BattleFieldSingle(BattleField):
     def update_field(self, terrain):
         self.field = Field[terrain.capitalize()]
 
-    def update_damage(self, side, damage):
-        self.active_selector_side[side].stats.decrease_hp(damage)
+    def update_damage(self, side, remaining_hp):
+        if side == 1:
+            self.active_selector_side[side].stats.decrease_hp(remaining_hp)
+        else:
+            self.active_selector_side[side].stats.decrease_hp(int(remaining_hp/100 * self.active_selector_side[
+                side].stats.real_stats[StatsType.HP]))
 
     def update_heal(self, side, heal):
         self.active_selector_side[side].stats.increase_hp(heal)

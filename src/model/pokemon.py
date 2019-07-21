@@ -1,6 +1,6 @@
 from typing import Dict
 from model.stats import StatsType, Stats
-from model.status import StatusType
+from model.status import StatusType, Status
 from model.item import Item
 
 
@@ -46,6 +46,8 @@ class Pokemon:
     def use_move(self, move_index: int, target, weather, field):
         """Methods that apply a move"""
         self.moves[move_index].invoke_move(self, target, weather, field)
+        if target.stats.get_actual_hp() <= 0:
+            Status.apply_non_volatile_status(target, StatusType.Fnt)
 
     def __lt__(self, other_pokemon):
         """More speed"""

@@ -63,7 +63,7 @@ class StatusTest(unittest.TestCase):
         self.assertEqual(self.pokemon.stats.get_actual(StatsType.Spe), 100)
 
     def test_apply_fainted_effect(self):
-        Status.apply_non_volatile_status(StatusType.Fainted, self.pokemon)
+        Status.apply_non_volatile_status(StatusType.Fnt, self.pokemon)
         self.assertEqual(0, self.pokemon.stats.get_actual_hp())
 
     if __name__ == "__main__":
