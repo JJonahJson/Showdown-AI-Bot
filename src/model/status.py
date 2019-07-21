@@ -73,7 +73,7 @@ class Status:
             return False
         for pkmn_type in pokemon.types:
             if pkmn_type in immune[status] or (pokemon.non_volatile_status is not StatusType.Normal and
-                                               pokemon.non_volatile_status and status is not StatusType.Fainted):
+                                               pokemon.non_volatile_status and status is not StatusType.Fnt):
                 return False
         pokemon.non_volatile_status = status
         if status in [StatusType.Psn, StatusType.Tox, StatusType.Brn]:
@@ -138,7 +138,7 @@ class Status:
         """Method which decreases pokemon's hp based on a specified percentage"""
         pokemon.stats.damage += pokemon.stats.real_stats[StatsType.HP] * percentage
         if pokemon.stats.damage >= pokemon.stats.real_stats[StatsType.HP]:
-            Status.apply_non_volatile_status(StatusType.Fainted, pokemon)
+            Status.apply_non_volatile_status(StatusType.Fnt, pokemon)
 
     @staticmethod
     def apply_infatuation(target, caster):
