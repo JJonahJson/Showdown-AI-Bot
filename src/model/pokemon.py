@@ -49,6 +49,9 @@ class Pokemon:
         if target.stats.get_actual_hp() <= 0:
             Status.apply_non_volatile_status(target, StatusType.Fnt)
 
+    def __repr__(self):
+        return self.name
+
     def __lt__(self, other_pokemon):
         """More speed"""
         return self.stats[StatsType.Spe] > other_pokemon.stats[StatsType.Spe]

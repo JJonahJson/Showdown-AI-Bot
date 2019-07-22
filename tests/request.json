@@ -1,0 +1,185 @@
+{
+  "active": [
+    {
+      "moves": [
+        {
+          "move": "Scald",
+          "id": "scald",
+          "pp": 24,
+          "maxpp": 24,
+          "target": "normal",
+          "disabled": false
+        },
+        {
+          "move": "Shell Smash",
+          "id": "shellsmash",
+          "pp": 24,
+          "maxpp": 24,
+          "target": "self",
+          "disabled": false
+        },
+        {
+          "move": "Earth Power",
+          "id": "earthpower",
+          "pp": 16,
+          "maxpp": 16,
+          "target": "normal",
+          "disabled": false
+        },
+        {
+          "move": "Ice Beam",
+          "id": "icebeam",
+          "pp": 16,
+          "maxpp": 16,
+          "target": "normal",
+          "disabled": false
+        }
+      ]
+    }
+  ],
+  "side": {
+    "name": "alfamax",
+    "id": "p1",
+    "pokemon": [
+      {
+        "ident": "p1: Omastar",
+        "details": "Omastar, L88, F",
+        "condition": "266/266",
+        "active": true,
+        "stats": {
+          "atk": 110,
+          "def": 270,
+          "spa": 253,
+          "spd": 173,
+          "spe": 147
+        },
+        "moves": [
+          "scald",
+          "shellsmash",
+          "earthpower",
+          "icebeam"
+        ],
+        "baseAbility": "swiftswim",
+        "item": "whiteherb",
+        "pokeball": "pokeball",
+        "ability": "swiftswim"
+      },
+      {
+        "ident": "p1: Ambipom",
+        "details": "Ambipom, L86, F",
+        "condition": "269/269",
+        "active": false,
+        "stats": {
+          "atk": 221,
+          "def": 163,
+          "spa": 152,
+          "spd": 163,
+          "spe": 247
+        },
+        "moves": [
+          "seedbomb",
+          "uturn",
+          "knockoff",
+          "return102"
+        ],
+        "baseAbility": "pickup",
+        "item": "choiceband",
+        "pokeball": "pokeball",
+        "ability": "pickup"
+      },
+      {
+        "ident": "p1: Crawdaunt",
+        "details": "Crawdaunt, L82, F",
+        "condition": "237/237",
+        "active": false,
+        "stats": {
+          "atk": 244,
+          "def": 187,
+          "spa": 195,
+          "spd": 137,
+          "spe": 137
+        },
+        "moves": [
+          "swordsdance",
+          "crabhammer",
+          "knockoff",
+          "aquajet"
+        ],
+        "baseAbility": "adaptability",
+        "item": "lifeorb",
+        "pokeball": "pokeball",
+        "ability": "adaptability"
+      },
+      {
+        "ident": "p1: Registeel",
+        "details": "Registeel, L84",
+        "condition": "272/272",
+        "active": false,
+        "stats": {
+          "atk": 174,
+          "def": 300,
+          "spa": 174,
+          "spd": 300,
+          "spe": 132
+        },
+        "moves": [
+          "toxic",
+          "seismictoss",
+          "ironhead",
+          "stealthrock"
+        ],
+        "baseAbility": "clearbody",
+        "item": "leftovers",
+        "pokeball": "pokeball",
+        "ability": "clearbody"
+      },
+      {
+        "ident": "p1: Tapu Koko",
+        "details": "Tapu Koko, L80",
+        "condition": "243/243",
+        "active": false,
+        "stats": {
+          "atk": 230,
+          "def": 182,
+          "spa": 198,
+          "spd": 166,
+          "spe": 254
+        },
+        "moves": [
+          "dazzlinggleam",
+          "bravebird",
+          "thunderbolt",
+          "defog"
+        ],
+        "baseAbility": "electricsurge",
+        "item": "lifeorb",
+        "pokeball": "pokeball",
+        "ability": "electricsurge"
+      },
+      {
+        "ident": "p1: Kricketune",
+        "details": "Kricketune, L89, F",
+        "condition": "282/282",
+        "active": false,
+        "stats": {
+          "atk": 202,
+          "def": 142,
+          "spa": 149,
+          "spd": 142,
+          "spe": 166
+        },
+        "moves": [
+          "stickyweb",
+          "toxic",
+          "knockoff",
+          "leechlife"
+        ],
+        "baseAbility": "swarm",
+        "item": "focussash",
+        "pokeball": "pokeball",
+        "ability": "swarm"
+      }
+    ]
+  },
+  "rqid": 4
+}

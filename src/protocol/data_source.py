@@ -60,8 +60,6 @@ class DatabaseDataSource(AbstractDataSource):
         parametric_query = "SELECT type_1, type_2 FROM Pokemon as pkmn WHERE pkmn.name = %s"
         cursor.execute(parametric_query, (name,))
         result = cursor.fetchall()
-        # TODO: Return Enum value
-        # TODO: Tests
         if not result[0][1]:
             return [PokemonType[result[0][0]]]
         else:
@@ -71,14 +69,22 @@ class DatabaseDataSource(AbstractDataSource):
     # all_boost, target, movetype
     def get_move_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)
-        parametric_query = "SELECT * FROM Moves as mv where mv.name = %s"
-        cursor.execute(parametric_query, (name,))
+        if "return" in name:
+            real_name = name[:len(name)-3]
+            real_power = int(name[-3:])
+        else:
+            real_name = name
+        parametric_query = "SELECT * FROM Moves as mv where mv.id_name = %s"
+        cursor.execute(parametric_query, (real_name,))
         result = cursor.fetchall()[0]
 
         move_name = result[1]
         id_name = result[2]
         accuracy = result[3]
-        base_power = result[4]
+        if "return" in name:
+            base_power = real_power
+        else:
+            base_power = result[4]
         category = result[5]
 
         if category == 'Physical':
@@ -91,8 +97,15 @@ class DatabaseDataSource(AbstractDataSource):
         pp = result[6]
         priority = result[7]
         chance = result[8]
-        volatile_status = StatusType[result[9]]
-        non_volatile_status = StatusType[result[10]]
+        if result[9]:
+            volatile_status = StatusType[result[9].capitalize()]
+        else:
+            volatile_status = result[9]
+        if result[10]:
+            non_volatile_status = StatusType[result[10].capitalize()]
+        else:
+            non_volatile_status = result[10]
+
         boost_atk = result[11]
         boost_def = result[12]
         boost_spa = result[13]
@@ -103,7 +116,7 @@ class DatabaseDataSource(AbstractDataSource):
         target = result[18]
 
         boosts = [
-            (StatsType.att, boost_atk),
+            (StatsType.Att, boost_atk),
             (StatsType.Def, boost_def),
             (StatsType.Spa, boost_spa),
             (StatsType.Spd, boost_spd),
@@ -116,12 +129,14 @@ class DatabaseDataSource(AbstractDataSource):
 
         if target == 'self':
             return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
-                              filter(lambda x: x[1] != 0, boosts), [], defends_on, chance, (target, volatile_status),
+                              list(filter(lambda x: x[1] != 0, boosts)), [], defends_on, chance, (target,
+                                                                                                volatile_status),
                               (target,
                                non_volatile_status))
         else:
             return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
-                              [], filter(lambda x: x[1] != 0, boosts), defends_on, chance, (target, volatile_status),
+                              [], list(filter(lambda x: x[1] != 0, boosts)), defends_on, chance, (target,
+                                                                                                volatile_status),
                               (target, non_volatile_status))
 
     def get_movetype_by_name(self, name):

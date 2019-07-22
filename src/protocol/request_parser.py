@@ -9,13 +9,13 @@ from src.model.status import StatusType
 def get_active_moves(moves_list, db_connection):
     active_moves = []
     for move in moves_list:
-        move = db_connection.get_move_by_name(move["name"].replace("'", ''))
-        move.pp = move["pp"]
-        active_moves.append(move)
+        move_retrieved = db_connection.get_move_by_name(move["id"].replace("'", ''))
+        move_retrieved.pp = move["pp"]
+        active_moves.append(move_retrieved)
     return active_moves
 
 
-def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
+def get_pokemons(pokemon_list, db_connection, active_moves):
     active_pokemon_bot = None
     bench_bot = {}
     counter = 1
@@ -30,7 +30,7 @@ def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
                       stats_dict["spa"],
                       stats_dict["spe"],
                       stats_dict["spd"],
-                      int(pokemon["details"].split(",").strip().replace("L", "")),
+                      int(pokemon["details"].split(",")[1].strip().replace("L", "")),
                       is_base=False)
 
         if len(cond) > 1:
@@ -51,6 +51,7 @@ def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
                                          0.00,  # TODO: Get weight from db
                                          status,
                                          [],
+                                         None,
                                          level)
             bench_bot[counter] = active_pokemon_bot
             counter += 1
@@ -58,7 +59,7 @@ def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
             moves = []
             for move in pokemon["moves"]:
                 moves.append(db_connection.get_move_by_name(move))
-                pokemon = Pokemon(pkmn_name,
+            pokemon = Pokemon(pkmn_name,
                                   pkmn_type,
                                   gender,
                                   stats,
@@ -67,9 +68,10 @@ def get_pokemons(pokemon_list, db_connection, active_moves, battle_id):
                                   0.00,  # TODO: Get weight from db
                                   status,
                                   [],
+                                  None,
                                   level)
-                bench_bot[counter] = pokemon
-                counter += 1
+            bench_bot[counter] = pokemon
+            counter += 1
 
     return active_pokemon_bot, bench_bot
 
@@ -79,7 +81,7 @@ def parse_and_set(message, db_connection):
     pokemons = {1: {}, 2: {}}
     counter = {1: 1, 2: 1}
     # TODO: Check the index of move 1 or 0?!
-    moves = get_active_moves(pokemon_json["active"]["moves"])
+    moves = get_active_moves(pokemon_json["active"][0]["moves"])
     active_pokemon_bot, bench_active= get_pokemons(
         pokemon_json["side"], db_connection, moves
     )
