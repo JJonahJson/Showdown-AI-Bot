@@ -1,6 +1,6 @@
 from random import uniform
 
-from src.model.terrain import Weather as w, Field as f
+from src.model.field import Weather as w, Field as f
 from src.model.pokemontype import PokemonType as t
 from src.model.stats import StatsType
 from src.model.status import StatusType

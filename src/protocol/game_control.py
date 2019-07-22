@@ -105,9 +105,9 @@ class GameLoop:
                     self.battle_field.active_selector_side[1] = active
 
             elif current[1] == "teampreview":
-            # TODO: IA Knapsack which pokemon do we carry
-            # await battle.make_team_order(self.ws)
-
+                # TODO: IA Knapsack which pokemon do we carry
+                # await battle.make_team_order(self.ws)
+                pass
             elif current[1] == "turn":
                 # TODO: Call IA to decide which action to do
                 # An action is a move or a switch
