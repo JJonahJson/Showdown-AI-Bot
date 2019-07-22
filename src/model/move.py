@@ -79,16 +79,13 @@ class Move(ABC):
 
     def calculate_base_power(self, types):
         stab = 1
-        if self.move.move_type in types:
+        if self.move_type in types:
             stab = 1.5
-        return self.move.base_power*stab
+        return self.base_power*stab
 
 
     def __lt__(self, other_move):
         return self.priority > other_move.priority
-
-    def calculate_base_power(self):
-        return self.base_power * self.power_multiply
 
     def add_power_multiply(self, value: float):
         self.power_multiply = self.power_multiply * value

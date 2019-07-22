@@ -38,11 +38,11 @@ class StatusUpdateTest(unittest.TestCase):
 
     def test_boost_stat(self):
         su.update_state(build_string("-boost", "att|1"), self.battle_field)
-        self.assertEqual(self.battle_field.active_pokemon_bot.stats.mul_stats[StatsType.Att], 1)
+        self.assertEqual(self.battle_field.active_pokemon_bot.stats.mul_stats[StatsType.Atk], 1)
 
     def test_unboost_stat(self):
         su.update_state(build_string("-unboost", "att|1"), self.battle_field)
-        self.assertEqual(self.battle_field.active_pokemon_bot.stats.mul_stats[StatsType.Att], -1)
+        self.assertEqual(self.battle_field.active_pokemon_bot.stats.mul_stats[StatsType.Atk], -1)
 
     def test_status(self):
         su.update_state(build_string("-status", "tox"), self.battle_field)

@@ -89,7 +89,7 @@ class DatabaseDataSource(AbstractDataSource):
         category = result[5]
 
         if category == 'Physical':
-            scale_with = StatsType.Att
+            scale_with = StatsType.Atk
             defends_on = StatsType.Def
         else:
             scale_with = StatsType.Spa
@@ -117,7 +117,7 @@ class DatabaseDataSource(AbstractDataSource):
         target = result[18]
 
         boosts = [
-            (StatsType.Att, boost_atk),
+            (StatsType.Atk, boost_atk),
             (StatsType.Def, boost_def),
             (StatsType.Spa, boost_spa),
             (StatsType.Spd, boost_spd),

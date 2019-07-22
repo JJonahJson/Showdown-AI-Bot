@@ -9,28 +9,37 @@ class Chooser:
         moves = field.active_pokemon_bot.get_usable_moves()
         damage = []
         for index_move in moves:
-            damage[index_move] = DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
-                                                            moves[index_move], field.active_pokemon_oppo)
+            damage.append(DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
+                                                            moves[index_move], field.active_pokemon_oppo))
 
-        choosen_move = max(damage)
-        return choosen_move
+        choosen_move_index = max(range(len(damage)), key=lambda x: damage[x])
+        return choosen_move_index+1
 
     @staticmethod
     def choose_switch(field: BattleFieldSingle):
         bot_team = field.all_pkmns_bot
         valid_switch = []
         for index_pkmn in bot_team:
-            valid_switch[index_pkmn] = 0
-            for type in bot_team[index_pkmn].types:
-                for type_oppo in field.active_pokemon_oppo.types:
-                    if type in TypeMultiplier.resistsTo[type_oppo]:
-                        valid_switch[index_pkmn] += 1
+            valid_switch.append(0)
+            for pkmn_type in bot_team[index_pkmn].types:
+                for pkmn_type_oppo in field.active_pokemon_oppo.types:
+                    if pkmn_type in TypeMultiplier.weakTo[pkmn_type_oppo]:
+                        valid_switch[index_pkmn-1] += 1
 
-                    if type in TypeMultiplier.weakTo[type_oppo]:
-                        valid_switch[index_pkmn] -= 1
+                    if pkmn_type_oppo in TypeMultiplier.weakTo[pkmn_type]:
+                        valid_switch[index_pkmn-1] -= 1
 
-                    if type in TypeMultiplier.ineffectiveTo[type_oppo]:
-                        valid_switch[index_pkmn] -= 1
+                    if pkmn_type in TypeMultiplier.resistsTo[pkmn_type_oppo]:
+                        valid_switch[index_pkmn-1] -= 1
 
-        choosen_switch = max(valid_switch)
-        return choosen_switch
+                    if pkmn_type_oppo in TypeMultiplier.resistsTo[pkmn_type]:
+                        valid_switch[index_pkmn-1] += 1
+
+                    if pkmn_type_oppo in TypeMultiplier.immuneTo[pkmn_type]:
+                        valid_switch[index_pkmn-1] += 2
+
+                    if pkmn_type in TypeMultiplier.immuneTo[pkmn_type_oppo]:
+                        valid_switch[index_pkmn-1] -= 2
+
+        choosen_switch_index = max(range(len(valid_switch)), key=lambda x: valid_switch[x])
+        return choosen_switch_index+1
