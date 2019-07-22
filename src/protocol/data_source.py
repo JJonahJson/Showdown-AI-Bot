@@ -40,12 +40,13 @@ class DatabaseDataSource(AbstractDataSource):
             use_pure=True
         )
 
-    def get_pokemon_by_name(self, name):
+    def get_pokemon_by_name(self, name, level=50):
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT * FROM Pokemon as pkmn WHERE pkmn.name = %s"
-        cursor.execute(parametric_query, (name,))
+        cursor.execute(parametric_query, (name.replace("'", ""),))
         result = cursor.fetchall()
-        stats = Stats(result[0][2], result[0][3], result[0][4], result[0][5], result[0][6], result[0][7])
+        stats = Stats(result[0][2], result[0][3], result[0][4], result[0][5], result[0][6], result[0][7],
+                      level=level, is_base=True)
         pkmn_name = result[0][1]
         weight_kg = result[0][10]
         if not result[0][9]:
@@ -53,7 +54,7 @@ class DatabaseDataSource(AbstractDataSource):
         else:
             type_list = [PokemonType[result[0][8]], PokemonType[result[0][9]]]
 
-        return Pokemon(pkmn_name, type_list, "", stats, None, None, weight_kg, StatusType.Normal, [], None, 50)
+        return Pokemon(pkmn_name, type_list, "", stats, None, None, weight_kg, StatusType.Normal, [], None, level)
 
     def get_pokemontype_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)

@@ -51,7 +51,7 @@ class Stats:
     }
 
     def __init__(self, hp: int, attack: int, defense: int, special_attack: int, special_defense: int, speed: int,
-                 level=50, is_base=True):
+                 level=50, is_base=True, ev_speed=252, nature_speed=1.1):
         # Initial value of each statistic
         self.base_stats = {
             StatsType.HP: hp,
@@ -66,12 +66,12 @@ class Stats:
 
         if is_base:
             self.real_stats = {
-                StatsType.HP: ((31+2*hp+0)*level/100)+10+level/100,
-                StatsType.Att: ((31+2*attack+0)*level/100)+5,
-                StatsType.Def: ((31+2*defense+0)*level/100)+5,
-                StatsType.Spa: ((31+2*special_attack+0)*level/100)+5,
-                StatsType.Spd: ((31+2*special_defense+0)*level/100)+5,
-                StatsType.Spe: ((31+2*speed+0)*level/100)+5,
+                StatsType.HP: round(((31+2*hp+0)*level/100)+10+level/100),
+                StatsType.Att: round(((31+2*attack+0)*level//100)+5),
+                StatsType.Def: round(((31+2*defense+0)*level//100)+5),
+                StatsType.Spa: round(((31+2*special_attack+0)*level//100)+5),
+                StatsType.Spd: round(((31+2*special_defense+0)*level//100)+5),
+                StatsType.Spe: round((((31+2*speed+ev_speed//4)*level//100)+5)*nature_speed),
                 StatsType.Acc: 1,
                 StatsType.Eva: 1
             }
@@ -115,21 +115,20 @@ class Stats:
         if (self.damage - quantity) < 0:
             self.damage = 0
         else:
-            self.damage -= quantity
+            self.damage -= round(quantity)
 
     def decrease_hp(self, quantity: int):
         """Decrease Pokemon's HP by increasing the damage"""
-        self.damage = self.real_stats[StatsType.HP] - quantity
-
+        self.damage = self.real_stats[StatsType.HP] - round(quantity)
 
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
         if stat_type is StatsType.Acc or stat_type is StatsType.Eva:
-            return self.real_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
-                stat_type]
+            return round(self.real_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
+                stat_type])
         else:
-            return self.real_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.volatile_mul[
-                stat_type]
+            return round(self.real_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.volatile_mul[
+                stat_type])
 
     def get_actual_hp(self) -> int:
         """Returns Pokemon's actual HP value by subtracting the damage to the base HP"""

@@ -136,7 +136,7 @@ class Status:
     @staticmethod
     def decrease_hp(pokemon, percentage: float):
         """Method which decreases pokemon's hp based on a specified percentage"""
-        pokemon.stats.damage += pokemon.stats.real_stats[StatsType.HP] * percentage
+        pokemon.stats.damage += round(pokemon.stats.real_stats[StatsType.HP] * percentage)
         if pokemon.stats.damage >= pokemon.stats.real_stats[StatsType.HP]:
             Status.apply_non_volatile_status(StatusType.Fnt, pokemon)
 

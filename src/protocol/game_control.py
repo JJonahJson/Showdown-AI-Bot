@@ -1,11 +1,13 @@
-import src.protocol.senders as sender
 import json
-import time
 import random
-from src.model.field import BattleFieldSingle
+import time
+
 import src.protocol.login as login
-import src.protocol.state_update as su
 import src.protocol.request_parser as rp
+import src.protocol.senders as sender
+import src.protocol.state_update as su
+from src.protocol.enemy_updater import update_enemy_pokemon
+from src.model.field import BattleFieldSingle
 from src.protocol.data_source import DatabaseDataSource
 
 
@@ -13,7 +15,7 @@ class GameLoop:
 
     def __init__(self, ws):
         self.ws = ws
-        self.field = BattleFieldSingle(None, None, None, None)
+        self.battle_field = BattleFieldSingle(None, None, {}, {})
         with open("standard_answers", "r") as file:
             self.standard_answers = file.readlines()
         self.db = DatabaseDataSource()
@@ -48,10 +50,10 @@ class GameLoop:
 
         elif string_tab[1] == "updatesearch":
             to_parse = json.loads(string_tab[2])
-            if to_parse["games"] and self.field.room_name == "":
+            if to_parse["games"] and self.battle_field.room_name == "":
                 for k in to_parse["games"]:
                     if "battle" in k:
-                        self.field.room_name = k
+                        self.battle_field.room_name = k
                         break
 
         if "battle" in string_tab[0]:
@@ -66,16 +68,19 @@ class GameLoop:
             current = line.split('|')
             if current[1] == "init":
                 num_answer = random.randint(0, len(self.standard_answers))
-                await sender.sender(self.ws, self.field.room_name, self.standard_answers[num_answer])
+                await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
                 time.sleep(3)
-                await sender.sender(self.ws, self.field.room_name, "/timer on")
+                await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
             elif current[1] == "player" and len(current) > 3 and current[3].lower() == "tapulabu":
                 # init del player id
-                self.field.player_id = "p1"
+                self.battle_field.player_id = "p1"
 
-            elif current[1] == "switch" and self.field.battle_id not in current[2]:
+            elif current[1] == "switch" and self.battle_field.battle_id not in current[2]:
                 # Handle the pokemons of the opponent
-                pass
+                name = current[2].split(":")[1].strip()
+                level = int(current[3].split(",")[1].replace("L", "").strip())
+                gender = current[3].split(",")[2].strip()
+                update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
             elif current[1] == "request":
                 if current[2] == '':
                     continue
@@ -84,24 +89,24 @@ class GameLoop:
                         # Populate the team
                         # await battle.req_loader(current[3].split('\n')[1], self.ws)
                         active, bench = rp.parse_and_set(current[3].splitlines()[1], self.db)
-                        self.field.active_pokemon_bot = active
-                        self.field.all_pkmns_bot = bench
-                        self.field.bench_selector_side[1] = bench
-                        self.field.active_selector_side[1] = active
+                        self.battle_field.active_pokemon_bot = active
+                        self.battle_field.all_pkmns_bot = bench
+                        self.battle_field.bench_selector_side[1] = bench
+                        self.battle_field.active_selector_side[1] = active
                     except KeyError as e:
                         print(e)
                         print(current[3])
                 else:
                     # Populate team
                     active, bench = rp.parse_and_set(current[3].splitlines()[1], self.db)
-                    self.field.active_pokemon_bot = active
-                    self.field.all_pkmns_bot = bench
-                    self.field.bench_selector_side[1] = bench
-                    self.field.active_selector_side[1] = active
+                    self.battle_field.active_pokemon_bot = active
+                    self.battle_field.all_pkmns_bot = bench
+                    self.battle_field.bench_selector_side[1] = bench
+                    self.battle_field.active_selector_side[1] = active
 
             elif current[1] == "teampreview":
-                # TODO: IA Knapsack which pokemon do we carry
-                #await battle.make_team_order(self.ws)
+            # TODO: IA Knapsack which pokemon do we carry
+            # await battle.make_team_order(self.ws)
 
             elif current[1] == "turn":
                 # TODO: Call IA to decide which action to do
@@ -114,12 +119,12 @@ class GameLoop:
 
             elif current[1] == "win":
                 # Win state, leave the room
-                await sender.sendmessage(self.ws, self.field.player_id, "Well done, have a nice day!")
-                await sender.leaving(self.ws, self.field.player_id)
+                await sender.sendmessage(self.ws, self.battle_field.player_id, "Well done, have a nice day!")
+                await sender.leaving(self.ws, self.battle_field.player_id)
             elif current[1] == "c":
                 # This is a message
                 num_answer = random.randint(0, len(self.standard_answers))
-                await sender.sender(self.ws, self.field.room_name, self.standard_answers[num_answer])
+                await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
             else:
-                su.update_state(current, self.field)
+                su.update_state(current, self.battle_field)
                 pass

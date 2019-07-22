@@ -117,18 +117,21 @@ class BattleFieldSingle(BattleField):
     def switch_pokemon(self, player: int, pokemon_in: int):
         """Switch pokemon
         :param player:
-        :param pokemon_in: Not used
+        :param pokemon_in:
         :return:
         """
+        active_index = self.get_pokemon_index_by_name(player, self.active_selector_side[player].name)
         if player == 1:
             to_replace = self.active_pokemon_bot
             self.active_pokemon_bot = self.all_pkmns_bot[pokemon_in]
+            self.all_pkmns_bot[active_index] = self.all_pkmns_bot[pokemon_in]
             self.all_pkmns_bot[pokemon_in] = to_replace
             self.active_selector_side[1] = self.active_pokemon_bot
 
         else:
             to_replace = self.active_pokemon_oppo
             self.active_pokemon_oppo = self.all_pkmns_oppo[pokemon_in]
+            self.all_pkmns_oppo[active_index] = self.all_pkmns_oppo[pokemon_in]
             self.all_pkmns_oppo[pokemon_in] = to_replace
             self.active_selector_side[2] = self.active_pokemon_oppo
 
