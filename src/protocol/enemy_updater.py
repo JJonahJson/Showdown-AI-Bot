@@ -23,3 +23,6 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
             for index in battle_field.all_pkmns_oppo:
                 if battle_field.all_pkmns_oppo[index].name == pokemon_name:
                     battle_field.switch_pokemon(2, index)
+
+
+# TODO: Add update_enemy_move
