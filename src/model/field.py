@@ -123,12 +123,14 @@ class BattleFieldSingle(BattleField):
         if player == 1:
             to_replace = self.active_pokemon_bot
             self.active_pokemon_bot = self.all_pkmns_bot[pokemon_in]
+            #TODO aggiungere lo switch
             self.all_pkmns_bot[pokemon_in] = to_replace
             self.active_selector_side[1] = self.active_pokemon_bot
 
         else:
             to_replace = self.active_pokemon_oppo
             self.active_pokemon_oppo = self.all_pkmns_oppo[pokemon_in]
+            #TODO aggiungere lo switch
             self.all_pkmns_oppo[pokemon_in] = to_replace
             self.active_selector_side[2] = self.active_pokemon_oppo
 
