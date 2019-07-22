@@ -25,6 +25,5 @@ class UpdateEnemyTest(unittest.TestCase):
         self.assertEqual(self.bf.active_pokemon_oppo.name, "Sunflora", "M")
 
 
-
 if __name__ == '__main__':
     unittest.main()
