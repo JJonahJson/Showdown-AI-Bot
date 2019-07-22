@@ -23,38 +23,38 @@ class StatusType(Enum):
 
 
 non_volatile = {
-    StatusType.Normal   : False,
-    StatusType.Fnt      : True,
-    StatusType.Psn      : True,
-    StatusType.Tox      : True,
-    StatusType.Brn      : True,
-    StatusType.Par      : True,
-    StatusType.Frz      : True,
-    StatusType.Slp      : True,
+    StatusType.Normal: False,
+    StatusType.Fnt: True,
+    StatusType.Psn: True,
+    StatusType.Tox: True,
+    StatusType.Brn: True,
+    StatusType.Par: True,
+    StatusType.Frz: True,
+    StatusType.Slp: True,
 
-    StatusType.Attract  : False,
-    StatusType.Flinch   : False,
+    StatusType.Attract: False,
+    StatusType.Flinch: False,
     StatusType.Confusion: False,
-    StatusType.Protect  : False,
-    StatusType.Trapped  : False
+    StatusType.Protect: False,
+    StatusType.Trapped: False
 
 }
 
 immune = {
-    StatusType.Psn      : [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Tox      : [PokemonType.Poison, PokemonType.Steel],
-    StatusType.Par      : [PokemonType.Electric],
-    StatusType.Frz      : [PokemonType.Ice],
-    StatusType.Brn      : [PokemonType.Fire],
-    StatusType.Normal   : [],
-    StatusType.Fnt      : [],
-    StatusType.Attract  : [],
-    StatusType.Flinch   : [],
+    StatusType.Psn: [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Tox: [PokemonType.Poison, PokemonType.Steel],
+    StatusType.Par: [PokemonType.Electric],
+    StatusType.Frz: [PokemonType.Ice],
+    StatusType.Brn: [PokemonType.Fire],
+    StatusType.Normal: [],
+    StatusType.Fnt: [],
+    StatusType.Attract: [],
+    StatusType.Flinch: [],
     StatusType.Confusion: [],
-    StatusType.Protect  : [],
-    StatusType.Trapped  : [],
-    StatusType.Endure   : [],
-    StatusType.Slp      : []
+    StatusType.Protect: [],
+    StatusType.Trapped: [],
+    StatusType.Endure: [],
+    StatusType.Slp: []
 }
 
 
