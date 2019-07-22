@@ -1,6 +1,6 @@
 from random import uniform
 
-from src.model.terrain import Weather as w, Field as f
+from src.model.field import Weather as w, Field as f
 from src.model.pokemontype import PokemonType as t
 from src.model.stats import StatsType
 from src.model.status import StatusType
@@ -54,7 +54,7 @@ class TypeMultiplier:
         t.Steel: [t.Normal, t.Grass, t.Ice, t.Flying, t.Psychic, t.Bug, t.Rock, t.Dragon, t.Steel, t.Fairy],
         t.Fairy: [t.Fighting, t.Bug, t.Dark]
     }
-    ineffectiveTo = {
+    immuneTo = {
         t.Normal: [t.Ghost],
         t.Fire: [],
         t.Water: [],
@@ -103,7 +103,7 @@ class DamageCalculator:
     @staticmethod
     def calculate(weather: w, terrain, user, move, target) -> int:
 
-        if target.types in TypeMultiplier.ineffectiveTo[move.move_type]:
+        if target.types in TypeMultiplier.immuneTo[move.move_type]:
             return 0
         else:
             base_damage = (((10 + user.level * 2) * user.stats.get_actual(move.scale_with) + move.calculate_base_power(
@@ -125,7 +125,7 @@ class DamageCalculator:
                 mult *= 0.5
 
         burn_multiplier = 1
-        if user.non_volatile_status == StatusType.Brn and move.scale_with == StatsType.Att:
+        if user.non_volatile_status == StatusType.Brn and move.scale_with == StatsType.Atk:
             burn_multiplier = 0.5
 
         return int(base_damage * mult * terrain_mult * user.damage_output_multiplier * target.damage_input_multiplier *

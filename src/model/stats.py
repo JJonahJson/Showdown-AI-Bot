@@ -4,7 +4,7 @@ from enum import Enum, auto
 class StatsType(Enum):
     """Enum class which contains stats' types"""
     HP = auto()
-    Att = auto()
+    Atk = auto()
     Def = auto()
     Spa = auto()
     Spd = auto()
@@ -55,7 +55,7 @@ class Stats:
         # Initial value of each statistic
         self.base_stats = {
             StatsType.HP: hp,
-            StatsType.Att: attack,
+            StatsType.Atk: attack,
             StatsType.Def: defense,
             StatsType.Spa: special_attack,
             StatsType.Spd: special_defense,
@@ -67,7 +67,7 @@ class Stats:
         if is_base:
             self.real_stats = {
                 StatsType.HP: round(((31+2*hp+0)*level/100)+10+level/100),
-                StatsType.Att: round(((31+2*attack+0)*level//100)+5),
+                StatsType.Atk: round(((31 + 2 * attack + 0) * level // 100) + 5),
                 StatsType.Def: round(((31+2*defense+0)*level//100)+5),
                 StatsType.Spa: round(((31+2*special_attack+0)*level//100)+5),
                 StatsType.Spd: round(((31+2*special_defense+0)*level//100)+5),
@@ -80,7 +80,7 @@ class Stats:
 
         # Initial value of each statistics' multiplier
         self.mul_stats = {
-            StatsType.Att: 0,
+            StatsType.Atk: 0,
             StatsType.Def: 0,
             StatsType.Spa: 0,
             StatsType.Spd: 0,
@@ -90,7 +90,7 @@ class Stats:
         }
         # Initial value of each statistics' volatile multiplier
         self.volatile_mul = {
-            StatsType.Att: 1,
+            StatsType.Atk: 1,
             StatsType.Def: 1,
             StatsType.Spa: 1,
             StatsType.Spd: 1,

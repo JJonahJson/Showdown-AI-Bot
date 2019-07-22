@@ -24,7 +24,7 @@ class DBTest(unittest.TestCase):
         self.assertEqual(pokemon_obj.types[0], pk.Fire)
         self.assertEqual(pokemon_obj.types[1], pk.Fighting)
         self.assertEqual(pokemon_obj.stats.base_stats[s.HP], 80)
-        self.assertEqual(pokemon_obj.stats.base_stats[s.Att], 120)
+        self.assertEqual(pokemon_obj.stats.base_stats[s.Atk], 120)
         self.assertEqual(pokemon_obj.stats.base_stats[s.Def], 70)
         self.assertEqual(pokemon_obj.stats.base_stats[s.Spa], 110)
         self.assertEqual(pokemon_obj.stats.base_stats[s.Spd], 70)
