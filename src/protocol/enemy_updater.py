@@ -27,9 +27,10 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
 
 def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
     if not battle_field.active_pokemon_oppo.moves:
-        move = db_con.get_move_by_name(move_name.replace(" ", "").lower())
+        move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".","").lower())
         battle_field.active_pokemon_oppo.moves[1] = move
     elif move_name not in list(map(lambda x: x[1].move_name, battle_field.active_pokemon_oppo.moves.items())):
-        move = db_con.get_move_by_name(move_name.replace(" ", "").lower())
+        move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".","").lower())
         current_index = max(battle_field.active_pokemon_oppo.moves.keys())
         battle_field.active_pokemon_oppo.moves[current_index + 1] = move
+22

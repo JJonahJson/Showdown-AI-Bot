@@ -16,7 +16,8 @@ def get_active_moves(moves_list, db_connection):
             move_retrieved.pp = 1
         active_moves[index] = move_retrieved
         # TODO Rename in is_usable
-        active_moves[index].isUsable = not move["disabled"]
+        if move["disabled"]:
+            active_moves[index].isUsable = not move["disabled"]
         index += 1
     return active_moves
 
