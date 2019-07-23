@@ -1,19 +1,39 @@
-from src.model.field import BattleFieldSingle
+from src.model.field import BattleFieldSingle, Weather
 from src.model.damagecalculator import DamageCalculator, TypeMultiplier
+from src.model.status import StatusType
+from src.model.stats import StatsType
 
 
 class Chooser:
 
     @staticmethod
     def choose_move(field: BattleFieldSingle):
+        # determine if the opponent is faster
+        opponent_faster = False
+        if field.active_pokemon_bot.stats.real_stats[StatsType.Spe] < field.active_pokemon_oppo.stats.real_stats[
+            StatsType.Spe]:
+            opponent_faster = True
+
+        # determine the index of the move with more damage inflicted to the opponent
         moves = field.active_pokemon_bot.get_usable_moves()
         damage = []
         for index_move in moves:
             damage.append(DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
-                                                            moves[index_move], field.active_pokemon_oppo))
+                                                     moves[index_move], field.active_pokemon_oppo))
 
-        choosen_move_index = max(range(len(damage)), key=lambda x: damage[x])
-        return choosen_move_index+1
+        max_damage_move_index = max(range(len(damage)), key=lambda x: damage[x])
+
+        # determine when is better to use protect
+        if (field.active_pokemon_oppo.non_volatile_status in [StatusType.Brn, StatusType.Psn, StatusType.Tox]) or (
+                StatusType.Confusion in field.active_pokemon_oppo.volatile_status) or (
+                field.weather in [Weather.Hail, Weather.Sandstorm]):
+            opponent_moves = field.active_pokemon_oppo.get_usable_moves()
+            opponent_damage = []
+            for index_move in opponent_moves:
+                damage.append(DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_oppo,
+                                                         opponent_moves[index_move], field.active_pokemon_bot))
+
+        return max_damage_move_index + 1
 
     @staticmethod
     def choose_switch(field: BattleFieldSingle):
@@ -24,22 +44,22 @@ class Chooser:
             for pkmn_type in bot_team[index_pkmn].types:
                 for pkmn_type_oppo in field.active_pokemon_oppo.types:
                     if pkmn_type in TypeMultiplier.weakTo[pkmn_type_oppo]:
-                        valid_switch[index_pkmn-1] += 1
+                        valid_switch[index_pkmn - 1] += 1
 
                     if pkmn_type_oppo in TypeMultiplier.weakTo[pkmn_type]:
-                        valid_switch[index_pkmn-1] -= 1
+                        valid_switch[index_pkmn - 1] -= 1
 
                     if pkmn_type in TypeMultiplier.resistsTo[pkmn_type_oppo]:
-                        valid_switch[index_pkmn-1] -= 1
+                        valid_switch[index_pkmn - 1] -= 1
 
                     if pkmn_type_oppo in TypeMultiplier.resistsTo[pkmn_type]:
-                        valid_switch[index_pkmn-1] += 1
+                        valid_switch[index_pkmn - 1] += 1
 
                     if pkmn_type_oppo in TypeMultiplier.immuneTo[pkmn_type]:
-                        valid_switch[index_pkmn-1] += 2
+                        valid_switch[index_pkmn - 1] += 2
 
                     if pkmn_type in TypeMultiplier.immuneTo[pkmn_type_oppo]:
-                        valid_switch[index_pkmn-1] -= 2
+                        valid_switch[index_pkmn - 1] -= 2
 
         choosen_switch_index = max(range(len(valid_switch)), key=lambda x: valid_switch[x])
-        return choosen_switch_index+1
+        return choosen_switch_index + 1
