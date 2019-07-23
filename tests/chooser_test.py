@@ -1,11 +1,12 @@
 import unittest
-from src.model.stats import Stats, StatsType
-from src.model.pokemon import Pokemon
-from src.model.move import SingleMove, MoveCategory
-from src.model.pokemontype import PokemonType as pk
-from src.model.status import StatusType
+
 from src.ai.chooser import Chooser
 from src.model.field import BattleFieldSingle
+from src.model.move import SingleMove, MoveCategory
+from src.model.pokemon import Pokemon
+from src.model.pokemontype import PokemonType as pk
+from src.model.stats import Stats, StatsType
+from src.model.status import StatusType
 
 
 class ChooserTest(unittest.TestCase):
@@ -29,17 +30,18 @@ class ChooserTest(unittest.TestCase):
                                  StatusType.Normal, [], None, 50)
 
         self.pokemon1a.moves[1] = SingleMove('Flamethrower', 1, 90, MoveCategory.Damage, 15, 0, False, 1, pk.Fire,
-                                            StatsType.Spa, [], [], StatsType.Spd, 10, None, StatusType.Brn)
+                                             StatsType.Spa, [], [], StatsType.Spd, 10, None, StatusType.Brn)
         self.pokemon1a.moves[2] = SingleMove('Bite', 1, 60, MoveCategory.Damage, 25, 0, False, 1, pk.Dark,
-                                            StatsType.Atk, [], [], StatsType.Def, 30, StatusType.Flinch, None)
+                                             StatsType.Atk, [], [], StatsType.Def, 30, StatusType.Flinch, None)
 
         self.pokemon2a.moves[1] = SingleMove('Hydropump', 1, 110, MoveCategory.Damage, 5, 0, False, 1, pk.Water,
-                                            StatsType.Spa, [], [], StatsType.Spd, 100, None, None)
+                                             StatsType.Spa, [], [], StatsType.Spd, 100, None, None)
         self.pokemon2a.moves[2] = SingleMove('Psy Beam', 1, 65, MoveCategory.Damage, 20, 0, False, 1, pk.Psychic,
-                                            StatsType.Spa, [], [], StatsType.Spd, 10, StatusType.Confusion, None)
+                                             StatsType.Spa, [], [], StatsType.Spd, 10, StatusType.Confusion, None)
         self.battleField = BattleFieldSingle(self.pokemon1a, self.pokemon2a,
                                              {1: self.pokemon1a, 2: self.pokemon1b, 3: self.pokemon1c,
-                                              4: self.pokemon1d, 5: self.pokemon1e, 6: self.pokemon1f}, {1: self.pokemon2a})
+                                              4: self.pokemon1d, 5: self.pokemon1e, 6: self.pokemon1f},
+                                             {1: self.pokemon2a})
 
     def test_choose_move(self):
         index = Chooser.choose_move(self.battleField)

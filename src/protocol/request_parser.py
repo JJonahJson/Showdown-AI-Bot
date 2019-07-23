@@ -10,8 +10,13 @@ def get_active_moves(moves_list, db_connection):
     index = 1
     for move in moves_list:
         move_retrieved = db_connection.get_move_by_name(move["id"].replace("'", ''))
-        move_retrieved.pp = move["pp"]
+        if "pp" in move.keys():
+            move_retrieved.pp = move["pp"]
+        else:
+            move_retrieved.pp = 1
         active_moves[index] = move_retrieved
+        # TODO Rename in is_usable
+        active_moves[index].isUsable = not move["disabled"]
         index += 1
     return active_moves
 
@@ -46,7 +51,7 @@ def get_pokemons(pokemon_list, db_connection, active_moves):
         pkmn_type = db_connection.get_pokemontype_by_name(pkmn_name)
         level = int(pokemon["details"].split(",")[1].strip().replace("L", ""))
         if pokemon["active"]:
-            if "M" in pokemon["details"] or "F" in pokemon["details"]:
+            if len(pokemon["details"].split(",")) > 2:
                 if "Castform" not in pkmn_name:
                     gender = pokemon["details"].split(",")[2].strip()
                 else:
@@ -98,4 +103,4 @@ def parse_and_set(message, db_connection):
     active_pokemon_bot, bench_active = get_pokemons(
         pokemon_json["side"], db_connection, moves
     )
-    return active_pokemon_bot, bench_active
+    return active_pokemon_bot, bench_active, pokemon_json["rqid"]

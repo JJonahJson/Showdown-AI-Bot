@@ -4,6 +4,7 @@ from src.model.field import Weather as w, Field as f
 from src.model.pokemontype import PokemonType as t
 from src.model.stats import StatsType
 from src.model.status import StatusType
+from src.model.move import MoveCategory
 
 
 class TypeMultiplier:
@@ -103,6 +104,8 @@ class DamageCalculator:
     @staticmethod
     def calculate(weather: w, terrain, user, move, target) -> int:
 
+        if move.category is MoveCategory.Status:
+            return 0
         if target.types in TypeMultiplier.immuneTo[move.move_type]:
             return 0
         else:

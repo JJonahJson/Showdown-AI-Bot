@@ -1,4 +1,3 @@
-from src.model.damagecalculator import DamageCalculator
 from src.model.status import Status
 from abc import ABC, abstractmethod
 from enum import Enum, auto
@@ -113,11 +112,11 @@ class SingleMove(Move):
                          on_user, on_target, defends_on, chance, volatile_status, non_volatile_status)
 
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
-        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
-        target_pokemon.stats.decrease_hp(damage)
+        #damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
+        #target_pokemon.stats.decrease_hp(damage)
         self.pp -= 1
 
-        if random.randint(0,100) <= self.chance:
+        if random.randint(0, 100) <= self.chance:
 
             for tupla in self.on_user_stats:
                 caster_pokemon.stats.modify(tupla[0], tupla[1])

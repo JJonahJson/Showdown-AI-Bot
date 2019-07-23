@@ -98,8 +98,9 @@ class BattleFieldSingle(BattleField):
         self.active_selector_side = {1: self.active_pokemon_bot, 2: self.active_pokemon_oppo}
         self.bench_selector_side = {1: self.all_pkmns_bot, 2: self.all_pkmns_oppo}
 
-    def update_turn(self):
-        self.turn_number += 2
+    def update_turn(self, value=2):
+        self.turn_number += value
+        print(self.turn_number)
 
     def get_pokemon_index_by_name(self, side, pkmn_name):
         for item in self.bench_selector_side[side]:
