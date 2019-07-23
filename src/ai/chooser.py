@@ -45,5 +45,5 @@ class Chooser:
                     if pkmn_type in TypeMultiplier.immuneTo[pkmn_type_oppo]:
                         valid_switch[index_pkmn] -= 2
 
-        choosen_switch_index = max(range(len(valid_switch)), key=lambda x: valid_switch[x])
-        return choosen_switch_index + 1
+        choosen_switch_index = max(valid_switch.keys(), key=lambda x: valid_switch[x])
+        return choosen_switch_index
