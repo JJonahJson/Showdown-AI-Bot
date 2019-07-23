@@ -28,10 +28,15 @@ class Move(ABC):
         crit_ratio (int): Critical ratio of the move
         target (str): Which targets are possible by the move
         move_type (PokemonType): Type of the move
-        on_user (SecondaryEffect): SecondaryEffect of the move
-        on_target (SecondaryEffect): SecondaryEffect of the move
+        on_user_stats: stat of the user modified by the move
+        on_target_stats: stat of the opponent modified by the move
         power_multiply (int): Used for the items that enhance the damage of a move
         is_locked (boolean): if the move is locked or not
+        chance: probability that the change of the stat or of the status occurs
+        volatile_status: volatile_status added by the move
+        non_volatile_status: non_volatile_status added by the move
+        is_usable = a move is not usable if the pp are over or the move is blocked
+        #TODO forse bisogna aggiungere una distinzione tra status on user e on target
 
     """
 
@@ -54,7 +59,8 @@ class Move(ABC):
         self.on_target_stats = on_target_stats
         self.moveStatus = MoveStatus.Available
         self.power_multiply = 1
-        self.isUsable = True
+        self.is_usable = True
+        self.is_locked = False
 
         if defends_on:
             self.defends_on = self.scale_with
@@ -64,7 +70,6 @@ class Move(ABC):
         self.chance = chance
         self.volatile_status = volatile_status
         self.non_volatile_status = non_volatile_status
-
 
     @abstractmethod
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
@@ -80,8 +85,7 @@ class Move(ABC):
         stab = 1
         if self.move_type in types:
             stab = 1.5
-        return self.base_power*stab
-
+        return self.base_power * stab
 
     def __lt__(self, other_move):
         return self.priority > other_move.priority
@@ -103,13 +107,13 @@ class SingleMove(Move):
     def __init__(self, move_name: str, accuracy: int,
                  base_power: int, category: str, pp: int, priority: int,
                  is_Z: bool, crit_ratio: int, move_type,
-                 scale_with, on_user,
-                 on_target, defends_on, chance: int, volatile_status, non_volatile_status):
+                 scale_with, on_user_stats,
+                 on_target_stats, defends_on, chance: int, volatile_status, non_volatile_status):
 
         super().__init__(move_name, accuracy,
                          base_power, category, pp, priority,
                          is_Z, crit_ratio, move_type, scale_with,
-                         on_user, on_target, defends_on, chance, volatile_status, non_volatile_status)
+                         on_user_stats, on_target_stats, defends_on, chance, volatile_status, non_volatile_status)
 
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
         #damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
@@ -135,6 +139,3 @@ class SingleMove(Move):
                     Status.apply_non_volatile_status(self.non_volatile_status[1], caster_pokemon)
                 else:
                     Status.apply_non_volatile_status(self.non_volatile_status[1], target_pokemon)
-
-
-
