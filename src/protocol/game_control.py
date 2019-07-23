@@ -10,6 +10,7 @@ from ai.damage_tracker import DamageTracker
 from src.model.field import BattleFieldSingle
 from src.protocol.data_source import DatabaseDataSource
 from src.protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
+from ai.chooser import Chooser
 
 
 class GameLoop:
@@ -22,6 +23,7 @@ class GameLoop:
         self.db = DatabaseDataSource()
         self.damage_tracker = DamageTracker()
         self.last_move = ""
+        self.counter = 0
 
     async def challenge_loop(self, message):
         string_tab = message.split("|")
@@ -53,7 +55,7 @@ class GameLoop:
 
         elif string_tab[1] == "updatesearch":
             to_parse = json.loads(string_tab[2])
-            if to_parse["games"] and self.battle_field.room_name == "":
+            if to_parse["games"]:
                 for k in to_parse["games"]:
                     if "battle" in k:
                         self.battle_field.room_name = k
@@ -70,7 +72,7 @@ class GameLoop:
                 continue
             current = line.split('|')
             if current[1] == "init":
-                num_answer = random.randint(0, len(self.standard_answers))
+                num_answer = random.randint(0, len(self.standard_answers)-1)
                 await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
                 time.sleep(3)
                 await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
@@ -81,38 +83,49 @@ class GameLoop:
                 if "2" in current[2]:
                     self.battle_field.turn_number = 1
                 else:
-                    self.battle_field.turn_number = 0
+                    self.battle_field.turn_number = 2
             elif current[1] == "-damage":
                 if self.battle_field.player_id in current[2]:
-                    actual = int(current[3].split("/")[0].strip())
-                    total = int(current[3].split("/")[1].strip())
-                    damage_perc = round(actual / total)
-                    self.damage_tracker.add_damage(self.battle_field.active_pokemon_oppo, damage_perc,
-                                                   self.battle_field.active_pokemon_bot, self.last_move)
+                    if 'fnt' not in current[3]:
+                        actual = int(current[3].split(" ")[0].split("/")[0].strip())
+                        total = int(current[3].split(" ")[0].split("/")[1].strip())
+                        damage_perc = round(actual / total)
+                        self.damage_tracker.add_damage(self.battle_field.active_pokemon_oppo, damage_perc,
+                                                       self.battle_field.active_pokemon_bot, self.last_move)
                 else:
-                    damage_perc = int(current[3].split("/")[0].strip())
-                    self.damage_tracker.add_damage(self.battle_field.active_pokemon_bot, damage_perc,
-                                                   self.battle_field.active_pokemon_oppo, self.last_move)
+                    if 'fnt' not in current[3]:
+                        damage_perc = int(current[3].split("/")[0].strip())
+                        self.damage_tracker.add_damage(self.battle_field.active_pokemon_bot, damage_perc,
+                                                       self.battle_field.active_pokemon_oppo, self.last_move)
 
-            elif current[1] == "switch" and self.battle_field.player_id not in current[2]:
+            elif current[1] == "switch":
                 # Handle the pokemons of the opponent
-                name = current[2].split(":")[1].strip()
-                level = int(current[3].split(",")[1].replace("L", "").strip())
-                gender = current[3].split(",")[2].strip()
-                update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
+                if self.battle_field.player_id not in current[2]:
+                    name = current[2].split(":")[1].strip()
+                    level = int(current[3].split(",")[1].replace("L", "").strip())
+                    if len(current[3].split(",")) == 3:
+                        gender = current[3].split(",")[2].strip()
+                    else:
+                        gender = ""
+                    update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
+                if self.counter > 2:
+                    self.battle_field.update_turn()
+                self.counter += 1
+
+
             elif current[1] == "move" and self.battle_field.player_id not in current[2]:
                 # Update the moveset of the active pokemon
                 move_name = current[3].strip()
                 self.last_move = move_name
                 update_enemy_move(self.battle_field, self.db, move_name)
-            elif current[1] == "request":
+            elif current[1] == "request" and "wait" not in current[2]:
                 if current[2] == '':
                     continue
                 if len(current[2]) == 1:
                     try:
                         # Populate the team
                         # await battle.req_loader(current[3].split('\n')[1], self.ws)
-                        active, bench = rp.parse_and_set(current[3].splitlines()[1], self.db)
+                        active, bench = rp.parse_and_set(current[2], self.db)
                         self.battle_field.active_pokemon_bot = active
                         self.battle_field.all_pkmns_bot = bench
                         self.battle_field.bench_selector_side[1] = bench
@@ -120,9 +133,15 @@ class GameLoop:
                     except KeyError as e:
                         print(e)
                         print(current[3])
+                elif "forceSwitch" in current[2]:
+                    # We need to switch
+                    index = Chooser.choose_switch(self.battle_field)
+                    await sender.sendswitch(self.ws, self.battle_field.room_name, index, self.battle_field.turn_number)
+                    self.battle_field.update_turn()
+
                 else:
                     # Populate team
-                    active, bench = rp.parse_and_set(current[3].splitlines()[1], self.db)
+                    active, bench = rp.parse_and_set(current[2], self.db)
                     self.battle_field.active_pokemon_bot = active
                     self.battle_field.all_pkmns_bot = bench
                     self.battle_field.bench_selector_side[1] = bench
@@ -135,19 +154,23 @@ class GameLoop:
             elif current[1] == "turn":
                 # TODO: Call IA to decide which action to do
                 # An action is a move or a switch
-                await battle.make_action(self.ws)
+                move = Chooser.choose_move(self.battle_field)
+                await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+                self.battle_field.update_turn()
 
             elif current[1] == "callback" and current[2] == "trapped":
                 # We cannot switch so we can only make a move
-                await battle.make_move(self.ws)
+                move = Chooser.choose_move(self.battle_field)
+                await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+                self.battle_field.update_turn()
 
             elif current[1] == "win":
                 # Win state, leave the room
                 await sender.sendmessage(self.ws, self.battle_field.player_id, "Well done, have a nice day!")
                 await sender.leaving(self.ws, self.battle_field.player_id)
-            elif current[1] == "c":
+            elif current[1] == "c" and "tapulabu" not in current[2]:
                 # This is a message
-                num_answer = random.randint(0, len(self.standard_answers))
+                num_answer = random.randint(0, len(self.standard_answers)-1)
                 await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
             else:
                 su.update_state(current, self.battle_field)

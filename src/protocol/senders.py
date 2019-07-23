@@ -52,7 +52,7 @@ async def sendmove(websocket, battletag, move, turn):
     :param turn: Battle turn (1, 2, ...). Different from the one sent by server.
     """
     await sender(websocket, battletag, "/choose move " + str(move), str(turn))
-
+    #websocket.send("/choose move {} {}".format(str(move), str(turn)))
 
 async def sendswitch(websocket, battletag, pokemon, turn):
     """

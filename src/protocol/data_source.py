@@ -70,19 +70,26 @@ class DatabaseDataSource(AbstractDataSource):
     # all_boost, target, movetype
     def get_move_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)
-        if "return" in name:
+        if "return102" in name:
             real_name = name[:len(name)-3]
             real_power = int(name[-3:])
+        elif "hiddenpower" in name and len(name) > 11:
+            real_name = name[:len(name)-2]
         else:
             real_name = name
+
         parametric_query = "SELECT * FROM Moves as mv where mv.id_name = %s"
         cursor.execute(parametric_query, (real_name,))
-        result = cursor.fetchall()[0]
+        try:
+            result = cursor.fetchall()[0]
+        except:
+            print(name)
+            exit()
 
         move_name = result[1]
         id_name = result[2]
         accuracy = result[3]
-        if "return" in name:
+        if "return102" in name:
             base_power = real_power
         else:
             base_power = result[4]

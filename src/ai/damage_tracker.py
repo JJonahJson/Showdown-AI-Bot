@@ -1,4 +1,3 @@
-from src.model.move import SingleMove
 from src.model.pokemon import Pokemon
 
 
@@ -7,7 +6,7 @@ class DamageTracker:
     def __init__(self):
         self.tracker = {}
 
-    def add_damage(self, caster_pokemon: Pokemon, damage_perc, move: SingleMove, target_pokemon: Pokemon):
+    def add_damage(self, caster_pokemon: Pokemon, damage_perc, target_pokemon: Pokemon, move: str):
         """Method that add an entry in the tracker
         :param caster_pokemon: Pokemon that use the move
         :param damage_perc: Damage in %
@@ -15,16 +14,16 @@ class DamageTracker:
         :param target_pokemon: Target pokemon
         :return:
         """
-        self.tracker[(caster_pokemon.name, move.move_name, target_pokemon.name)] = damage_perc
+        self.tracker[(caster_pokemon.name, move, target_pokemon.name)] = damage_perc
 
-    def get_damage(self, caster_pokemon: Pokemon, move: SingleMove, target_pokemon: Pokemon):
+    def get_damage(self, caster_pokemon: Pokemon, target_pokemon: Pokemon, move):
         """Method that retrieve the % damage
         :param caster_pokemon: pokemon that use the move
         :param target_pokemon: pokemon that receive the move
         :param move: move obj
         :return:
         """
-        return self.tracker.get((caster_pokemon.name, move.move_name, target_pokemon.name), -1)
+        return self.tracker.get((caster_pokemon.name, move, target_pokemon.name), -1)
 
     def remove_caster(self, caster_pokemon: Pokemon):
         """Remove an entry for the caster pokemon use this in case of buff of pokemon_bot or debuff of enemy
