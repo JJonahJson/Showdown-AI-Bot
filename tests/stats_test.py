@@ -12,59 +12,59 @@ class StatsTest(unittest.TestCase):
     def testIncreaseStat(self):
         counter = 1
         self.stat.modify(StatsType.Atk, counter)
-        should_be = self.stat.base_stats[StatsType.Atk] * Stats.multipliers[counter]
+        should_be = self.stat.real_stats[StatsType.Atk] * Stats.multipliers[counter]
         actual = self.stat.get_actual(StatsType.Atk)
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
         counter += 1
         self.stat.modify(StatsType.Atk, 1)
-        should_be = self.stat.base_stats[StatsType.Atk] * Stats.multipliers[counter]
+        should_be = self.stat.real_stats[StatsType.Atk] * Stats.multipliers[counter]
         actual = self.stat.get_actual(StatsType.Atk)
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testIncreaseAccuracyOrEvasiveness(self):
         counter = 1
         self.stat.modify(StatsType.Eva, counter)
-        should_be = self.stat.base_stats[StatsType.Eva] * Stats.multipliersAE[counter]
+        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
         actual = self.stat.get_actual(StatsType.Eva)
-        self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
+        self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
         counter += 1
         self.stat.modify(StatsType.Eva, 1)
-        should_be = self.stat.base_stats[StatsType.Eva] * Stats.multipliersAE[counter]
+        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
         actual = self.stat.get_actual(StatsType.Eva)
-        self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
+        self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testDecreaseStat(self):
         counter = -1
         self.stat.modify(StatsType.Atk, counter)
-        should_be = self.stat.base_stats[StatsType.Atk] * Stats.multipliers[counter]
+        should_be = self.stat.real_stats[StatsType.Atk] * Stats.multipliers[counter]
         actual = self.stat.get_actual(StatsType.Atk)
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
         counter -= 1
         self.stat.modify(StatsType.Atk, -1)
-        should_be = self.stat.base_stats[StatsType.Atk] * Stats.multipliers[counter]
+        should_be = self.stat.real_stats[StatsType.Atk] * Stats.multipliers[counter]
         actual = self.stat.get_actual(StatsType.Atk)
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testDecreaseAccuracyOrEvasiveness(self):
         counter = (-1)
         self.stat.modify(StatsType.Eva, counter)
-        should_be = self.stat.base_stats[StatsType.Eva] * Stats.multipliersAE[counter]
+        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
         actual = self.stat.get_actual(StatsType.Eva)
-        self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
+        self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
         counter += (-1)
         self.stat.modify(StatsType.Eva, -1)
-        should_be = self.stat.base_stats[StatsType.Eva] * Stats.multipliersAE[counter]
+        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
         actual = self.stat.get_actual(StatsType.Eva)
-        self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
+        self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testOverflowBuff(self):
         counter = 7
         self.stat.modify(StatsType.Atk, counter)
-        should_be = self.stat.base_stats[StatsType.Atk] * Stats.multipliers[6]
+        should_be = self.stat.real_stats[StatsType.Atk] * Stats.multipliers[6]
         actual = self.stat.get_actual(StatsType.Atk)
         self.assertEqual(should_be, actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 

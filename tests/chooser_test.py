@@ -45,6 +45,7 @@ class ChooserTest(unittest.TestCase):
 
     def test_choose_move(self):
         index = Chooser.choose_move(self.battleField)
+        print(index)
         self.assertEqual(2, index)
 
     def test_switch_move(self):

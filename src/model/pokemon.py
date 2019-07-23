@@ -41,7 +41,7 @@ class Pokemon:
 
     def get_usable_moves(self):
         """Methods that returns all usable moves"""
-        return {key: self.moves[key] for key in self.moves if self.moves[key].isUsable}
+        return {key: self.moves[key] for key in self.moves if self.moves[key].is_usable and self.moves[key].pp != 0}
 
     def use_move(self, move_index: int, target, weather, field):
         """Methods that apply a move"""

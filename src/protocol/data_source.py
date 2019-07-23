@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import mysql.connector
 
-from src.model.move import SingleMove
+from src.model.move import SingleMove, MoveCategory
 from src.model.pokemon import Pokemon
 from src.model.pokemontype import PokemonType
 from src.model.stats import Stats, StatsType
@@ -93,12 +93,16 @@ class DatabaseDataSource(AbstractDataSource):
             base_power = real_power
         else:
             base_power = result[4]
-        category = result[5]
+        category = MoveCategory[result[5]]
 
-        if category == 'Physical':
+        if result[5] == 'Physical':
             scale_with = StatsType.Atk
             defends_on = StatsType.Def
+        elif result[5] == 'Special':
+            scale_with = StatsType.Spa
+            defends_on = StatsType.Spd
         else:
+            #Per non avere None
             scale_with = StatsType.Spa
             defends_on = StatsType.Spd
 

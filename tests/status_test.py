@@ -47,7 +47,7 @@ class StatusTest(unittest.TestCase):
 
     def test_apply_paralysis_effect(self):
         Status.apply_non_volatile_status(StatusType.Par, self.pokemon)
-        self.assertEqual(self.pokemon.stats.get_actual(StatsType.Spe), 60.25)
+        self.assertEqual(self.pokemon.stats.get_actual(StatsType.Spe), 84)
 
     def test_apply_poisoning_effect(self):
         Status.apply_non_volatile_status(StatusType.Psn, self.pokemon)
@@ -60,7 +60,7 @@ class StatusTest(unittest.TestCase):
     def test_remove_non_volatile_status(self):
         Status.apply_non_volatile_status(StatusType.Par, self.pokemon)
         Status.remove_non_volatile_status(self.pokemon)
-        self.assertEqual(self.pokemon.stats.get_actual(StatsType.Spe), 120.5)
+        self.assertEqual(self.pokemon.stats.get_actual(StatsType.Spe), 167)
 
     def test_apply_fainted_effect(self):
         Status.apply_non_volatile_status(StatusType.Fnt, self.pokemon)

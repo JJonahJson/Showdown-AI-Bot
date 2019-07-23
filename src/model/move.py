@@ -6,7 +6,8 @@ import random
 
 class MoveCategory(Enum):
     Status = auto()
-    Damage = auto()
+    Physical = auto()
+    Special = auto()
 
 
 class MoveStatus(Enum):
@@ -41,7 +42,7 @@ class Move(ABC):
     """
 
     def __init__(self, move_name: str, accuracy: int,
-                 base_power: int, category, pp: int, priority: int,
+                 base_power: int, category: MoveCategory, pp: int, priority: int,
                  is_Z: bool, crit_ratio: int, move_type, scale_with, on_user_stats,
                  on_target_stats, defends_on, chance: int, volatile_status, non_volatile_status):
 
@@ -105,7 +106,7 @@ class SingleMove(Move):
     """
 
     def __init__(self, move_name: str, accuracy: int,
-                 base_power: int, category: str, pp: int, priority: int,
+                 base_power: int, category: MoveCategory, pp: int, priority: int,
                  is_Z: bool, crit_ratio: int, move_type,
                  scale_with, on_user_stats,
                  on_target_stats, defends_on, chance: int, volatile_status, non_volatile_status):
