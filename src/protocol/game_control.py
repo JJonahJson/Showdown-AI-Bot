@@ -76,12 +76,17 @@ class GameLoop:
                 await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
             elif current[1] == "player" and len(current) > 3 and current[3].lower() == "tapulabu":
                 # init del player id
-                self.battle_field.player_id = "p1"
+                self.battle_field.player_id = current[2]
+                # TODO: Check if the server init of turn numbers
+                if "2" in current[2]:
+                    self.battle_field.turn_number = 1
+                else:
+                    self.battle_field.turn_number = 0
             elif current[1] == "-damage":
-                if self.battle_field.battle_id in current[2]:
+                if self.battle_field.player_id in current[2]:
                     actual = int(current[3].split("/")[0].strip())
                     total = int(current[3].split("/")[1].strip())
-                    damage_perc = round(actual/total)
+                    damage_perc = round(actual / total)
                     self.damage_tracker.add_damage(self.battle_field.active_pokemon_oppo, damage_perc,
                                                    self.battle_field.active_pokemon_bot, self.last_move)
                 else:
@@ -89,13 +94,13 @@ class GameLoop:
                     self.damage_tracker.add_damage(self.battle_field.active_pokemon_bot, damage_perc,
                                                    self.battle_field.active_pokemon_oppo, self.last_move)
 
-            elif current[1] == "switch" and self.battle_field.battle_id not in current[2]:
+            elif current[1] == "switch" and self.battle_field.player_id not in current[2]:
                 # Handle the pokemons of the opponent
                 name = current[2].split(":")[1].strip()
                 level = int(current[3].split(",")[1].replace("L", "").strip())
                 gender = current[3].split(",")[2].strip()
                 update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
-            elif current[1] == "move" and self.battle_field.battle_id not in current[2]:
+            elif current[1] == "move" and self.battle_field.player_id not in current[2]:
                 # Update the moveset of the active pokemon
                 move_name = current[3].strip()
                 self.last_move = move_name

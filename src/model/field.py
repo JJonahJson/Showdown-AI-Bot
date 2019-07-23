@@ -1,9 +1,9 @@
-from src.model.status import StatusType, Status
-from src.model.stats import StatsType
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 
 from src.model.pokemon import Pokemon
+from src.model.stats import StatsType
+from src.model.status import StatusType, Status
 
 
 class Weather(Enum):
@@ -50,6 +50,10 @@ class BattleField(ABC):
         pass
 
     @abstractmethod
+    def update_turn(self):
+        pass
+
+    @abstractmethod
     def update_status(self, side, status=""):
         pass
 
@@ -89,9 +93,13 @@ class BattleFieldSingle(BattleField):
         self.active_pokemon_oppo = active_pokemon_oppo
         self.all_pkmns_bot = bench_bot
         self.room_name = ""
+        self.turn_number = 0
         self.all_pkmns_oppo = bench_oppo
         self.active_selector_side = {1: self.active_pokemon_bot, 2: self.active_pokemon_oppo}
         self.bench_selector_side = {1: self.all_pkmns_bot, 2: self.all_pkmns_oppo}
+
+    def update_turn(self):
+        self.turn_number += 2
 
     def get_pokemon_index_by_name(self, side, pkmn_name):
         for item in self.bench_selector_side[side]:
@@ -160,7 +168,7 @@ class BattleFieldSingle(BattleField):
         if side == 1:
             self.active_selector_side[side].stats.decrease_hp(remaining_hp)
         else:
-            self.active_selector_side[side].stats.decrease_hp(int(remaining_hp/100 * self.active_selector_side[
+            self.active_selector_side[side].stats.decrease_hp(int(remaining_hp / 100 * self.active_selector_side[
                 side].stats.real_stats[StatsType.HP]))
 
     def update_heal(self, side, heal):
