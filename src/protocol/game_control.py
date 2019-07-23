@@ -6,9 +6,10 @@ import src.protocol.login as login
 import src.protocol.request_parser as rp
 import src.protocol.senders as sender
 import src.protocol.state_update as su
-from src.protocol.enemy_updater import update_enemy_pokemon
+from ai.damage_tracker import DamageTracker
 from src.model.field import BattleFieldSingle
 from src.protocol.data_source import DatabaseDataSource
+from src.protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
 
 class GameLoop:
@@ -19,6 +20,8 @@ class GameLoop:
         with open("standard_answers", "r") as file:
             self.standard_answers = file.readlines()
         self.db = DatabaseDataSource()
+        self.damage_tracker = DamageTracker()
+        self.last_move = ""
 
     async def challenge_loop(self, message):
         string_tab = message.split("|")
@@ -74,6 +77,17 @@ class GameLoop:
             elif current[1] == "player" and len(current) > 3 and current[3].lower() == "tapulabu":
                 # init del player id
                 self.battle_field.player_id = "p1"
+            elif current[1] == "-damage":
+                if self.battle_field.battle_id in current[2]:
+                    actual = int(current[3].split("/")[0].strip())
+                    total = int(current[3].split("/")[1].strip())
+                    damage_perc = round(actual/total)
+                    self.damage_tracker.add_damage(self.battle_field.active_pokemon_oppo, damage_perc,
+                                                   self.battle_field.active_pokemon_bot, self.last_move)
+                else:
+                    damage_perc = int(current[3].split("/")[0].strip())
+                    self.damage_tracker.add_damage(self.battle_field.active_pokemon_bot, damage_perc,
+                                                   self.battle_field.active_pokemon_oppo, self.last_move)
 
             elif current[1] == "switch" and self.battle_field.battle_id not in current[2]:
                 # Handle the pokemons of the opponent
@@ -81,6 +95,11 @@ class GameLoop:
                 level = int(current[3].split(",")[1].replace("L", "").strip())
                 gender = current[3].split(",")[2].strip()
                 update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
+            elif current[1] == "move" and self.battle_field.battle_id not in current[2]:
+                # Update the moveset of the active pokemon
+                move_name = current[3].strip()
+                self.last_move = move_name
+                update_enemy_move(self.battle_field, self.db, move_name)
             elif current[1] == "request":
                 if current[2] == '':
                     continue
