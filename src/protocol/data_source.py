@@ -54,7 +54,7 @@ class DatabaseDataSource(AbstractDataSource):
         else:
             type_list = [PokemonType[result[0][8]], PokemonType[result[0][9]]]
 
-        return Pokemon(pkmn_name, type_list, "", stats, None, None, weight_kg, StatusType.Normal, [], None, level)
+        return Pokemon(pkmn_name, type_list, "", stats, {}, [], weight_kg, StatusType.Normal, [], None, level)
 
     def get_pokemontype_by_name(self, name):
         cursor = self.db_connection.cursor(prepared=True)

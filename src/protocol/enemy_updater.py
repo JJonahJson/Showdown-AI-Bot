@@ -16,8 +16,8 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
             # add the pokemon
             pokemon = db_con.get_pokemon_by_name(pokemon_name, level)
             current_index = max(battle_field.all_pkmns_oppo.keys())
-            battle_field.all_pkmns_oppo[current_index+1] = pokemon
-            battle_field.switch_pokemon(2, current_index+1)
+            battle_field.all_pkmns_oppo[current_index + 1] = pokemon
+            battle_field.switch_pokemon(2, current_index + 1)
         else:
             # We need to switch the pokemom without adding it to the all_pkmns dict
             for index in battle_field.all_pkmns_oppo:
@@ -25,4 +25,11 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
                     battle_field.switch_pokemon(2, index)
 
 
-# TODO: Add update_enemy_move
+def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
+    if not battle_field.active_pokemon_oppo.moves:
+        move = db_con.get_move_by_name(move_name.replace(" ", "").lower())
+        battle_field.active_pokemon_oppo.moves[1] = move
+    elif move_name not in list(map(lambda x: x[1].move_name, battle_field.active_pokemon_oppo.moves.items())):
+        move = db_con.get_move_by_name(move_name.replace(" ", "").lower())
+        current_index = max(battle_field.active_pokemon_oppo.moves.keys())
+        battle_field.active_pokemon_oppo.moves[current_index + 1] = move
