@@ -62,6 +62,8 @@ class GameLoop:
                 for k in to_parse["games"]:
                     if "battle" in k:
                         self.battle_field.room_name = k
+            print("If you want to follow the match go to this link https://play.pokemonshowdown.com/{"
+                  "}".format(self.battle_field.room_name))
 
         if "battle" in string_tab[0]:
             #   Battle concern message.
