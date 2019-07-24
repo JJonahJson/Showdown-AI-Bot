@@ -54,7 +54,7 @@ class Pokemon:
 
     def __lt__(self, other_pokemon):
         """More speed"""
-        return self.stats[StatsType.Spe] > other_pokemon.stats[StatsType.Spe]
+        return self.stats.get_actual(StatsType.Spe) < other_pokemon.stats.get_actual(StatsType.Spe)
 
     def __eq__(self, other_pokemon):
         return self.name == other_pokemon.name
