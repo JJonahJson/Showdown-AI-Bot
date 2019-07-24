@@ -15,7 +15,7 @@ def get_active_moves(moves_list, db_connection):
         else:
             move_retrieved.pp = 1
         active_moves[index] = move_retrieved
-        if move["disabled"]:
+        if "disabled" in move.keys():
             active_moves[index].is_usable = not move["disabled"]
         index += 1
     return active_moves
