@@ -1,7 +1,6 @@
 import asyncio
 import argparse
-
-from websocket import create_connection
+from websocket._core import create_connection
 
 from src.protocol import game_control
 
