@@ -16,12 +16,12 @@ class Chooser:
 
         # determine the index of the move with more damage inflicted to the opponent
         moves = field.active_pokemon_bot.get_usable_moves()
-        damage = []
+        damage = {}
         for index_move in moves:
-            damage.append(DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
-                                                            moves[index_move], field.active_pokemon_oppo))
+            damage[index_move] = DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
+                                                            moves[index_move], field.active_pokemon_oppo)
 
-        max_damage_move_index = max(range(len(damage)), key=lambda x: damage[x])
+        max_damage_move_index = max(damage.keys(), key=lambda x: damage[x])
 
         # determine when is better to use protect
         if (field.active_pokemon_oppo.non_volatile_status in [StatusType.Brn, StatusType.Psn, StatusType.Tox]) or (
@@ -33,7 +33,7 @@ class Chooser:
                 damage.append(DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_oppo,
                                                          opponent_moves[index_move], field.active_pokemon_bot))
 
-        return max_damage_move_index + 1
+        return max_damage_move_index
 
     @staticmethod
     def choose_switch(field: BattleFieldSingle):

@@ -29,14 +29,14 @@ class ChooserTest(unittest.TestCase):
         self.pokemon1f = Pokemon("Arbok", [pk.Poison], "Male", self.stat, {}, [], 65,
                                  StatusType.Normal, [], None, 50)
 
-        self.pokemon1a.moves[1] = SingleMove('Flamethrower', 1, 90, MoveCategory.Damage, 15, 0, False, 1, pk.Fire,
+        self.pokemon1a.moves[1] = SingleMove('Flamethrower', 1, 90, MoveCategory.Special, 15, 0, False, 1, pk.Fire,
                                              StatsType.Spa, [], [], StatsType.Spd, 10, None, StatusType.Brn)
-        self.pokemon1a.moves[2] = SingleMove('Bite', 1, 60, MoveCategory.Damage, 25, 0, False, 1, pk.Dark,
+        self.pokemon1a.moves[2] = SingleMove('Bite', 1, 60, MoveCategory.Physical, 25, 0, False, 1, pk.Dark,
                                              StatsType.Atk, [], [], StatsType.Def, 30, StatusType.Flinch, None)
 
-        self.pokemon2a.moves[1] = SingleMove('Hydropump', 1, 110, MoveCategory.Damage, 5, 0, False, 1, pk.Water,
+        self.pokemon2a.moves[1] = SingleMove('Hydropump', 1, 110, MoveCategory.Special, 5, 0, False, 1, pk.Water,
                                              StatsType.Spa, [], [], StatsType.Spd, 100, None, None)
-        self.pokemon2a.moves[2] = SingleMove('Psy Beam', 1, 65, MoveCategory.Damage, 20, 0, False, 1, pk.Psychic,
+        self.pokemon2a.moves[2] = SingleMove('Psy Beam', 1, 65, MoveCategory.Special, 20, 0, False, 1, pk.Psychic,
                                              StatsType.Spa, [], [], StatsType.Spd, 10, StatusType.Confusion, None)
         self.battleField = BattleFieldSingle(self.pokemon1a, self.pokemon2a,
                                              {1: self.pokemon1a, 2: self.pokemon1b, 3: self.pokemon1c,

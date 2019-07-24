@@ -58,3 +58,4 @@ class Pokemon:
 
     def __eq__(self, other_pokemon):
         return self.name == other_pokemon.name
+
