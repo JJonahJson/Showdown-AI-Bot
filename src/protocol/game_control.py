@@ -34,7 +34,7 @@ class GameLoop:
             # Login
             await login.log_in(self.ws, self.user_name, self.password, string_tab[2], string_tab[3])
 
-        elif string_tab[1] == "updateuser" and string_tab[2] == " tapulabu":
+        elif string_tab[1] == "updateuser" and self.user_name in string_tab[2]:
             # Once we are connected.
             await sender.challenge(self.ws, self.opponent_name, "gen7randombattle")
 
@@ -51,7 +51,7 @@ class GameLoop:
             except KeyError:
                 pass
 
-        elif string_tab[1] == "pm" and "tapulabu" not in string_tab[2]:
+        elif string_tab[1] == "pm" and self.user_name not in string_tab[2]:
             if string_tab[4] == ".info":
                 await sender.sender(self.ws, "", "/pm " + string_tab[2] + ", Showdown Battle Bot active")
             await sender.sender(self.ws, "", "/pm " + string_tab[2] + ", Bring it on.")
@@ -78,7 +78,7 @@ class GameLoop:
                 await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
                 time.sleep(3)
                 await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
-            elif current[1] == "player" and len(current) > 3 and current[3].lower() == "tapulabu":
+            elif current[1] == "player" and len(current) > 3 and current[3].lower() == self.user_name:
                 # init del player id
                 self.battle_field.player_id = current[2]
                 # TODO: Check if the server init of turn numbers
@@ -170,11 +170,11 @@ class GameLoop:
 
             elif current[1] == "win":
                 # Win state, leave the room
-                await sender.sendmessage(self.ws, self.battle_field.player_id, "Well done, have a nice day!")
-                await sender.leaving(self.ws, self.battle_field.player_id)
+                await sender.sendmessage(self.ws, self.battle_field.room_name, "Well done, have a nice day!")
+                await sender.leaving(self.ws, self.battle_field.room_name)
                 exit(1)
 
-            elif current[1] == "c" and "tapulabu" not in current[2]:
+            elif current[1] == "c" and self.user_name not in current[2]:
                 # This is a message
                 num_answer = random.randint(0, len(self.standard_answers) - 1)
                 await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])

@@ -21,4 +21,4 @@ async def log_in(websocket, user_name, password, challid, chall):
                              'challstr': challid + "%7C" + chall
                          })
     await protocol.senders.sender(websocket, "", "/trn " + username + ",0," + json.loads(resp.text[1:])['assertion'])
-    await protocol.senders.sender(websocket, "", "/avatar 158")
+    await protocol.senders.sender(websocket, "", "/avatar 167")
