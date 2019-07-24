@@ -8,11 +8,10 @@ class Chooser:
 
     @staticmethod
     def choose_move(field: BattleFieldSingle):
+        bot_may_die = False
+        bot_has_protect = False
         # determine if the opponent is faster
-        opponent_faster = False
-        if field.active_pokemon_bot.stats.real_stats[StatsType.Spe] < field.active_pokemon_oppo.stats.real_stats[
-            StatsType.Spe]:
-            opponent_faster = True
+        opponent_faster = field.active_pokemon_bot < field.active_pokemon_oppo
 
         # determine the index of the move with more damage inflicted to the opponent
         moves = field.active_pokemon_bot.get_usable_moves()
@@ -20,18 +19,30 @@ class Chooser:
         for index_move in moves:
             damage[index_move] = DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
                                                             moves[index_move], field.active_pokemon_oppo)
+            bot_has_protect = moves[index_move].move_name == "Protect"
+            if bot_has_protect:
+                protect_index = index_move
 
         max_damage_move_index = max(damage.keys(), key=lambda x: damage[x])
 
-        # determine when is better to use protect
-        if (field.active_pokemon_oppo.non_volatile_status in [StatusType.Brn, StatusType.Psn, StatusType.Tox]) or (
-                StatusType.Confusion in field.active_pokemon_oppo.volatile_status) or (
-                field.weather in [Weather.Hail, Weather.Sandstorm]):
-            opponent_moves = field.active_pokemon_oppo.get_usable_moves()
-            opponent_damage = []
-            for index_move in opponent_moves:
-                damage.append(DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_oppo,
-                                                         opponent_moves[index_move], field.active_pokemon_bot))
+        # determine when opponent's hp may decrease
+        oppo_is_damaging = (field.active_pokemon_oppo.non_volatile_status in [StatusType.Brn, StatusType.Psn,
+                                                                                 StatusType.Tox]) or (
+                                      StatusType.Confusion in field.active_pokemon_oppo.volatile_status) or (
+                                      field.weather in [Weather.Hail, Weather.Sandstorm])
+
+        opponent_moves = field.active_pokemon_oppo.get_usable_moves()
+
+        #check if an opponent's move kills the bot
+        for index_move in opponent_moves:
+            bot_may_die = (field.active_pokemon_bot.stats.get_actual_hp() - DamageCalculator.calculate(field.weather,
+                                                                                                       field.field,
+                                                                                                       field.active_pokemon_oppo,
+                                                                                                       opponent_moves[
+                                                                                                           index_move],
+                                                                                                       field.active_pokemon_bot)) <= 0
+        if oppo_is_damaging and bot_may_die and bot_has_protect:
+            return protect_index
 
         return max_damage_move_index
 

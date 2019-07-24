@@ -15,8 +15,9 @@ from src.protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
 class GameLoop:
 
-    def __init__(self, ws):
+    def __init__(self, ws, opponent_name):
         self.ws = ws
+        self.opponent_name = opponent_name
         self.battle_field = BattleFieldSingle(None, None, {}, {})
         with open("standard_answers", "r") as file:
             self.standard_answers = file.readlines()
@@ -33,7 +34,7 @@ class GameLoop:
 
         elif string_tab[1] == "updateuser" and string_tab[2] == " tapulabu":
             # Once we are connected.
-            await sender.challenge(self.ws, "errevas", "gen7randombattle")
+            await sender.challenge(self.ws, self.opponent_name, "gen7randombattle")
 
         elif "updatechallenges" in string_tab[1]:
             # If somebody challenges the bot
