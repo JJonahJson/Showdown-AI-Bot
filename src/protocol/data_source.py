@@ -83,8 +83,7 @@ class DatabaseDataSource(AbstractDataSource):
         try:
             result = cursor.fetchall()[0]
         except:
-            print(name)
-            exit()
+            return None
 
         move_name = result[1]
         id_name = result[2]
