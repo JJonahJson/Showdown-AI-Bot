@@ -38,8 +38,8 @@ def get_pokemons(pokemon_list, db_connection, active_moves):
                       stats_dict["atk"],
                       stats_dict["def"],
                       stats_dict["spa"],
-                      stats_dict["spe"],
                       stats_dict["spd"],
+                      stats_dict["spe"],
                       level,
                       is_base=False)
 

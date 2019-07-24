@@ -24,13 +24,13 @@ class Stats:
         -3: 0.4,
         -2: 0.5,
         -1: 0.67,
-        0: 1,
-        1: 1.5,
-        2: 2,
-        3: 2.5,
-        4: 3,
-        5: 3.5,
-        6: 4
+        0 : 1,
+        1 : 1.5,
+        2 : 2,
+        3 : 2.5,
+        4 : 3,
+        5 : 3.5,
+        6 : 4
     }
 
     """Multipliers for accuracy and evasion changes	"""
@@ -41,20 +41,20 @@ class Stats:
         -3: 0.5,
         -2: 0.6,
         -1: 0.75,
-        0: 1,
-        1: 1.33,
-        2: 1.67,
-        3: 2,
-        4: 2.33,
-        5: 2.67,
-        6: 3
+        0 : 1,
+        1 : 1.33,
+        2 : 1.67,
+        3 : 2,
+        4 : 2.33,
+        5 : 2.67,
+        6 : 3
     }
 
     def __init__(self, hp: int, attack: int, defense: int, special_attack: int, special_defense: int, speed: int,
-                 level=50, is_base=True, ev_speed=252, nature_speed=1.1):
+                 level=50, is_base=True, ev_speed=0, nature_speed=1.1):
         # Initial value of each statistic
         self.base_stats = {
-            StatsType.HP: hp,
+            StatsType.HP : hp,
             StatsType.Atk: attack,
             StatsType.Def: defense,
             StatsType.Spa: special_attack,
@@ -66,19 +66,19 @@ class Stats:
 
         if is_base:
             self.real_stats = {
-                StatsType.HP: round(((31+2*hp+0)*level/100)+10+level/100),
-                StatsType.Atk: round(((31 + 2 * attack + 0) * level // 100) + 5),
-                StatsType.Def: round(((31+2*defense+0)*level//100)+5),
-                StatsType.Spa: round(((31+2*special_attack+0)*level//100)+5),
-                StatsType.Spd: round(((31+2*special_defense+0)*level//100)+5),
-                StatsType.Spe: round((((31+2*speed+ev_speed//4)*level//100)+5)*nature_speed),
+                StatsType.HP : round(((31 + (2 * hp) + 0) * level / 100) + 10 + level) + 18,
+                StatsType.Atk: round(((31 + (2 * attack) + 0) * level / 100) + 5) + 18,
+                StatsType.Def: round(((31 + (2 * defense) + 0) * level / 100) + 5) + 18,
+                StatsType.Spa: round(((31 + (2 * special_attack) + 0) * level / 100) + 5) + 18,
+                StatsType.Spd: round(((31 + (2 * special_defense) + 0) * level / 100) + 5) + 18,
+                StatsType.Spe: round((((31 + (2 * speed) + ev_speed / 4) * level / 100) + 5)) + 18,
                 StatsType.Acc: 1,
                 StatsType.Eva: 1
             }
         else:
             self.real_stats = self.base_stats
 
-        # Initial value of each statistics' multiplier
+            # Initial value of each statistics' multiplier
         self.mul_stats = {
             StatsType.Atk: 0,
             StatsType.Def: 0,

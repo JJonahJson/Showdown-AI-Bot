@@ -11,7 +11,8 @@ class Chooser:
         bot_may_die = False
         bot_has_protect = False
         # determine if the opponent is faster
-        opponent_faster = field.active_pokemon_bot < field.active_pokemon_oppo
+        opponent_faster = field.active_pokemon_bot.stats.get_actual(StatsType.Spe) < \
+                          field.active_pokemon_oppo.stats.get_actual(StatsType.Spe)
 
         # determine the index of the move with more damage inflicted to the opponent
         moves = field.active_pokemon_bot.get_usable_moves()
