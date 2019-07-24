@@ -3,15 +3,16 @@ import requests
 import protocol.senders
 
 
-async def log_in(websocket, challid, chall):
+
+async def log_in(websocket, user_name, password, challid, chall):
     """
     Login in function. Send post request to showdown server.
     :param websocket: Websocket stream
     :param challid: first part of login challstr sent by server
     :param chall: second part of login challstr sent by server
     """
-    username = "tapulabu"
-    password = "tapulabu"
+    username = user_name
+
     resp = requests.post("https://play.pokemonshowdown.com/action.php?",
                          data={
                              'act': 'login',

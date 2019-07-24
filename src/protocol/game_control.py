@@ -15,8 +15,10 @@ from src.protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
 class GameLoop:
 
-    def __init__(self, ws, opponent_name):
+    def __init__(self, ws, user_name, password, opponent_name):
         self.ws = ws
+        self.user_name = user_name
+        self.password = password
         self.opponent_name = opponent_name
         self.battle_field = BattleFieldSingle(None, None, {}, {})
         with open("standard_answers", "r") as file:
@@ -30,7 +32,7 @@ class GameLoop:
         string_tab = message.split("|")
         if string_tab[1] == "challstr":
             # Login
-            await login.log_in(self.ws, string_tab[2], string_tab[3])
+            await login.log_in(self.ws, self.user_name, self.password, string_tab[2], string_tab[3])
 
         elif string_tab[1] == "updateuser" and string_tab[2] == " tapulabu":
             # Once we are connected.
