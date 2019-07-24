@@ -27,5 +27,5 @@ async def main(password):
 
 
 if __name__ == "__main__":
-    password = getpass.getpass(prompt="Insert your Pokemon Showdown password")
+    password = getpass.getpass(prompt="Insert your Pokemon Showdown password\n")
     asyncio.get_event_loop().run_until_complete(main(password))
