@@ -1,2 +1,0 @@
----Modellare gli oggetti onTarget e anche onUser
-

@@ -1,8 +1,2 @@
-componenti.txt
-src/.vscode/.ropeproject/config.py
-src/.vscode/.ropeproject/objectdb
-src/model/moves/__pycache__
-src/model/description.md
 *pyc
-settings.json
 .idea/*

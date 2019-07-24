@@ -53,13 +53,15 @@ class TypeMultiplier:
 
     resistsTo = {
         PokemonType.Normal: [],
-        PokemonType.Fire: [PokemonType.Fire, PokemonType.Grass, PokemonType.Ice, PokemonType.Bug, PokemonType.Steel, PokemonType.Fairy],
+        PokemonType.Fire: [PokemonType.Fire, PokemonType.Grass, PokemonType.Ice, PokemonType.Bug, PokemonType.Steel,
+                           PokemonType.Fairy],
         PokemonType.Water: [PokemonType.Fire, PokemonType.Water, PokemonType.Ice, PokemonType.Steel],
         PokemonType.Electric: [PokemonType.Electric, PokemonType.Flying, PokemonType.Steel],
         PokemonType.Grass: [PokemonType.Water, PokemonType.Electric, PokemonType.Grass, PokemonType.Ground],
         PokemonType.Ice: [PokemonType.Ice],
         PokemonType.Fighting: [PokemonType.Bug, PokemonType.Rock, PokemonType.Dark],
-        PokemonType.Poison: [PokemonType.Grass, PokemonType.Fighting, PokemonType.Poison, PokemonType.Bug, PokemonType.Rock, PokemonType.Dark],
+        PokemonType.Poison: [PokemonType.Grass, PokemonType.Fighting, PokemonType.Poison, PokemonType.Bug,
+                             PokemonType.Rock, PokemonType.Dark],
         PokemonType.Ground: [PokemonType.Poison, PokemonType.Rock],
         PokemonType.Flying: [PokemonType.Ground, PokemonType.Grass, PokemonType.Bug],
         PokemonType.Psychic: [PokemonType.Fighting, PokemonType.Psychic],
@@ -68,7 +70,9 @@ class TypeMultiplier:
         PokemonType.Ghost: [PokemonType.Poison, PokemonType.Bug],
         PokemonType.Dragon: [PokemonType.Fire, PokemonType.Grass, PokemonType.Water],
         PokemonType.Dark: [PokemonType.Ghost, PokemonType.Dark],
-        PokemonType.Steel: [PokemonType.Normal, PokemonType.Grass, PokemonType.Ice, PokemonType.Flying, PokemonType.Psychic, PokemonType.Bug, PokemonType.Rock, PokemonType.Dragon, PokemonType.Steel, PokemonType.Fairy],
+        PokemonType.Steel: [PokemonType.Normal, PokemonType.Grass, PokemonType.Ice, PokemonType.Flying,
+                            PokemonType.Psychic, PokemonType.Bug, PokemonType.Rock, PokemonType.Dragon,
+                            PokemonType.Steel, PokemonType.Fairy],
         PokemonType.Fairy: [PokemonType.Fighting, PokemonType.Bug, PokemonType.Dark]
     }
     immuneTo = {
@@ -91,4 +95,3 @@ class TypeMultiplier:
         PokemonType.Steel: [PokemonType.Poison],
         PokemonType.Fairy: [PokemonType.Dragon]
     }
-

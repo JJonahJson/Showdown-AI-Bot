@@ -1,6 +1,6 @@
 from model.status_type import StatusType
 
-from model.pokemontype import PokemonType
+from model.pokemon_type import PokemonType
 from model.stats_type import StatsType
 
 
@@ -13,12 +13,56 @@ non_volatile = {
     StatusType.Par: True,
     StatusType.Frz: True,
     StatusType.Slp: True,
-
     StatusType.Attract: False,
     StatusType.Flinch: False,
     StatusType.Confusion: False,
     StatusType.Protect: False,
-    StatusType.Trapped: False
+    StatusType.Trapped: False,
+    StatusType.Endure: False,
+    StatusType.Substitute: False,
+    StatusType.Taunt: False,
+    StatusType.Aquaring: False,
+    StatusType.Autotomize: False,
+    StatusType.Banefulbunker: False,
+    StatusType.Bide: False,
+    StatusType.Partiallytrapped: False,
+    StatusType.Charge: False,
+    StatusType.Curse: False,
+    StatusType.Defensecurl: False,
+    StatusType.Destinybond: False,
+    StatusType.Disable: False,
+    StatusType.Electrify: False,
+    StatusType.Embargo: False,
+    StatusType.Encore: False,
+    StatusType.Focusenergy: False,
+    StatusType.Followme: False,
+    StatusType.Foresight: False,
+    StatusType.Gastroacid: False,
+    StatusType.Grudge: False,
+    StatusType.Healblock: False,
+    StatusType.Helpinghand: False,
+    StatusType.Imprison: False,
+    StatusType.Ingrain: False,
+    StatusType.Kingsshield: False,
+    StatusType.Laserfocus: False,
+    StatusType.Leechseed: False,
+    StatusType.Magiccoat: False,
+    StatusType.Magnetrise: False,
+    StatusType.Minimize: False,
+    StatusType.Miracleeye: False,
+    StatusType.Nightmare: False,
+    StatusType.Powder: False,
+    StatusType.Powertrick: False,
+    StatusType.Ragepowder: False,
+    StatusType.Smackdown: False,
+    StatusType.Snatch: False,
+    StatusType.Spikyshield: False,
+    StatusType.Spotlight: False,
+    StatusType.Stockpile: False,
+    StatusType.Telekinesis: False,
+    StatusType.Throatchop: False,
+    StatusType.Torment: False,
+    StatusType.Yawn: False
 
 }
 
@@ -28,15 +72,9 @@ immune = {
     StatusType.Par: [PokemonType.Electric],
     StatusType.Frz: [PokemonType.Ice],
     StatusType.Brn: [PokemonType.Fire],
+    StatusType.Slp: [],
     StatusType.Normal: [],
-    StatusType.Fnt: [],
-    StatusType.Attract: [],
-    StatusType.Flinch: [],
-    StatusType.Confusion: [],
-    StatusType.Protect: [],
-    StatusType.Trapped: [],
-    StatusType.Endure: [],
-    StatusType.Slp: []
+    StatusType.Fnt: []
 }
 
 

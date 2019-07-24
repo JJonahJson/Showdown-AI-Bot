@@ -3,7 +3,7 @@ from random import uniform
 from model.weather_type import WeatherModifiers, FieldModifiers
 from model.status_type import StatusType
 from model.move_type import MoveCategory
-from model.pokemontype import TypeMultiplier
+from model.pokemon_type import TypeMultiplier
 
 
 class DamageCalculator:

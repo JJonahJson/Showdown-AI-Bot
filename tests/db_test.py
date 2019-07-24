@@ -1,7 +1,7 @@
 import unittest
 import src.protocol.data_source as ds
 from src.model.stats_type import StatsType as s
-from src.model.pokemontype import PokemonType as pk
+from src.model.pokemon_type import PokemonType as pk
 
 
 class DBTest(unittest.TestCase):

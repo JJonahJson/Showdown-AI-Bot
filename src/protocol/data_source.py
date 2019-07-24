@@ -5,7 +5,7 @@ import mysql.connector
 from model.move import SingleMove
 from model.move_type import MoveCategory
 from model.pokemon import Pokemon
-from model.pokemontype import PokemonType
+from model.pokemon_type import PokemonType
 from model.stats import Stats
 from model.stats_type import StatsType
 from model.status_type import StatusType

@@ -1,6 +1,7 @@
 from model.field_type import Weather
-from model.damagecalculator import DamageCalculator, StatusType
+from model.damage_calculator import DamageCalculator, StatusType
 from model.stats_type import StatsType
+
 
 class Chooser:
 
@@ -26,13 +27,13 @@ class Chooser:
 
         # determine when opponent's hp may decrease
         oppo_is_damaging = (field.active_pokemon_oppo.non_volatile_status in [StatusType.Brn, StatusType.Psn,
-                                                                                 StatusType.Tox]) or (
-                                      StatusType.Confusion in field.active_pokemon_oppo.volatile_status) or (
-                                      field.weather in [Weather.Hail, Weather.Sandstorm])
+                                                                              StatusType.Tox]) or (
+                                   StatusType.Confusion in field.active_pokemon_oppo.volatile_status) or (
+                                   field.weather in [Weather.Hail, Weather.Sandstorm])
 
         opponent_moves = field.active_pokemon_oppo.get_usable_moves()
 
-        #check if an opponent's move kills the bot
+        # check if an opponent's move kills the bot
         for index_move in opponent_moves:
             bot_may_die = (field.active_pokemon_bot.stats.get_actual_hp() - DamageCalculator.calculate(field.weather,
                                                                                                        field.field,

@@ -1,4 +1,4 @@
-from model.pokemontype import PokemonType as t
+from model.pokemon_type import PokemonType as t
 from model.field_type import Weather as w, Field as f
 
 

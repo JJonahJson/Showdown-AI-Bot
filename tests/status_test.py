@@ -1,7 +1,7 @@
 import unittest
 
 from src.model.pokemon import Pokemon
-from src.model.pokemontype import PokemonType as pk
+from src.model.pokemon_type import PokemonType as pk
 from src.model.stats import Stats
 from src.model.stats_type import StatsType
 from src.model.status import Status

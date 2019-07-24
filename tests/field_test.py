@@ -2,7 +2,7 @@ import unittest
 
 from src.model.field import BattleFieldSingle, Weather
 from src.model.pokemon import Pokemon
-from src.model.pokemontype import PokemonType as pk
+from src.model.pokemon_type import PokemonType as pk
 from src.model.stats import Stats
 
 
