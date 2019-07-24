@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 
 import mysql.connector
 
-from src.model.move import SingleMove
+from model.move import SingleMove
 from model.move_type import MoveCategory
-from src.model.pokemon import Pokemon
-from src.model.pokemontype import PokemonType
-from src.model.stats import Stats
-from src.model.stats_type import StatsType
+from model.pokemon import Pokemon
+from model.pokemontype import PokemonType
+from model.stats import Stats
+from model.stats_type import StatsType
 from model.status_type import StatusType
 
 

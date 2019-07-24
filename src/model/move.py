@@ -1,4 +1,4 @@
-from src.model.status import Status
+from model.status import Status
 from abc import ABC, abstractmethod
 from model.move_type import MoveStatus
 import random

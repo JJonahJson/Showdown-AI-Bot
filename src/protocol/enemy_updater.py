@@ -1,4 +1,4 @@
-from src.model.field import BattleFieldSingle
+from model.field import BattleFieldSingle
 
 
 def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: str, level: int, gender: str):

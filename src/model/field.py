@@ -1,36 +1,10 @@
 from abc import ABC, abstractmethod
-from enum import Enum, auto
 
-from src.model.pokemon import Pokemon
-from src.model.stats_type import StatsType
-from src.model.status import Status
+from model.pokemon import Pokemon
+from model.stats_type import StatsType
+from model.status import Status
 from model.status_type import StatusType
-
-
-class Weather(Enum):
-    """Enum for the possible weathers in game"""
-    Raindance = auto()
-    Sunnyday = auto()
-    Wind = auto()
-    Hail = auto()
-    Sandstorm = auto()
-    Normal = auto()
-
-    # TODO: Primordial and desolate multipliers needs to be reworked
-
-
-class Field(Enum):
-    """Enum for the possible fields in game"""
-    Electric = auto()
-    Psychic = auto()
-    Grass = auto()
-    Misty = auto()
-    Normal = auto()
-
-
-class SpeedCriterion(Enum):
-    Normal = False
-    TrickRoom = True
+from model.field_type import Field, Weather, SpeedCriterion
 
 
 class BattleField(ABC):

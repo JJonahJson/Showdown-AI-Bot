@@ -1,5 +1,5 @@
-from src.model.field import Field
-from src.model.status import Status
+from model.field_type import Field
+from model.status import Status
 from model.status_type import StatusType
 
 

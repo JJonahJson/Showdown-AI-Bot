@@ -1,7 +1,7 @@
 import json
 
-from src.model.pokemon import Pokemon
-from src.model.stats import Stats
+from model.pokemon import Pokemon
+from model.stats import Stats
 from model.status_type import StatusType
 
 

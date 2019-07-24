@@ -2,15 +2,15 @@ import json
 import random
 import time
 
-import src.protocol.login as login
-import src.protocol.request_parser as rp
-import src.protocol.senders as sender
-import src.protocol.state_update as su
+import protocol.login as login
+import protocol.request_parser as rp
+import protocol.senders as sender
+import protocol.state_update as su
 from ai.chooser import Chooser
 from ai.damage_tracker import DamageTracker
-from src.model.field import BattleFieldSingle
-from src.protocol.data_source import DatabaseDataSource
-from src.protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
+from model.field import BattleFieldSingle
+from protocol.data_source import DatabaseDataSource
+from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
 
 class GameLoop:

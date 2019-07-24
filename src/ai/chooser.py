@@ -1,8 +1,6 @@
-from src.model.field import Weather
-from src.model.damagecalculator import DamageCalculator, TypeMultiplier
-from model.status_type import StatusType
+from model.field_type import Weather
+from model.damagecalculator import DamageCalculator, StatusType
 from model.stats_type import StatsType
-
 
 class Chooser:
 
@@ -58,22 +56,22 @@ class Chooser:
             valid_switch[index_pkmn] = 0
             for pkmn_type in bot_team[index_pkmn].types:
                 for pkmn_type_oppo in field.active_pokemon_oppo.types:
-                    if pkmn_type in TypeMultiplier.weakTo[pkmn_type_oppo]:
+                    if DamageCalculator.weak_to(pkmn_type_oppo, pkmn_type):
                         valid_switch[index_pkmn] += 1
 
-                    if pkmn_type_oppo in TypeMultiplier.weakTo[pkmn_type]:
+                    if DamageCalculator.weak_to(pkmn_type, pkmn_type_oppo):
                         valid_switch[index_pkmn] -= 1
 
-                    if pkmn_type in TypeMultiplier.resistsTo[pkmn_type_oppo]:
+                    if DamageCalculator.resists_to(pkmn_type_oppo, pkmn_type):
                         valid_switch[index_pkmn] -= 1
 
-                    if pkmn_type_oppo in TypeMultiplier.resistsTo[pkmn_type]:
+                    if DamageCalculator.resists_to(pkmn_type, pkmn_type_oppo):
                         valid_switch[index_pkmn] += 1
 
-                    if pkmn_type_oppo in TypeMultiplier.immuneTo[pkmn_type]:
+                    if DamageCalculator.immune_to(pkmn_type, pkmn_type_oppo):
                         valid_switch[index_pkmn] += 2
 
-                    if pkmn_type in TypeMultiplier.immuneTo[pkmn_type_oppo]:
+                    if DamageCalculator.immune_to(pkmn_type_oppo, pkmn_type):
                         valid_switch[index_pkmn] -= 2
 
         choosen_switch_index = max(valid_switch.keys(), key=lambda x: valid_switch[x])

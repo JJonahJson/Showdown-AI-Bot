@@ -1,12 +1,13 @@
 import unittest
 
-from src.ai.chooser import Chooser
-from src.model.field import BattleFieldSingle
-from src.model.move import SingleMove, MoveCategory
-from src.model.pokemon import Pokemon
-from src.model.pokemontype import PokemonType as pk
-from src.model.stats import Stats
-from src.model.stats_type import StatsType
+from ai.chooser import Chooser
+from model.field import BattleFieldSingle
+from model.move import SingleMove
+from model.move_type import MoveCategory
+from model.pokemon import Pokemon
+from model.pokemontype import PokemonType as pk
+from model.stats import Stats
+from model.stats_type import StatsType
 from model.status_type import StatusType
 
 

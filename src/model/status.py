@@ -1,7 +1,7 @@
 from model.status_type import StatusType
 
-from src.model.pokemontype import PokemonType
-from src.model.stats_type import StatsType
+from model.pokemontype import PokemonType
+from model.stats_type import StatsType
 
 
 non_volatile = {
