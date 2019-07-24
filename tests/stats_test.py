@@ -1,6 +1,7 @@
 import unittest
 
-from src.model.stats import Stats, StatsType
+from src.model.stats import Stats
+from src.model.stats_type import StatsType
 
 
 class StatsTest(unittest.TestCase):

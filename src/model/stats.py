@@ -1,16 +1,4 @@
-from enum import Enum, auto
-
-
-class StatsType(Enum):
-    """Enum class which contains stats' types"""
-    HP = auto()
-    Atk = auto()
-    Def = auto()
-    Spa = auto()
-    Spd = auto()
-    Spe = auto()
-    Acc = auto()
-    Eva = auto()
+from model.stats_type import StatsType
 
 
 class Stats:
@@ -124,11 +112,11 @@ class Stats:
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
         if stat_type is StatsType.Acc or stat_type is StatsType.Eva:
-            return round(self.real_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
-                stat_type])
+            return round(self.real_stats[stat_type] *
+                         self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[stat_type])
         else:
-            return round(self.real_stats[stat_type] * self.multipliers[self.mul_stats[stat_type]] * self.volatile_mul[
-                stat_type])
+            return round(self.real_stats[stat_type] *
+                         self.multipliers[self.mul_stats[stat_type]] * self.volatile_mul[stat_type])
 
     def get_actual_hp(self) -> int:
         """Returns Pokemon's actual HP value by subtracting the damage to the base HP"""

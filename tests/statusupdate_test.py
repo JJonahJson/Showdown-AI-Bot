@@ -5,8 +5,9 @@ from src.model.field import BattleFieldSingle
 from src.model.field import Weather
 from src.model.pokemon import Pokemon
 from src.model.pokemontype import PokemonType as pk
-from src.model.stats import Stats, StatsType
-from src.model.status import StatusType
+from src.model.stats import Stats
+from src.model.stats_type import StatsType
+from model.status_type import StatusType
 
 
 def build_string(selector, parameters):

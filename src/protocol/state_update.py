@@ -1,5 +1,6 @@
 from src.model.field import Field
-from src.model.status import StatusType, Status
+from src.model.status import Status
+from model.status_type import StatusType
 
 
 def update_state(line, field):

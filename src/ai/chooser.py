@@ -1,13 +1,13 @@
-from src.model.field import BattleFieldSingle, Weather
+from src.model.field import Weather
 from src.model.damagecalculator import DamageCalculator, TypeMultiplier
-from src.model.status import StatusType
-from src.model.stats import StatsType
+from model.status_type import StatusType
+from model.stats_type import StatsType
 
 
 class Chooser:
 
     @staticmethod
-    def choose_move(field: BattleFieldSingle):
+    def choose_move(field):
         bot_may_die = False
         bot_has_protect = False
         # determine if the opponent is faster
@@ -48,7 +48,7 @@ class Chooser:
         return max_damage_move_index
 
     @staticmethod
-    def choose_switch(field: BattleFieldSingle):
+    def choose_switch(field):
         bot_team = field.all_pkmns_bot
         valid_switch = {}
         for index_pkmn in dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and

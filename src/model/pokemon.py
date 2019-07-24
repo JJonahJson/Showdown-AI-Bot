@@ -1,7 +1,8 @@
 from typing import Dict
-from model.stats import StatsType, Stats
-from model.status import StatusType, Status
+
 from model.item import Item
+from model.stats_type import StatsType
+from model.status import Status
 
 
 class Pokemon:
@@ -21,8 +22,8 @@ class Pokemon:
 
     """
 
-    def __init__(self, name: str, types: list, gender: str, stats: Stats, moves: Dict, abilities: list, weight: float,
-                 non_volatile_status: StatusType, volatile_status: list, item: Item, level: int):
+    def __init__(self, name: str, types: list, gender: str, stats, moves: Dict, abilities: list, weight: float,
+                 non_volatile_status, volatile_status: list, item: Item, level: int):
         self.name = name
         self.types = types
         self.gender = gender
@@ -49,9 +50,22 @@ class Pokemon:
         if target.stats.get_actual_hp() <= 0:
             Status.apply_non_volatile_status(target, StatusType.Fnt)
 
-    def __repr__(self):
-        return self.name
+    def to_string(self):
+        return "{}, L{}, {}\nHP:{} ATK:{} DEF:{} SPA:{} SPD:{} SPE:{}\nMOVES:\n{}".format(self.name,
+                                                                                          str(self.level),
+                                                                                          self.non_volatile_status,
+                                                                                          self.stats.get_actual_hp(),
+                                                                                          self.stats.get_actual(
+                                                                                              StatsType.Atk),
+                                                                                          self.stats.get_actual(
+                                                                                              StatsType.Def),
+                                                                                          self.stats.get_actual(
+                                                                                              StatsType.Spa),
+                                                                                          self.stats.get_actual(
+                                                                                              StatsType.Spd),
+                                                                                          self.stats.get_actual(
+                                                                                              StatsType.Spe),
+                                                                                          self.moves)
 
     def __eq__(self, other_pokemon):
         return self.name == other_pokemon.name
-

@@ -1,7 +1,7 @@
 import unittest
 
 from src.model.stats import Stats
-from src.model.status import StatusType
+from model.status_type import StatusType
 from src.model.pokemon import Pokemon
 from src.model.pokemontype import PokemonType as pk
 

@@ -1,4 +1,4 @@
-from src.model.stats import StatsType
+from model.stats_type import StatsType
 
 from abc import ABC, abstractmethod
 

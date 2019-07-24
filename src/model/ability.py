@@ -1,5 +1,5 @@
 from src.model.field import Weather, Field
-from src.model.stats import StatsType
+from src.model.stats_type import StatsType
 from src.model.field import BattleFieldSingle
 
 from abc import ABC, abstractmethod

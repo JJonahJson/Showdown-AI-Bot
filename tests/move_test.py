@@ -4,7 +4,8 @@ from src.model.field import Weather as w, Field as f
 from src.model.move import SingleMove, MoveCategory
 from src.model.pokemon import Pokemon
 from src.model.pokemontype import PokemonType as pk
-from src.model.stats import StatsType, Stats
+from src.model.stats import Stats
+from src.model.stats_type import StatsType
 
 
 class MoveTest(unittest.TestCase):

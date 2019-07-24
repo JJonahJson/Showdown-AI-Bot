@@ -1,70 +1,7 @@
-from enum import Enum, auto
+from model.status_type import StatusType
 
 from src.model.pokemontype import PokemonType
-from src.model.stats import StatsType
-
-
-class StatusType(Enum):
-    """Class that represents all possible statuses of a pokemon"""
-    Normal = auto(),
-    Fnt = auto(),
-    Psn = auto(),
-    Tox = auto(),
-    Brn = auto(),
-    Par = auto(),
-    Frz = auto(),
-    Slp = auto(),
-    Attract = auto(),
-    Confusion = auto(),
-    Trapped = auto(),
-    Protect = auto(),
-    Endure = auto(),
-    Flinch = auto(),
-    Substitute = auto(),
-    Taunt = auto(),
-    Aquaring = auto(),
-    Autotomize = auto(),
-    Banefulbunker = auto(),
-    Bide = auto(),
-    Partiallytrapped = auto(),
-    Charge = auto(),
-    Curse = auto(),
-    Defensecurl = auto(),
-    Destinybond = auto(),
-    Disable = auto(),
-    Electrify = auto(),
-    Embargo = auto(),
-    Encore = auto(),
-    Focusenergy = auto(),
-    Followme = auto(),
-    Foresight = auto(),
-    Gastroacid = auto(),
-    Grudge = auto(),
-    Healblock = auto(),
-    Helpinghand = auto(),
-    Imprison = auto(),
-    Ingrain = auto(),
-    Kingsshield = auto(),
-    Laserfocus = auto(),
-    Leechseed = auto(),
-    Magiccoat = auto(),
-    Magnetrise = auto(),
-    Minimize = auto(),
-    Miracleeye = auto(),
-    Nightmare = auto(),
-    Powder = auto(),
-    Powertrick = auto(),
-    Ragepowder = auto(),
-    Smackdown = auto(),
-    Snatch = auto(),
-    Spikyshield = auto(),
-    Spotlight = auto(),
-    Stockpile = auto(),
-    Telekinesis = auto(),
-    Throatchop = auto(),
-    Torment = auto(),
-    Yawn = auto()
-
+from src.model.stats_type import StatsType
 
 
 non_volatile = {
@@ -107,7 +44,7 @@ class Status:
     """Utility class with static methods which modify status and relative stats"""
 
     @staticmethod
-    def apply_non_volatile_status(status: StatusType, pokemon) -> bool:
+    def apply_non_volatile_status(status, pokemon) -> bool:
         """
         Method which applies a non volatile status, used also to specify when fainted
         :param status:
@@ -150,7 +87,7 @@ class Status:
             return False
 
     @staticmethod
-    def add_volatile_status(status: StatusType, pokemon):
+    def add_volatile_status(status, pokemon):
         """Method which adds a volatile status to pokemon's volatile status list"""
         if non_volatile[status]:
             return False
@@ -161,7 +98,7 @@ class Status:
         return True
 
     @staticmethod
-    def remove_volatile_status(status: StatusType, pokemon):
+    def remove_volatile_status(status, pokemon):
         """Method which removes a volatile status to pokemon's volatile status list"""
         try:
             pokemon.volatile_status.remove(status)
@@ -169,12 +106,12 @@ class Status:
             pass
 
     @staticmethod
-    def add_volatile_stat_mod(pokemon, stat_type: StatsType, value: float):
+    def add_volatile_stat_mod(pokemon, stat_type, value: float):
         """Method which adds changes to the specified volatile stat"""
         pokemon.stats.volatile_mul[stat_type] *= value
 
     @staticmethod
-    def remove_volatile_stat_mod(pokemon, stat_type: StatsType, value: float):
+    def remove_volatile_stat_mod(pokemon, stat_type, value: float):
         """Method which removes changes to the specified volatile stat"""
         pokemon.stats.volatile_mul[stat_type] /= value
 

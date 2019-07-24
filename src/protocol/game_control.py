@@ -111,7 +111,9 @@ class GameLoop:
                     else:
                         gender = ""
                     update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
-
+            elif current[1] == "nametaken":
+                print("Wrong username or password")
+                exit(2)
             elif current[1] == "move":
                 # Update the moveset of the active pokemon
                 if self.battle_field.player_id not in current[2]:
@@ -140,6 +142,7 @@ class GameLoop:
                         self.battle_field.all_pkmns_bot = bench
                         self.battle_field.bench_selector_side[1] = bench
                         self.battle_field.active_selector_side[1] = active
+                        print(self.battle_field.active_pokemon_bot.to_string())
                     except KeyError as e:
                         print(e)
                         print(current[3])
@@ -151,6 +154,7 @@ class GameLoop:
                     self.battle_field.turn_number = id
                     self.battle_field.bench_selector_side[1] = bench
                     self.battle_field.active_selector_side[1] = active
+                    print(self.battle_field.active_pokemon_bot.to_string())
 
             elif current[1] == "teampreview":
                 # TODO: IA Knapsack which pokemon do we carry

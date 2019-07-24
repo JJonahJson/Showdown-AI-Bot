@@ -1,10 +1,10 @@
 from random import uniform
 
-from src.model.field import Weather as w, Field as f
+from src.model.field import Field as f
 from src.model.pokemontype import PokemonType as t
-from src.model.stats import StatsType
-from src.model.status import StatusType
-from src.model.move import MoveCategory
+from src.model.stats_type import StatsType
+from model.status_type import StatusType
+from model.move_type import MoveCategory
 
 
 class TypeMultiplier:
@@ -102,7 +102,7 @@ class DamageCalculator:
     """This class contains a static method for damage calculation"""
 
     @staticmethod
-    def calculate(weather: w, terrain, user, move, target) -> int:
+    def calculate(weather, terrain, user, move, target) -> int:
 
         if move.category is MoveCategory.Status:
             return 0

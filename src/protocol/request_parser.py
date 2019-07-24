@@ -2,7 +2,7 @@ import json
 
 from src.model.pokemon import Pokemon
 from src.model.stats import Stats
-from src.model.status import StatusType
+from model.status_type import StatusType
 
 
 def get_active_moves(moves_list, db_connection):

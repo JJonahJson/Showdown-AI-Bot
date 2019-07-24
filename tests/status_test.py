@@ -1,8 +1,11 @@
 import unittest
 
 from src.model.pokemon import Pokemon
-from src.model.stats import Stats, StatsType
-from src.model.status import Status, StatusType, PokemonType as pk
+from src.model.pokemontype import PokemonType as pk
+from src.model.stats import Stats
+from src.model.stats_type import StatsType
+from src.model.status import Status
+from model.status_type import StatusType
 
 
 class StatusTest(unittest.TestCase):
