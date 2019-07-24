@@ -5,4 +5,4 @@ src/model/moves/__pycache__
 src/model/description.md
 *pyc
 settings.json
-.idea/
+.idea/*
