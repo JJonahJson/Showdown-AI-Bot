@@ -1,12 +1,11 @@
 import unittest
-import src.protocol.state_update as su
 
-from src.model.field import BattleFieldSingle
-from src.model.field import Weather
-from src.model.pokemon import Pokemon
-from src.model.pokemon_type import PokemonType as pk
-from src.model.stats import Stats
-from src.model.stats_type import StatsType
+from model.field import BattleFieldSingle
+from model.field import Weather
+from model.pokemon import Pokemon
+from model.pokemon_type import PokemonType as pk
+from model.stats import Stats
+from model.stats_type import StatsType
 from model.status_type import StatusType
 
 

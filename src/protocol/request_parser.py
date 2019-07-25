@@ -30,10 +30,20 @@ def get_pokemons(pokemon_list, db_connection, active_moves):
         # Parse the pokemon's stats
         stats_dict = pokemon["stats"]
         cond = pokemon["condition"].split()
-        if "Castform" in pokemon["ident"].split(":")[1].strip():
-            level = 50
+        splitted_details = pokemon["details"].split(",")
+
+        if len(splitted_details) == 3:
+            # Normal case
+            level = int(splitted_details[1].replace("L","").strip())
+            gender = splitted_details[2].strip()
         else:
-            level = int(pokemon["details"].split(",")[1].strip().replace("L", ""))
+            if "L" in splitted_details[1]:
+                level = int(splitted_details[1].replace("L","").strip())
+                gender = ""
+            else:
+                level = 75
+                gender = splitted_details[1].replace("L","").strip()
+
         stats = Stats(int(cond[0].split("/")[0]),
                       stats_dict["atk"],
                       stats_dict["def"],

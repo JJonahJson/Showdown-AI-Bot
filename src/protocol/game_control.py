@@ -62,15 +62,20 @@ class GameLoop:
 
     async def handle_message(self, message):
         splitted = message.split("|")
-        if "battle" in splitted[0]:
-            self.handler_battle[splitted[1]](splitted)
+        if "battle" not in splitted[0]:
+            function = self.handler_challenge.get(splitted[1], self._handle_place_holder)
+            await function(splitted)
         else:
             lines = message.splitlines()
             for line in lines[1:]:
                 if line == '':
                     continue
                 current = line.split("|")
-                self.handler_challenge[current[1]](current)
+                function = self.handler_battle.get(current[1], self._handle_place_holder)
+                await function(current)
+
+    async def _handle_place_holder(self, string_tab):
+        pass
 
     async def _handle_challstr(self, string_tab):
         await login.log_in(self.ws, self.user_name, self.password, string_tab[2], string_tab[3])
@@ -94,7 +99,7 @@ class GameLoop:
         time.sleep(3)
 
     async def _handle_player(self, current):
-        if len(current) > 3 and current.lower() == self.user_name:
+        if len(current) > 3 and current[3].lower() == self.user_name:
             self.battle_field.player_id = current[2]
             if "2" in current[2]:
                 self.battle_field.turn_number = 1
@@ -148,8 +153,8 @@ class GameLoop:
             try:
                 # Populate the team
                 # await battle.req_loader(current[3].split('\n')[1], self.ws)
-                active, bench, id = rp.parse_and_set(current[2], self.db)
-                self.battle_field.turn_number = id
+                active, bench, number = rp.parse_and_set(current[2], self.db)
+                self.battle_field.turn_number = number
                 self.battle_field.active_pokemon_bot = active
                 self.battle_field.all_pkmns_bot = bench
                 self.battle_field.bench_selector_side[1] = bench
@@ -200,21 +205,22 @@ class GameLoop:
 
     async def _handle_heal(self, current):
         """-heal"""
-        if self.battle_field.player_id in current[1]:
-            self.battle_field.update_heal(1, int(current[2].split("/")[0]))
+        if self.battle_field.player_id in current[2]:
+            self.battle_field.update_heal(1, int(current[3].split("/")[0]))
         else:
-            self.battle_field.update_heal(2, int(current[2].split("/")[0]))
+            # TODO: The opponent is in %
+            self.battle_field.update_heal(2, int(current[3].split("/")[0]))
 
     async def _handle_status(self, current):
         """-status"""
-        if self.battle_field.player_id in current[1]:
-            self.battle_field.update_status(1, current[2])
+        if self.battle_field.player_id in current[2]:
+            self.battle_field.update_status(1, current[3])
         else:
-            self.battle_field.update_status(2, current[2])
+            self.battle_field.update_status(2, current[3])
 
     async def _handle_curestatus(self, current):
         """-curestatus"""
-        if self.battle_field.player_id in current[1]:
+        if self.battle_field.player_id in current[2]:
             self.battle_field.update_status(1)
         else:
             self.battle_field.update_status(2)
@@ -222,20 +228,23 @@ class GameLoop:
     async def _handle_boost(self, current):
         """-boost"""
         if self.battle_field.player_id in current[1]:
-            self.battle_field.update_buff(1, current[2], int(current[3]))
+            self.battle_field.update_buff(1, current[3], int(current[4]))
         else:
-            self.battle_field.update_buff(2, current[2], int(current[3]))
+            self.battle_field.update_buff(2, current[3], int(current[4]))
 
     async def _handle_unboost(self, current):
         """-unboost"""
         if self.battle_field.player_id in current[1]:
-            self.battle_field.update_buff(1, current[2], - int(current[3]))
+            self.battle_field.update_buff(1, current[3], - int(current[4]))
         else:
-            self.battle_field.update_buff(2, current[2], - int(current[3]))
+            self.battle_field.update_buff(2, current[3], - int(current[4]))
 
     async def _handle_weather(self, current):
         """-weather"""
-        self.battle_field.update_weather(current[2])
+        if current[2] == 'none':
+            self.battle_field.update_weather("Normal")
+        else:
+            self.battle_field.update_weather(current[2])
 
     async def _handle_field_start(self, current):
         """-fieldstart"""

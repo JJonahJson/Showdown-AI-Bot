@@ -1,6 +1,6 @@
-from src.model.field import Weather, Field
-from src.model.stats_type import StatsType
-from src.model.field import BattleFieldSingle
+from model.field import Weather, Field
+from model.stats_type import StatsType
+from model.field import BattleFieldSingle
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto

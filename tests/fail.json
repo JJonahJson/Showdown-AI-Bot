@@ -1,0 +1,185 @@
+{
+  "active":[
+    {
+      "moves":[
+        {
+          "move":"High Jump Kick",
+          "id":"highjumpkick",
+          "pp":16,
+          "maxpp":16,
+          "target":"normal",
+          "disabled":false
+        },
+        {
+          "move":"Ice Beam",
+          "id":"icebeam",
+          "pp":16,
+          "maxpp":16,
+          "target":"normal",
+          "disabled":false
+        },
+        {
+          "move":"U-turn",
+          "id":"uturn",
+          "pp":32,
+          "maxpp":32,
+          "target":"normal",
+          "disabled":false
+        },
+        {
+          "move":"Poison Jab",
+          "id":"poisonjab",
+          "pp":32,
+          "maxpp":32,
+          "target":"normal",
+          "disabled":false
+        }
+      ]
+    }
+  ],
+  "side":{
+    "name":"tapulabu",
+    "id":"p1",
+    "pokemon":[
+      {
+        "ident":"p1: Pheromosa",
+        "details":"Pheromosa, L78",
+        "condition":"239/239",
+        "active":true,
+        "stats":{
+          "atk":259,
+          "def":103,
+          "spa":259,
+          "spd":103,
+          "spe":281
+        },
+        "moves":[
+          "highjumpkick",
+          "icebeam",
+          "uturn",
+          "poisonjab"
+        ],
+        "baseAbility":"beastboost",
+        "item":"expertbelt",
+        "pokeball":"pokeball",
+        "ability":"beastboost"
+      },
+      {
+        "ident":"p1: Kyurem",
+        "details":"Kyurem, L83",
+        "condition":"343/343",
+        "active":false,
+        "stats":{
+          "atk":263,
+          "def":197,
+          "spa":263,
+          "spd":197,
+          "spe":205
+        },
+        "moves":[
+          "outrage",
+          "roost",
+          "earthpower",
+          "icebeam"
+        ],
+        "baseAbility":"pressure",
+        "item":"leftovers",
+        "pokeball":"pokeball",
+        "ability":"pressure"
+      },
+      {
+        "ident":"p1: Golisopod",
+        "details":"Golisopod, L84, F",
+        "condition":"263/263",
+        "active":false,
+        "stats":{
+          "atk":258,
+          "def":283,
+          "spa":149,
+          "spd":199,
+          "spe":115
+        },
+        "moves":[
+          "liquidation",
+          "leechlife",
+          "toxic",
+          "spikes"
+        ],
+        "baseAbility":"emergencyexit",
+        "item":"leftovers",
+        "pokeball":"pokeball",
+        "ability":"emergencyexit"
+      },
+      {
+        "ident":"p1: Bruxish",
+        "details":"Bruxish, L85, M",
+        "condition":"254/254",
+        "active":false,
+        "stats":{
+          "atk":227,
+          "def":168,
+          "spa":168,
+          "spd":168,
+          "spe":205
+        },
+        "moves":[
+          "swordsdance",
+          "liquidation",
+          "aquajet",
+          "crunch"
+        ],
+        "baseAbility":"strongjaw",
+        "item":"lifeorb",
+        "pokeball":"pokeball",
+        "ability":"strongjaw"
+      },
+      {
+        "ident":"p1: Stoutland",
+        "details":"Stoutland, L88, M",
+        "condition":"293/293",
+        "active":false,
+        "stats":{
+          "atk":244,
+          "def":209,
+          "spa":129,
+          "spd":209,
+          "spe":191
+        },
+        "moves":[
+          "icefang",
+          "return102",
+          "wildcharge",
+          "superpower"
+        ],
+        "baseAbility":"scrappy",
+        "item":"choiceband",
+        "pokeball":"pokeball",
+        "ability":"scrappy"
+      },
+      {
+        "ident":"p1: Delibird",
+        "details":"Delibird, F",
+        "condition":"251/251",
+        "active":false,
+        "stats":{
+          "atk":167,
+          "def":147,
+          "spa":187,
+          "spd":147,
+          "spe":207
+        },
+        "moves":[
+          "spikes",
+          "rapidspin",
+          "freezedry",
+          "destinybond"
+        ],
+        "baseAbility":"vitalspirit",
+        "item":"leftovers",
+        "pokeball":"pokeball",
+        "ability":"vitalspirit"
+      }
+    ]
+  },
+  "rqid":2
+}

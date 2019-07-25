@@ -1,5 +1,5 @@
-from model.field_type import Weather
 from model.damage_calculator import DamageCalculator, StatusType
+from model.field_type import Weather
 from model.stats_type import StatsType
 
 
@@ -44,6 +44,8 @@ class Chooser:
         if oppo_is_damaging and bot_may_die and bot_has_protect:
             return protect_index
 
+        print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name, str(damage[
+                                                                                                                 max_damage_move_index])))
         return max_damage_move_index
 
     @staticmethod

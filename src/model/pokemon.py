@@ -2,6 +2,7 @@ from typing import Dict
 
 from model.item import Item
 from model.stats_type import StatsType
+from model.status import StatusType
 from model.status import Status
 
 

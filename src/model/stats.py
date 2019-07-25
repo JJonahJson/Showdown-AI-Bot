@@ -1,16 +1,4 @@
-from enum import Enum, auto
-
-
-class StatsType(Enum):
-    """Enum class which contains stats' types"""
-    HP = auto()
-    Atk = auto()
-    Def = auto()
-    Spa = auto()
-    Spd = auto()
-    Spe = auto()
-    Acc = auto()
-    Eva = auto()
+from model.stats_type import StatsType
 
 
 class Stats:

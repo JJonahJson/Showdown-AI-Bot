@@ -1,9 +1,9 @@
 from random import uniform
 
-from model.weather_type import WeatherModifiers, FieldModifiers
-from model.status_type import StatusType
 from model.move_type import MoveCategory
 from model.pokemon_type import TypeMultiplier
+from model.status_type import StatusType
+from model.weather_type import WeatherModifiers, FieldModifiers
 
 
 class DamageCalculator:
@@ -28,13 +28,14 @@ class DamageCalculator:
 
         if move.category is MoveCategory.Status:
             return 0
-        if target.types in TypeMultiplier.immuneTo[move.move_type]:
+        if target.types[0] in TypeMultiplier.immuneTo[move.move_type] or \
+                (len(target.types) > 1 and target.types[1] in TypeMultiplier.immuneTo[move.move_type]):
             return 0
+
         else:
-            base_damage = (((10 + user.level * 2) * user.stats.get_actual(move.scale_with) + move.calculate_base_power(
-                user.types))
-                           / 250 *
-                           target.stats.get_actual(move.defends_on)) + 2
+            base_damage = (((2*user.level +10)*user.stats.get_actual(move.scale_with)*move.calculate_base_power(
+                user.types))/(
+                    250*target.stats.get_actual(move.defends_on))+2)
 
         # Try to get the multiplier based on the weather, if is not in the dict get '1'
         mult = WeatherModifiers.modifiers.get((weather, move.move_type), 1)
