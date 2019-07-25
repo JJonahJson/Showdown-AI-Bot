@@ -8,6 +8,9 @@ import protocol.senders as sender
 from ai.chooser import Chooser
 from ai.damage_tracker import DamageTracker
 from model.field import BattleFieldSingle
+from model.field_type import Field
+from model.status import Status
+from model.status_type import StatusType
 from protocol.data_source import DatabaseDataSource
 from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
@@ -44,9 +47,18 @@ class GameLoop:
             "turn": self._handle_turn,
             "callaback": self._handle_callback,
             "win": self._handle_win,
-            "c": self._handle_chat
+            "c": self._handle_chat,
+            "faint": self._handle_faint,
+            "-heal": self._handle_heal,
+            "-status": self._handle_status,
+            "-curestatus": self._handle_curestatus,
+            "-boost": self._handle_boost,
+            "-unboost": self._handle_unboost,
+            "-weather": self._handle_weather,
+            "-fieldstart": self._handle_field_start,
+            "-fieldend": self._handle_field_end
+
         }
-        # TODO: Add stateupdate in handle dict
 
     async def handle_message(self, message):
         splitted = message.split("|")
@@ -178,3 +190,57 @@ class GameLoop:
         if self.user_name not in current[2]:
             num_answer = random.randint(0, len(self.standard_answers) - 1)
             await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
+
+    async def _handle_faint(self, current):
+        """faint"""
+        if self.battle_field.player_id not in current[1]:
+            Status.apply_non_volatile_status(StatusType.Fnt, self.battle_field.active_pokemon_bot)
+        else:
+            Status.apply_non_volatile_status(StatusType.Fnt, self.battle_field.active_pokemon_oppo)
+
+    async def _handle_heal(self, current):
+        """-heal"""
+        if self.battle_field.player_id in current[1]:
+            self.battle_field.update_heal(1, int(current[2].split("/")[0]))
+        else:
+            self.battle_field.update_heal(2, int(current[2].split("/")[0]))
+
+    async def _handle_status(self, current):
+        """-status"""
+        if self.battle_field.player_id in current[1]:
+            self.battle_field.update_status(1, current[2])
+        else:
+            self.battle_field.update_status(2, current[2])
+
+    async def _handle_curestatus(self, current):
+        """-curestatus"""
+        if self.battle_field.player_id in current[1]:
+            self.battle_field.update_status(1)
+        else:
+            self.battle_field.update_status(2)
+
+    async def _handle_boost(self, current):
+        """-boost"""
+        if self.battle_field.player_id in current[1]:
+            self.battle_field.update_buff(1, current[2], int(current[3]))
+        else:
+            self.battle_field.update_buff(2, current[2], int(current[3]))
+
+    async def _handle_unboost(self, current):
+        """-unboost"""
+        if self.battle_field.player_id in current[1]:
+            self.battle_field.update_buff(1, current[2], - int(current[3]))
+        else:
+            self.battle_field.update_buff(2, current[2], - int(current[3]))
+
+    async def _handle_weather(self, current):
+        """-weather"""
+        self.battle_field.update_weather(current[2])
+
+    async def _handle_field_start(self, current):
+        """-fieldstart"""
+        self.battle_field.update_field(current[2])
+
+    async def _handle_field_end(self, current):
+        """-fieldend"""
+        self.battle_field.update_field(Field.Normal)
