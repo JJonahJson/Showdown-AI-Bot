@@ -52,6 +52,9 @@ class Pokemon:
             Status.apply_non_volatile_status(target, StatusType.Fnt)
 
     def to_string(self):
+        """Method used to pretty print a pokemon
+        :return: string
+        """
         return "{}, L{}, {}\nHP:{} ATK:{} DEF:{} SPA:{} SPD:{} SPE:{}\nMOVES:\n{}".format(self.name,
                                                                                           str(self.level),
                                                                                           self.non_volatile_status,

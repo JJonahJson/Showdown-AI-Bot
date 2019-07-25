@@ -6,6 +6,11 @@ from model.status_type import StatusType
 
 
 def get_active_moves(moves_list, db_connection):
+    """Method that parses the active moves from a request
+    :param moves_list:
+    :param db_connection:
+    :return:
+    """
     active_moves = {}
     index = 1
     for move in moves_list:
@@ -22,6 +27,12 @@ def get_active_moves(moves_list, db_connection):
 
 
 def get_pokemons(pokemon_list, db_connection, active_moves):
+    """Method that parses the request and buildsthe bot team objects
+    :param pokemon_list:
+    :param db_connection:
+    :param active_moves:
+    :return:
+    """
     active_pokemon_bot = None
     bench_bot = {}
     counter = 1

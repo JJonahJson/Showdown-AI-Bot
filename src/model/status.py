@@ -162,7 +162,8 @@ class Status:
 
     @staticmethod
     def apply_infatuation(target, caster):
-        if target.gender == caster.gender or target.gender == "Genderless":
+        """Method which applies infatuation"""
+        if target.gender == caster.gender or target.gender == "":
             return False
         if Status.add_volatile_status(StatusType.Attract, target):
             return True
@@ -171,6 +172,7 @@ class Status:
 
     @staticmethod
     def apply_paralysis_effect(target):
+        """Method which applies paralyze effect and halves the speed of the pokemon"""
         if target.non_volatile_status is not StatusType.Par:
             return False
         else:
@@ -179,6 +181,7 @@ class Status:
 
     @staticmethod
     def apply_poisoning_effect(target):
+        """Method which applies poisoning effect and decreases hp by 12.5%"""
         if target.non_volatile_status != StatusType.Psn:
             return False
         else:
@@ -187,6 +190,7 @@ class Status:
 
     @staticmethod
     def apply_bad_poisoning_effect(target):
+        """Method which applies bad poisoning of a pokemon and applyes the continuos and relentless damage"""
         if target.non_volatile_status != StatusType.Tox:
             return False
         else:
@@ -196,6 +200,7 @@ class Status:
 
     @staticmethod
     def apply_burning_effect(target):
+        """Method which applies burn status and decrese hp of a pokemon by 6.25%"""
         if target.non_volatile_status != StatusType.Brn:
             return False
         else:
@@ -204,6 +209,7 @@ class Status:
 
     @staticmethod
     def apply_frozen_effect(target):
+        """Method that applies frozen status to a pokemon"""
         if target.non_volatile_status != StatusType.Frz:
             return False
         else:
@@ -212,6 +218,7 @@ class Status:
 
     @staticmethod
     def apply_sleep_effect(target):
+        """Method that apply sleep effect to a pokemon"""
         if target.non_volatile_status != StatusType.Slp:
             return False
         else:
@@ -220,6 +227,7 @@ class Status:
 
     @staticmethod
     def apply_fainted_effect(target):
+        """Method that applies fainted effect to a pokemon"""
         if target.non_volatile_status != StatusType.Fnt:
             return False
         else:

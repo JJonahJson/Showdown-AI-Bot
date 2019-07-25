@@ -2,6 +2,14 @@ from model.field import BattleFieldSingle
 
 
 def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: str, level: int, gender: str):
+    """Function that updates the current available pokemons of the opponet
+    :param battle_field: BattleField object
+    :param db_con: A db connection
+    :param pokemon_name: A pokemon name
+    :param level: The pokemon level
+    :param gender: The gender
+    :return:
+    """
     # If the oppo doesn't have pokemons
     if not battle_field.all_pkmns_oppo:
         # Add the pokemon
@@ -26,6 +34,12 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
 
 
 def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
+    """Method that updates the moveset of the opponent's active pokemon.
+    :param battle_field: Battlefield object
+    :param db_con: A database connection
+    :param move_name: A move name
+    :return:
+    """
     if not battle_field.active_pokemon_oppo.moves:
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())
         if move:

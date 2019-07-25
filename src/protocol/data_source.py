@@ -12,6 +12,8 @@ from model.status_type import StatusType
 
 
 class AbstractDataSource(ABC):
+    """Abstract class
+    """
 
     @abstractmethod
     def get_pokemon_by_name(self, name):
@@ -31,6 +33,7 @@ class AbstractDataSource(ABC):
 
 
 class DatabaseDataSource(AbstractDataSource):
+    """Class that allow us to connect to the db and retrieve pokemon's informations"""
 
     def __init__(self):
         super().__init__()
@@ -43,6 +46,11 @@ class DatabaseDataSource(AbstractDataSource):
         )
 
     def get_pokemon_by_name(self, name, level=50):
+        """Method that takes a pokemon name and return a complete pokemon object without moves.
+        :param name: The pokemon name
+        :param level: The pokemon level
+        :return: A pokemon object with stats but empty moves
+        """
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT * FROM Pokemon as pkmn WHERE pkmn.name = %s"
         cursor.execute(parametric_query, (name.replace("'", ""),))
@@ -59,6 +67,10 @@ class DatabaseDataSource(AbstractDataSource):
         return Pokemon(pkmn_name, type_list, "", stats, {}, [], weight_kg, StatusType.Normal, [], None, level)
 
     def get_pokemontype_by_name(self, name):
+        """Method that takes a pokemon name and return a pokemontype enum
+        :param name: The name of the pokemon
+        :return: The list of the pokemon types
+        """
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT type_1, type_2 FROM Pokemon as pkmn WHERE pkmn.name = %s"
         cursor.execute(parametric_query, (name,))
@@ -71,12 +83,16 @@ class DatabaseDataSource(AbstractDataSource):
     # num,name, id_name, acc, base_power, category, pp, priority, chance, volatileStatus, nonvolatileStatus
     # all_boost, target, movetype
     def get_move_by_name(self, name):
+        """Method that takes a move_name as input and returns a complete move object
+        :param name: The move name
+        :return: The move object
+        """
         cursor = self.db_connection.cursor(prepared=True)
         if "return102" in name:
-            real_name = name[:len(name)-3]
+            real_name = name[:len(name) - 3]
             real_power = int(name[-3:])
         elif "hiddenpower" in name and len(name) > 11:
-            real_name = name[:len(name)-2]
+            real_name = name[:len(name) - 2]
         else:
             real_name = name
 
@@ -103,7 +119,7 @@ class DatabaseDataSource(AbstractDataSource):
             scale_with = StatsType.Spa
             defends_on = StatsType.Spd
         else:
-            #Per non avere None
+            # Per non avere None
             scale_with = StatsType.Spa
             defends_on = StatsType.Spd
 
@@ -143,16 +159,20 @@ class DatabaseDataSource(AbstractDataSource):
         if target == 'self':
             return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
                               list(filter(lambda x: x[1] != 0, boosts)), [], defends_on, chance, (target,
-                                                                                                volatile_status),
+                                                                                                  volatile_status),
                               (target,
                                non_volatile_status))
         else:
             return SingleMove(move_name, accuracy, base_power, category, pp, priority, False, 1, move_type, scale_with,
                               [], list(filter(lambda x: x[1] != 0, boosts)), defends_on, chance, (target,
-                                                                                                volatile_status),
+                                                                                                  volatile_status),
                               (target, non_volatile_status))
 
     def get_movetype_by_name(self, name):
+        """Method that takes a move name as input and returns its type
+        :param name: The move name
+        :return: The type of the move
+        """
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT mv.move_type FROM Moves as mv WHERE mv.name = %s"
         cursor.execute(parametric_query, (name,))

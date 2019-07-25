@@ -25,6 +25,14 @@ class DamageCalculator:
 
     @staticmethod
     def calculate(weather, terrain, user, move, target) -> int:
+        """Method to predict the damage
+        :param weather: The current weather
+        :param terrain: The current terrain
+        :param user: The pokemon who casts the move
+        :param move: The move object
+        :param target: The target pokemon
+        :return: An int that represents the predicted damage dealt
+        """
 
         if move.category is MoveCategory.Status:
             return 0

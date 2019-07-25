@@ -132,15 +132,34 @@ class BattleFieldSingle(BattleField):
             Status.apply_non_volatile_status(StatusType[status.capitalize()], self.active_selector_side[side])
 
     def update_buff(self, side, stat, level):
+        """Update the stats multiplier
+        :param side: 1 or 2 1 for the bot side and 2 for the opponent side
+        :param stat: StatsType that means the stats that has been buffed or debuffed
+        :param level: the quantity of the buff/debuff
+        :return:
+        """
         self.active_selector_side[side].stats.modify(StatsType[stat.capitalize()], level)
 
     def update_weather(self, weather):
+        """Updates the weather
+        :param weather: The weather to be set
+        :return:
+        """
         self.weather = Weather[weather.capitalize()]
 
     def update_field(self, terrain):
+        """Updates the field
+        :param terrain: The terrain to be set
+        :return:
+        """
         self.field = Field[terrain.capitalize()]
 
     def update_damage(self, side, remaining_hp):
+        """Updates the damage
+        :param side: 1 or 2. 1 if it's the bot side, 2 if it's the oppo side
+        :param remaining_hp: The remaining hp
+        :return:
+        """
         if side == 1:
             self.active_selector_side[side].stats.decrease_hp(remaining_hp)
         else:
@@ -148,4 +167,9 @@ class BattleFieldSingle(BattleField):
                 side].stats.real_stats[StatsType.HP]))
 
     def update_heal(self, side, heal):
+        """Heals a unit
+        :param side: 1 or 2
+        :param heal: The % of healing
+        :return:
+        """
         self.active_selector_side[side].stats.increase_hp(heal)

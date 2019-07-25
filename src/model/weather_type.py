@@ -16,6 +16,7 @@ class WeatherModifiers:
 
 
 class FieldModifiers:
+    """This class contains a static dict for the terrain modifiers"""
     modifiers = {
         (t.Psychic, f.Psychic): 1.5,
         (t.Electric, f.Electric): 1.5,

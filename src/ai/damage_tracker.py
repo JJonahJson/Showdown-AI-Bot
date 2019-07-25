@@ -7,7 +7,7 @@ class DamageTracker:
         """Method that add an entry in the tracker
         :param caster_pokemon: Pokemon that use the move
         :param damage_perc: Damage in %
-        :param move: The move
+        :param move: move_name
         :param target_pokemon: Target pokemon
         :return:
         """
@@ -17,7 +17,7 @@ class DamageTracker:
         """Method that retrieve the % damage
         :param caster_pokemon: pokemon that use the move
         :param target_pokemon: pokemon that receive the move
-        :param move: move obj
+        :param move: move name
         :return:
         """
         return self.tracker.get((caster_pokemon.name, move, target_pokemon.name), -1)
