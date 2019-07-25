@@ -124,6 +124,7 @@ class GameLoop:
         num_answer = random.randint(0, len(self.standard_answers) - 1)
         await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
         time.sleep(3)
+        await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
 
     async def _handle_player(self, current):
         """Method that handles the player message that saves our id and the opponent id
