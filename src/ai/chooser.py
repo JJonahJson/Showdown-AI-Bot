@@ -1,3 +1,4 @@
+from ai.chooser_type import Difficulty
 from model.damage_calculator import DamageCalculator, StatusType
 from model.field_type import Weather
 from model.stats_type import StatsType
@@ -5,8 +6,56 @@ from model.stats_type import StatsType
 
 class Chooser:
 
+    def __init__(self):
+        self.difficulty = Difficulty.Easy
+        self.handler_move = {
+            Difficulty.Easy: Chooser._handle_easy_move,
+        }
+
+        self.handler_switch = {
+            Difficulty.Easy: Chooser._handle_easy_switch
+        }
+
+    def choose_move(self, field):
+        return self.handler_move[self.difficulty](field)
+
+    def choose_switch(self, field):
+        return self.handler_switch[self.difficulty](field)
+
     @staticmethod
-    def choose_move(field):
+    def _handle_easy_switch(field):
+        bot_team = field.all_pkmns_bot
+        valid_switch = {}
+        for index_pkmn in dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
+                                                field.active_pokemon_bot.name != x[1].name,
+                                      bot_team.items())):
+            # TODO Convert to dict
+            valid_switch[index_pkmn] = 0
+            for pkmn_type in bot_team[index_pkmn].types:
+                for pkmn_type_oppo in field.active_pokemon_oppo.types:
+                    if DamageCalculator.weak_to(pkmn_type_oppo, pkmn_type):
+                        valid_switch[index_pkmn] += 1
+
+                    if DamageCalculator.weak_to(pkmn_type, pkmn_type_oppo):
+                        valid_switch[index_pkmn] -= 1
+
+                    if DamageCalculator.resists_to(pkmn_type_oppo, pkmn_type):
+                        valid_switch[index_pkmn] -= 1
+
+                    if DamageCalculator.resists_to(pkmn_type, pkmn_type_oppo):
+                        valid_switch[index_pkmn] += 1
+
+                    if DamageCalculator.immune_to(pkmn_type, pkmn_type_oppo):
+                        valid_switch[index_pkmn] += 2
+
+                    if DamageCalculator.immune_to(pkmn_type_oppo, pkmn_type):
+                        valid_switch[index_pkmn] -= 2
+
+        choosen_switch_index = max(valid_switch.keys(), key=lambda x: valid_switch[x])
+        return choosen_switch_index
+
+    @staticmethod
+    def _handle_easy_move(field):
         bot_may_die = False
         bot_has_protect = False
         # determine if the opponent is faster
@@ -47,35 +96,3 @@ class Chooser:
         print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name, str(damage[
                                                                                                                  max_damage_move_index])))
         return max_damage_move_index
-
-    @staticmethod
-    def choose_switch(field):
-        bot_team = field.all_pkmns_bot
-        valid_switch = {}
-        for index_pkmn in dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
-                                                field.active_pokemon_bot.name != x[1].name,
-                                      bot_team.items())):
-            # TODO Convert to dict
-            valid_switch[index_pkmn] = 0
-            for pkmn_type in bot_team[index_pkmn].types:
-                for pkmn_type_oppo in field.active_pokemon_oppo.types:
-                    if DamageCalculator.weak_to(pkmn_type_oppo, pkmn_type):
-                        valid_switch[index_pkmn] += 1
-
-                    if DamageCalculator.weak_to(pkmn_type, pkmn_type_oppo):
-                        valid_switch[index_pkmn] -= 1
-
-                    if DamageCalculator.resists_to(pkmn_type_oppo, pkmn_type):
-                        valid_switch[index_pkmn] -= 1
-
-                    if DamageCalculator.resists_to(pkmn_type, pkmn_type_oppo):
-                        valid_switch[index_pkmn] += 1
-
-                    if DamageCalculator.immune_to(pkmn_type, pkmn_type_oppo):
-                        valid_switch[index_pkmn] += 2
-
-                    if DamageCalculator.immune_to(pkmn_type_oppo, pkmn_type):
-                        valid_switch[index_pkmn] -= 2
-
-        choosen_switch_index = max(valid_switch.keys(), key=lambda x: valid_switch[x])
-        return choosen_switch_index

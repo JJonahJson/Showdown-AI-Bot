@@ -30,6 +30,7 @@ class GameLoop:
         self.damage_tracker = DamageTracker()
         self.last_move = ""
         self.counter = 0
+        self.chooser = Chooser()
 
         # Dict of handlers for the challenge section
         self.handler_challenge = {
@@ -188,7 +189,7 @@ class GameLoop:
         """
         if "forceSwitch" in current[2]:
             self.battle_field.turn_number = json.loads(current[2])["rqid"]
-            index = Chooser.choose_switch(self.battle_field)
+            index = self.chooser.choose_switch(self.battle_field)
             await sender.sendswitch(self.ws, self.battle_field.room_name, index,
                                     self.battle_field.turn_number)
             return
@@ -234,7 +235,7 @@ class GameLoop:
         :return:
         """
         # An action is a move or a switch
-        move = Chooser.choose_move(self.battle_field)
+        move = self.chooser.choose_move(self.battle_field)
         await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
     async def _handle_callback(self, current):
@@ -243,7 +244,7 @@ class GameLoop:
         :return:
         """
         if current[2] == "trapped":
-            move = Chooser.choose_move(self.battle_field)
+            move = self.chooser.choose_move(self.battle_field)
             await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
     async def _handle_win(self, current):
