@@ -5,14 +5,22 @@
 -Vedere se aggiungere come category weather
 -reversare damage tracker per correggere la statistica penalizzata
 
--Parametrizzare difficulty
 -Implementare metodi per medium e hard
 -Fare i log
 -Fare il Readme del progetto
 -Aggiungere modalità sfida/listener, di conseguenza cambiano i parametri (se sei in modalità sfida specifichi opponent)
 
-Medium:
-    Switch quando si potrebbe attaccare, mosse di stato
-
 Hard:
     Aggiungere min-max
+
+-Controllare che le modifiche di stat volatile tipo dovute dalla bruciatura permangano
+-Aggiungere sesso parametrizzato così che si cambia l'avatar oppure lasciare che ognuno usi il proprio essendo un account già esistente
+-Aggiungere sfide random delle vecchie gen
+-Aggiungere mega e zmove
+-Aggiungere heal?
+-Aggiungere stealthrock e quelle di quel genere
+
+-se si può usare un pochino ability diamo punteggio allo switch di chi ha intimidate ecc, per far vedere che lo usiamo
+-item lo si lascia ma sinceramente non so che farci con le berry, per gli altri disabled lo dice già il server, la stat modificata interessa qb
+    -magari chi ha mossa disabled da un po' lo si può switchare così poi la cambia
+
