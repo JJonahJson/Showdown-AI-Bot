@@ -1,9 +1,18 @@
 -Controllare i punti di vittoria (che vengano aggiunti)
 -Modificare Dockerfile perché non cresca la memoria di un quintale
--Fare il Readme del progetto
 -Fare il container dell'intero progetto
 -Aggiungere commenti  nel codice, soprattutto in file complessi di protocol o costruttori pesanti in model
--Aggiungere al branch master una prima versione stabile
--Fare i log
 -Vedere se aggiungere come category weather
 -reversare damage tracker per correggere la statistica penalizzata
+
+-Parametrizzare difficulty
+-Implementare metodi per medium e hard
+-Fare i log
+-Fare il Readme del progetto
+-Aggiungere modalità sfida/listener, di conseguenza cambiano i parametri (se sei in modalità sfida specifichi opponent)
+
+Medium:
+    Switch quando si potrebbe attaccare, mosse di stato
+
+Hard:
+    Aggiungere min-max
