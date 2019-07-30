@@ -238,8 +238,11 @@ class GameLoop:
         :return:
         """
         # An action is a move or a switch
-        move = self.chooser.choose_move(self.battle_field)
-        await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+        move, is_move = self.chooser.choose_move(self.battle_field)
+        if is_move:
+            await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+        else:
+            await sender.sendswitch(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
     async def _handle_callback(self, current):
         """Method that handles the trapped state of the pokemon that cannot switch so he must do a move
@@ -247,7 +250,7 @@ class GameLoop:
         :return:
         """
         if current[2] == "trapped":
-            move = self.chooser.choose_move(self.battle_field)
+            move = self.chooser.choose_move(self.battle_field, True)
             await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
     async def _handle_win(self, current):
