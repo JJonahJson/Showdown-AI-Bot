@@ -10,7 +10,6 @@ async def sender(websocket, room, message1, message2=None):
         string = room + '|' + message1 + '|' + message2
     else:
         string = room + '|' + message1
-    print("Sent: {}".format(string))
     websocket.send(string)
 
 
