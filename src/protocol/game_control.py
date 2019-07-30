@@ -6,12 +6,13 @@ import protocol.login as login
 import protocol.request_parser as rp
 import protocol.senders as sender
 from ai.chooser import Chooser
+from ai.chooser_type import Difficulty
 from ai.damage_tracker import DamageTracker
 from model.field import BattleFieldSingle
 from model.field_type import Field
+from model.stats_type import StatsType
 from model.status import Status
 from model.status_type import StatusType
-from ai.chooser_type import Difficulty
 from protocol.data_source import DatabaseDataSource
 from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
@@ -32,6 +33,28 @@ class GameLoop:
         self.last_move = ""
         self.counter = 0
         self.chooser = Chooser(difficulty)
+
+        self.bot_volatile = []
+        self.oppo_volatile = []
+        # TODO: Do same thing with volatile status
+        self.mul_stats_bot = {
+            StatsType.Atk: 0,
+            StatsType.Def: 0,
+            StatsType.Spa: 0,
+            StatsType.Spd: 0,
+            StatsType.Spe: 0,
+            StatsType.Accuracy: 0,
+            StatsType.Evasion: 0
+        }
+        self.mul_stats_oppo = {
+            StatsType.Atk: 0,
+            StatsType.Def: 0,
+            StatsType.Spa: 0,
+            StatsType.Spd: 0,
+            StatsType.Spe: 0,
+            StatsType.Accuracy: 0,
+            StatsType.Evasion: 0
+        }
 
         # Dict of handlers for the challenge section
         self.handler_challenge = {
@@ -61,7 +84,9 @@ class GameLoop:
             "-unboost": self._handle_unboost,
             "-weather": self._handle_weather,
             "-fieldstart": self._handle_field_start,
-            "-fieldend": self._handle_field_end
+            "-fieldend": self._handle_field_end,
+            "-start": self._handle_start_vol,
+            "-end": self._handle_end_vol
 
         }
 
@@ -173,7 +198,19 @@ class GameLoop:
                 gender = current[3].split(",")[2].strip()
             else:
                 gender = ""
+            if self.battle_field.active_pokemon_oppo:
+                for stats in self.battle_field.active_pokemon_oppo.stats.mul_stats:
+                    self.battle_field.active_pokemon_oppo.stats.mul_stats[stats] = 0
+
             update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
+            for key in self.mul_stats_oppo:
+                self.mul_stats_oppo[key] = 0
+            self.oppo_volatile.clear()
+            self.battle_field.active_pokemon_oppo.volatile_status.clear()
+        else:
+            for key in self.mul_stats_bot:
+                self.mul_stats_bot[key] = 0
+            self.bot_volatile.clear()
 
     async def _handle_move(self, current):
         """Method that handles the message move and updates the current moveset of the enemy
@@ -211,6 +248,10 @@ class GameLoop:
                 self.battle_field.all_pkmns_bot = bench
                 self.battle_field.bench_selector_side[1] = bench
                 self.battle_field.active_selector_side[1] = active
+                for element in self.bot_volatile:
+                    Status.add_volatile_status(element, self.battle_field.active_pokemon_bot)
+                for key in self.mul_stats_bot:
+                    self.battle_field.active_pokemon_bot.stats.mul_stats[key] = self.mul_stats_bot[key]
                 print(self.battle_field.active_pokemon_bot.to_string())
             except KeyError as e:
                 print(e)
@@ -223,6 +264,10 @@ class GameLoop:
             self.battle_field.turn_number = number
             self.battle_field.bench_selector_side[1] = bench
             self.battle_field.active_selector_side[1] = active
+            for element in self.bot_volatile:
+                Status.add_volatile_status(element, self.battle_field.active_pokemon_bot)
+            for key in self.mul_stats_bot:
+                self.battle_field.active_pokemon_bot.stats.mul_stats[key] = self.mul_stats_bot[key]
             print(self.battle_field.active_pokemon_bot.to_string())
 
     async def _handle_team_preview(self, current):
@@ -327,10 +372,12 @@ class GameLoop:
         :return:
         """
         """-boost"""
-        if self.battle_field.player_id in current[1]:
+        if self.battle_field.player_id in current[2]:
             self.battle_field.update_buff(1, current[3], int(current[4]))
+            self.mul_stats_bot[StatsType[current[3].strip().capitalize()]] += int(current[4])
         else:
             self.battle_field.update_buff(2, current[3], int(current[4]))
+            self.mul_stats_oppo[StatsType[current[3].strip().capitalize()]] += int(current[4])
 
     async def _handle_unboost(self, current):
         """Method that handles the boost of the negative pokemons' stats
@@ -338,10 +385,12 @@ class GameLoop:
         :return:
         """
         """-unboost"""
-        if self.battle_field.player_id in current[1]:
+        if self.battle_field.player_id in current[2]:
             self.battle_field.update_buff(1, current[3], - int(current[4]))
+            self.mul_stats_bot[StatsType[current[3].strip().capitalize()]] -= int(current[4])
         else:
             self.battle_field.update_buff(2, current[3], - int(current[4]))
+            self.mul_stats_oppo[StatsType[current[3].strip().capitalize()]] -= int(current[4])
 
     async def _handle_weather(self, current):
         """Method that handles the weather message and updates the battlefield
@@ -360,6 +409,8 @@ class GameLoop:
         :return:
         """
         """-fieldstart"""
+        """<class 'list'>: ['', '-fieldstart', 'move: Grassy Terrain', '[from] ability: Grassy Surge', '[of] p2a: Tapu Bulu']"""
+        # TODO Handle terrains
         self.battle_field.update_field(current[2])
 
     async def _handle_field_end(self, current):
@@ -369,3 +420,26 @@ class GameLoop:
         """
         """-fieldend"""
         self.battle_field.update_field(Field.Normal)
+
+    async def _handle_start_vol(self, current):
+        """|-end|p1a: Hawlucha|Substitute"""
+        vol_status = current[3].strip().capitalize()
+        if self.battle_field.player_id in current[2]:
+            Status.add_volatile_status(StatusType[vol_status],
+                                       self.battle_field.active_pokemon_bot)
+            self.bot_volatile.append(StatusType[vol_status])
+        else:
+            Status.add_volatile_status(StatusType[vol_status],
+                                       self.battle_field.active_pokemon_oppo)
+            self.oppo_volatile.append(StatusType[vol_status])
+
+    async def _handle_end_vol(self, current):
+        #TODO parsing is different if is cast by us or by them
+        if self.battle_field.player_id in current[2]:
+            Status.remove_volatile_status(StatusType[current[3].strip().capitalize()],
+                                          self.battle_field.active_pokemon_bot)
+            self.bot_volatile.remove(StatusType[current[3].strip().capitalize()])
+        else:
+            Status.remove_volatile_status(StatusType[current[3].strip().capitalize()],
+                                          self.battle_field.active_pokemon_oppo)
+            self.oppo_volatile.remove(StatusType[current[3].strip().capitalize()])

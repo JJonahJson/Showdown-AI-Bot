@@ -26,15 +26,15 @@ class StatsTest(unittest.TestCase):
 
     def testIncreaseAccuracyOrEvasiveness(self):
         counter = 1
-        self.stat.modify(StatsType.Eva, counter)
-        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
-        actual = self.stat.get_actual(StatsType.Eva)
+        self.stat.modify(StatsType.Evasion, counter)
+        should_be = self.stat.real_stats[StatsType.Evasion] * Stats.multipliersAE[counter]
+        actual = self.stat.get_actual(StatsType.Evasion)
         self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
         counter += 1
-        self.stat.modify(StatsType.Eva, 1)
-        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
-        actual = self.stat.get_actual(StatsType.Eva)
+        self.stat.modify(StatsType.Evasion, 1)
+        should_be = self.stat.real_stats[StatsType.Evasion] * Stats.multipliersAE[counter]
+        actual = self.stat.get_actual(StatsType.Evasion)
         self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testDecreaseStat(self):
@@ -52,15 +52,15 @@ class StatsTest(unittest.TestCase):
 
     def testDecreaseAccuracyOrEvasiveness(self):
         counter = (-1)
-        self.stat.modify(StatsType.Eva, counter)
-        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
-        actual = self.stat.get_actual(StatsType.Eva)
+        self.stat.modify(StatsType.Evasion, counter)
+        should_be = self.stat.real_stats[StatsType.Evasion] * Stats.multipliersAE[counter]
+        actual = self.stat.get_actual(StatsType.Evasion)
         self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
         counter += (-1)
-        self.stat.modify(StatsType.Eva, -1)
-        should_be = self.stat.real_stats[StatsType.Eva] * Stats.multipliersAE[counter]
-        actual = self.stat.get_actual(StatsType.Eva)
+        self.stat.modify(StatsType.Evasion, -1)
+        should_be = self.stat.real_stats[StatsType.Evasion] * Stats.multipliersAE[counter]
+        actual = self.stat.get_actual(StatsType.Evasion)
         self.assertEqual(round(should_be), actual, "Stat should be {} instead of {}".format(str(should_be), str(actual)))
 
     def testOverflowBuff(self):

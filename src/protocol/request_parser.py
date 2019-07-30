@@ -119,7 +119,6 @@ def parse_and_set(message, db_connection):
     pokemon_json = json.loads(message)
     pokemons = {1: {}, 2: {}}
     counter = {1: 1, 2: 1}
-    # TODO: Check the index of move 1 or 0?!
     moves = get_active_moves(pokemon_json["active"][0]["moves"], db_connection)
     active_pokemon_bot, bench_active = get_pokemons(
         pokemon_json["side"], db_connection, moves

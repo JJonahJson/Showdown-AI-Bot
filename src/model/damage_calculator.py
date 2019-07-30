@@ -36,8 +36,8 @@ class DamageCalculator:
 
         if move.category is MoveCategory.Status:
             return 0
-        if target.types[0] in TypeMultiplier.immuneTo[move.move_type] or \
-                (len(target.types) > 1 and target.types[1] in TypeMultiplier.immuneTo[move.move_type]):
+        if DamageCalculator.immune_to(target.types[0], move.move_type) or \
+                (len(target.types) > 1 and DamageCalculator.immune_to(target.types[1], move.move_type)):
             return 0
 
         else:

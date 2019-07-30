@@ -1,8 +1,8 @@
 from ai.chooser_type import Difficulty
 from model.damage_calculator import DamageCalculator, StatusType
 from model.field_type import Weather
-from model.stats_type import StatsType
 from model.move_type import MoveCategory
+from model.stats_type import StatsType
 from model.status import immune
 
 
@@ -12,7 +12,7 @@ class Chooser:
         try:
             self.difficulty = Difficulty[difficulty.capitalize()]
             print("Starting bot with {} mode!".format(difficulty))
-        except :
+        except:
             print("{} not a supported difficulty!\n Use easy or normal or hard!".format(difficulty))
             exit(2)
 
@@ -106,15 +106,18 @@ class Chooser:
                         return index_move, True
                 elif moves[index_move].volatile_status[1]:
                     if not moves[index_move].volatile_status[1] in field.active_pokemon_oppo.volatile_status:
+                        print("Selected move {}".format(moves[index_move].move_name))
                         return index_move, True
 
                 else:
                     for stat, boost in moves[index_move].on_user_stats:
                         if field.active_pokemon_bot.stats.mul_stats[stat] == 0:
+                            print("Selected move {}".format(moves[index_move].move_name))
                             return index_move, True
 
                     for stat, boost in moves[index_move].on_target_stats:
                         if field.active_pokemon_oppo.stats.mul_stats[stat] == 0:
+                            print("Selected move {}".format(moves[index_move].move_name))
                             return index_move, True
 
             damage[index_move] = DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
@@ -156,12 +159,15 @@ class Chooser:
                                                                                       field.active_pokemon_oppo):
                         return pkmn, False
 
-        if bot_may_die and not bot_has_protect:
+        if bot_may_die and opponent_faster and not bot_has_protect and len(
+                dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
+                                      field.active_pokemon_bot.name != x[1].name,
+                            field.all_pkmns_bot.items()))) > 1:
             return Chooser.__handle_normal_switch__(field), False
 
         print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name, str(damage[
                                                                                                                  max_damage_move_index])))
-        return max_damage_move_index
+        return max_damage_move_index, True
 
     @staticmethod
     def __handle_normal_switch__(field):
@@ -192,7 +198,7 @@ class Chooser:
                     if DamageCalculator.immune_to(pkmn_type_oppo, pkmn_type):
                         valid_switch[index_pkmn] -= 2 * 2
 
-            for move_type in list(map(lambda x: x.move_type, bot_team[index_pkmn].moves)):
+            for move_type in list(map(lambda x: x[1].move_type, bot_team[index_pkmn].moves.items())):
                 for pkmn_type_oppo in field.active_pokemon_oppo.types:
                     if DamageCalculator.resists_to(pkmn_type_oppo, move_type):
                         valid_switch[index_pkmn] -= 1

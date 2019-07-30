@@ -150,8 +150,8 @@ class DatabaseDataSource(AbstractDataSource):
             (StatsType.Spa, boost_spa),
             (StatsType.Spd, boost_spd),
             (StatsType.Spe, boost_spe),
-            (StatsType.Acc, boost_acc),
-            (StatsType.Eva, boost_eva)
+            (StatsType.Accuracy, boost_acc),
+            (StatsType.Evasion, boost_eva)
         ]
 
         move_type = PokemonType[result[19]]
