@@ -6,8 +6,14 @@ from model.stats_type import StatsType
 
 class Chooser:
 
-    def __init__(self):
-        self.difficulty = Difficulty.Easy
+    def __init__(self, difficulty):
+        try:
+            self.difficulty = Difficulty[difficulty.capitalize()]
+            print("Starting bot with {} mode!".format(difficulty))
+        except :
+            print("{} not a supported difficulty!\n Use easy or normal or hard!".format(difficulty))
+            exit(2)
+
         self.handler_move = {
             Difficulty.Easy: Chooser._handle_easy_move,
         }

@@ -11,6 +11,7 @@ from model.field import BattleFieldSingle
 from model.field_type import Field
 from model.status import Status
 from model.status_type import StatusType
+from ai.chooser_type import Difficulty
 from protocol.data_source import DatabaseDataSource
 from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 
@@ -18,7 +19,7 @@ from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 class GameLoop:
     """Main control class"""
 
-    def __init__(self, ws, user_name, password, opponent_name):
+    def __init__(self, ws, user_name, password, opponent_name, difficulty):
         self.ws = ws
         self.user_name = user_name
         self.password = password
@@ -30,7 +31,7 @@ class GameLoop:
         self.damage_tracker = DamageTracker()
         self.last_move = ""
         self.counter = 0
-        self.chooser = Chooser()
+        self.chooser = Chooser(difficulty)
 
         # Dict of handlers for the challenge section
         self.handler_challenge = {
@@ -125,7 +126,9 @@ class GameLoop:
         num_answer = random.randint(0, len(self.standard_answers) - 1)
         await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
         time.sleep(3)
-        await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
+        await sender.sender(self.ws, self.battle_field.room_name, "Send go {difficulty} if you want to change "
+                                                                  "difficulty. Available difficulties are: easy, "
+                                                                  "normal, hard!\n/timer on")
 
     async def _handle_player(self, current):
         """Method that handles the player message that saves our id and the opponent id
@@ -259,8 +262,19 @@ class GameLoop:
     async def _handle_chat(self, current):
         """Method that replies to the chat"""
         if self.user_name not in current[2]:
-            num_answer = random.randint(0, len(self.standard_answers) - 1)
-            await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
+            if "go" in current[3]:
+                try:
+                    new_difficulty = Difficulty[current[3].split(" ")[1].capitalize()]
+                    self.chooser.difficulty = new_difficulty
+                    await sender.sender(self.ws, self.battle_field.room_name, "Difficulty is now set on: {}".format(
+                        new_difficulty.value))
+                except:
+                    await sender.sender(self.ws, self.battle_field.room_name, "That difficulty is not supported "
+                                                                              "yet!\nTry easy, normal or hard")
+
+            else:
+                num_answer = random.randint(0, len(self.standard_answers) - 1)
+                await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
 
     async def _handle_faint(self, current):
         """Method that handles the fainting of a pokemon
