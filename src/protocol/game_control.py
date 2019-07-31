@@ -411,7 +411,8 @@ class GameLoop:
         """-fieldstart"""
         """<class 'list'>: ['', '-fieldstart', 'move: Grassy Terrain', '[from] ability: Grassy Surge', '[of] p2a: Tapu Bulu']"""
         # TODO Handle terrains
-        self.battle_field.update_field(current[2])
+        terrain = current[2].split(":")[1].strip().split(" ")[0]
+        self.battle_field.update_field(Field[terrain])
 
     async def _handle_field_end(self, current):
         """Method that resets the terrain
@@ -422,8 +423,12 @@ class GameLoop:
         self.battle_field.update_field(Field.Normal)
 
     async def _handle_start_vol(self, current):
-        """|-end|p1a: Hawlucha|Substitute"""
-        vol_status = current[3].strip().capitalize()
+        """|-start|p2a: Toxicroak|move: Taunt"""
+        if "move" in current[3]:
+            vol_status = current[3].split(":")[1].strip().replace(" ", "")
+        else:
+            vol_status = current[3].strip().capitalize().replace(" ", "")
+
         if self.battle_field.player_id in current[2]:
             Status.add_volatile_status(StatusType[vol_status],
                                        self.battle_field.active_pokemon_bot)
@@ -434,12 +439,17 @@ class GameLoop:
             self.oppo_volatile.append(StatusType[vol_status])
 
     async def _handle_end_vol(self, current):
-        #TODO parsing is different if is cast by us or by them
-        if self.battle_field.player_id in current[2]:
-            Status.remove_volatile_status(StatusType[current[3].strip().capitalize()],
-                                          self.battle_field.active_pokemon_bot)
-            self.bot_volatile.remove(StatusType[current[3].strip().capitalize()])
+        """|-end|p2a: Toxicroak|move: Taunt"""
+        if "move" in current[3]:
+            vol_status = current[3].split(":")[1].strip()
         else:
-            Status.remove_volatile_status(StatusType[current[3].strip().capitalize()],
+            vol_status = current[3].strip().capitalize()
+
+        if self.battle_field.player_id in current[2]:
+            Status.remove_volatile_status(StatusType[vol_status],
+                                          self.battle_field.active_pokemon_bot)
+            self.bot_volatile.remove(StatusType[vol_status])
+        else:
+            Status.remove_volatile_status(StatusType[vol_status],
                                           self.battle_field.active_pokemon_oppo)
-            self.oppo_volatile.remove(StatusType[current[3].strip().capitalize()])
+            self.oppo_volatile.remove(StatusType[vol_status])

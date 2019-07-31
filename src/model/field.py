@@ -152,7 +152,7 @@ class BattleFieldSingle(BattleField):
         :param terrain: The terrain to be set
         :return:
         """
-        self.field = Field[terrain.capitalize()]
+        self.field = terrain
 
     def update_damage(self, side, remaining_hp):
         """Updates the damage

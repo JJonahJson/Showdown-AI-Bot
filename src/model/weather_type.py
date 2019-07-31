@@ -20,5 +20,5 @@ class FieldModifiers:
     modifiers = {
         (t.Psychic, f.Psychic): 1.5,
         (t.Electric, f.Electric): 1.5,
-        (t.Grass, f.Grass): 1.5
+        (t.Grass, f.Grassy): 1.5
     }
