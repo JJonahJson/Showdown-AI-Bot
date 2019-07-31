@@ -9,7 +9,6 @@
 Hard:
     Aggiungere min-max
 
--Aggiungere sesso parametrizzato così che si cambia l'avatar oppure lasciare che ognuno usi il proprio essendo un account già esistente
 -Aggiungere heal?
 -Aggiungere stealthrock e quelle di quel genere
 
