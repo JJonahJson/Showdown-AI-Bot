@@ -99,7 +99,7 @@ def get_pokemons(pokemon_list, db_connection, active_moves):
                                          stats,
                                          active_moves,
                                          [],
-                                         0.00,  # TODO: Get weight from db
+                                         0.00,
                                          status,
                                          [],
                                          None,

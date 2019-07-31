@@ -15,6 +15,10 @@ from model.status import Status
 from model.status_type import StatusType
 from protocol.data_source import DatabaseDataSource
 from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
+import model.setup_logger
+import logging
+
+logger = logging.getLogger("GameLoop")
 
 
 class GameLoop:
@@ -36,7 +40,6 @@ class GameLoop:
 
         self.bot_volatile = []
         self.oppo_volatile = []
-        # TODO: Do same thing with volatile status
         self.mul_stats_bot = {
             StatsType.Atk: 0,
             StatsType.Def: 0,
@@ -120,6 +123,7 @@ class GameLoop:
         :param string_tab: message
         :return:
         """
+        logging.info("Login Successfull")
         await login.log_in(self.ws, self.user_name, self.password, string_tab[2], string_tab[3])
 
     async def _handle_update_user(self, string_tab):
@@ -148,6 +152,7 @@ class GameLoop:
         :param current:
         :return:
         """
+        logging.info("NEW BATTLE STARTING")
         num_answer = random.randint(0, len(self.standard_answers) - 1)
         await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
         time.sleep(3)
@@ -220,6 +225,8 @@ class GameLoop:
         if self.battle_field.player_id not in current[2]:
             move_name = current[3].strip()
             self.last_move = move_name
+            logging.info("{} received {} from {}".format(self.battle_field.active_pokemon_bot, move_name,
+                                                         self.battle_field.active_pokemon_oppo))
             update_enemy_move(self.battle_field, self.db, move_name)
 
     async def _handle_request(self, current):
@@ -316,8 +323,10 @@ class GameLoop:
                 try:
                     new_difficulty = Difficulty[current[3].split(" ")[1].capitalize()]
                     self.chooser.difficulty = new_difficulty
+                    logger.info("Difficulty is now set on {}".format(new_difficulty.name))
                     await sender.sender(self.ws, self.battle_field.room_name, "Difficulty is now set on: {}".format(
-                        new_difficulty.value))
+                        new_difficulty.name))
+
                 except:
                     await sender.sender(self.ws, self.battle_field.room_name, "That difficulty is not supported "
                                                                               "yet!\nTry easy, normal or hard")
@@ -332,9 +341,12 @@ class GameLoop:
         :return:
         """
         """faint"""
+
         if self.battle_field.player_id not in current[1]:
+            logger.info("{} fainted".format(self.battle_field.active_pokemon_bot))
             Status.apply_non_volatile_status(StatusType.Fnt, self.battle_field.active_pokemon_bot)
         else:
+            logger.info("{} fainted".format(self.battle_field.active_pokemon_oppo))
             Status.apply_non_volatile_status(StatusType.Fnt, self.battle_field.active_pokemon_oppo)
 
     async def _handle_heal(self, current):
@@ -401,8 +413,10 @@ class GameLoop:
         """
         """-weather"""
         if current[2] == 'none':
+            logger.info("Weather set to Normal")
             self.battle_field.update_weather("Normal")
         else:
+            logger.info("Weather set to {}".format(current[2]))
             self.battle_field.update_weather(current[2])
 
     async def _handle_field_start(self, current):
@@ -411,9 +425,8 @@ class GameLoop:
         :return:
         """
         """-fieldstart"""
-        """<class 'list'>: ['', '-fieldstart', 'move: Grassy Terrain', '[from] ability: Grassy Surge', '[of] p2a: Tapu Bulu']"""
-        # TODO Handle terrains
         terrain = current[2].split(":")[1].strip().split(" ")[0]
+        logger.info("Terrain set to {}".format(terrain))
         self.battle_field.update_field(Field[terrain])
 
     async def _handle_field_end(self, current):
@@ -422,6 +435,7 @@ class GameLoop:
         :return:
         """
         """-fieldend"""
+        logger.info("Terrain set to Normal")
         self.battle_field.update_field(Field.Normal)
 
     async def _handle_start_vol(self, current):

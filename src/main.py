@@ -3,6 +3,10 @@ import argparse
 import getpass
 from websocket._core import create_connection
 from protocol import game_control
+import model.setup_logger
+import logging
+
+logger = logging.getLogger("Main")
 
 
 async def main(password):
@@ -21,7 +25,7 @@ async def main(password):
     print("Starting bot with opponent {}".format(args.opponent_name))
     while True:
         message = websocket.recv()
-        print(message)
+        logger.debug(message)
         await gl.handle_message(message)
 
 
