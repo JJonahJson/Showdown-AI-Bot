@@ -21,6 +21,7 @@ async def main(password):
     print("Starting bot with opponent {}".format(args.opponent_name))
     while True:
         message = websocket.recv()
+        print(message)
         await gl.handle_message(message)
 
 

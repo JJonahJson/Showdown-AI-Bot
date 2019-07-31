@@ -14,6 +14,8 @@ class Weather(Enum):
     Hail = auto()
     Sandstorm = auto()
     Normal = auto()
+    Primordialsea = auto()
+    Desolateland = auto()
 
     # TODO: Primordial and desolate multipliers needs to be reworked
 

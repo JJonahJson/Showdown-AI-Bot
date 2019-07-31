@@ -122,9 +122,6 @@ class Chooser:
 
             damage[index_move] = DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
                                                             moves[index_move], field.active_pokemon_oppo)
-            bot_has_protect = moves[index_move].move_name == "Protect"
-            if bot_has_protect:
-                protect_index = index_move
 
         max_damage_move_index = max(damage.keys(), key=lambda x: damage[x])
 
@@ -145,8 +142,6 @@ class Chooser:
                                                                                                            index_move],
                                                                                                        field.active_pokemon_bot)) <= 0
 
-        if oppo_is_damaging and bot_may_die and bot_has_protect:
-            return protect_index, True
 
         bench_bot = field.all_pkmns_bot
         for pkmn in bench_bot:

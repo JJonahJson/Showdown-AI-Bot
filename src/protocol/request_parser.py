@@ -14,15 +14,14 @@ def get_active_moves(active, db_connection):
     moves_list = active[0]["moves"]
     z_indexes = []
     can_mega = False
-    if len(active) > 1:
-        if "canMegaEvo" in active[1]:
-            can_mega = active[1]["canMegaEvo"]
-        elif "canZMove" in active[1]:
-            i = 1
-            for z_move in active[1]["canZMove"]:
-                if z_move:
-                    z_indexes.append(i)
-                i += 1
+    if "canMegaEvo" in active[0]:
+        can_mega = active[0]["canMegaEvo"]
+    elif "canZMove" in active[0]:
+        i = 1
+        for z_move in active[0]["canZMove"]:
+            if z_move:
+                z_indexes.append(i)
+            i += 1
 
     active_moves = {}
     index = 1
