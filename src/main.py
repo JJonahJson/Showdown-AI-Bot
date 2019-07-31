@@ -10,15 +10,22 @@ async def main(password):
     Loading function. Connect websocket then launch bot.
     """
     parser = argparse.ArgumentParser(description="Pokemon Showdown Bot")
-    parser.add_argument("-o", "--opponent_name", type=str, help="username of the opponent you want the bot to challenge")
-    parser.add_argument("-u", "--username", type=str, help="username of your Pokemon Showdown account")
-    parser.add_argument("-d", "--difficulty", type=str, help="The difficulty", default="easy")
+    parser.add_argument("-o", "--opponent_name", type=str,
+                        help="The username of the opponent you want the bot to challenge", default=None)
+    parser.add_argument("-u", "--username", type=str, help="The username of your Pokemon Showdown account",
+                        required=True)
+    parser.add_argument("-d", "--difficulty", type=str, help="The difficulty", default="easy",
+                        choices={"easy", "normal", "hard"})
+    parser.add_argument("-m", "--mode", type=str, help="The way to use the bot, 'searching' or 'challenging'",
+                        required=True, choices={"searching", "challenging"})
+    parser.add_argument("-g", "--gen", type=int, help="The pokemon generation chosen for the random battle", default=7,
+                        choices={1, 2, 3, 4, 5, 6, 7})
     args = parser.parse_args()
-    websocket = create_connection(
-        'ws://sim.smogon.com:8000/showdown/websocket')
+    websocket = create_connection('ws://sim.smogon.com:8000/showdown/websocket')
 
-    gl = game_control.GameLoop(websocket, args.username, password,  args.opponent_name, args.difficulty)
-    print("Starting bot with opponent {}".format(args.opponent_name))
+    gl = game_control.GameLoop(websocket, args.username, password, args.gen, args.difficulty, args.mode,
+                               args.opponent_name)
+    print("Starting bot of {} with opponent {}".format(args.username, args.opponent_name))
     while True:
         message = websocket.recv()
         print(message)

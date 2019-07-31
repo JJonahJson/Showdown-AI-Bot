@@ -20,10 +20,12 @@ from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
 class GameLoop:
     """Main control class"""
 
-    def __init__(self, ws, user_name, password, opponent_name, difficulty):
+    def __init__(self, ws, user_name, password, gen, difficulty, mode, opponent_name):
         self.ws = ws
         self.user_name = user_name
         self.password = password
+        self.gen = gen
+        self.mode = mode
         self.opponent_name = opponent_name
         self.battle_field = BattleFieldSingle(None, None, {}, {})
         with open("standard_answers", "r") as file:
@@ -128,7 +130,10 @@ class GameLoop:
         :return:
         """
         if self.user_name in string_tab[2]:
-            await sender.challenge(self.ws, self.opponent_name, "gen7randombattle")
+            if self.mode == "challenging":
+                await sender.challenge(self.ws, self.opponent_name, "gen"+str(self.gen)+"randombattle")
+            elif self.mode == "searching":
+                await sender.searching(self.ws, "gen"+str(self.gen)+"randombattle")
 
     async def _handle_update_search(self, string_tab):
         """Method that handles the creation of battle room and saves the room id and prints the link to watch the battle
