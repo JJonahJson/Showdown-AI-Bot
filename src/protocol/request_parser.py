@@ -5,12 +5,25 @@ from model.stats import Stats
 from model.status_type import StatusType
 
 
-def get_active_moves(moves_list, db_connection):
+def get_active_moves(active, db_connection):
     """Method that parses the active moves from a request
     :param moves_list:
     :param db_connection:
     :return:
     """
+    moves_list = active[0]["moves"]
+    z_indexes = []
+    can_mega = False
+    if len(active) > 1:
+        if "canMegaEvo" in active[1]:
+            can_mega = active[1]["canMegaEvo"]
+        elif "canZMove" in active[1]:
+            i = 1
+            for z_move in active[1]["canZMove"]:
+                if z_move:
+                    z_indexes.append(i)
+                i += 1
+
     active_moves = {}
     index = 1
     for move in moves_list:
@@ -23,7 +36,9 @@ def get_active_moves(moves_list, db_connection):
         if "disabled" in move.keys():
             active_moves[index].is_usable = not move["disabled"]
         index += 1
-    return active_moves
+    for index in z_indexes:
+        active_moves[index].is_Z = True
+    return active_moves, can_mega
 
 
 def get_pokemons(pokemon_list, db_connection, active_moves):
@@ -117,10 +132,9 @@ def get_pokemons(pokemon_list, db_connection, active_moves):
 
 def parse_and_set(message, db_connection):
     pokemon_json = json.loads(message)
-    pokemons = {1: {}, 2: {}}
-    counter = {1: 1, 2: 1}
-    moves = get_active_moves(pokemon_json["active"][0]["moves"], db_connection)
+    moves, can_mega = get_active_moves(pokemon_json["active"], db_connection)
     active_pokemon_bot, bench_active = get_pokemons(
         pokemon_json["side"], db_connection, moves
     )
+    active_pokemon_bot.can_mega = can_mega
     return active_pokemon_bot, bench_active, pokemon_json["rqid"]

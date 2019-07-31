@@ -285,7 +285,9 @@ class GameLoop:
         # An action is a move or a switch
         move, is_move = self.chooser.choose_move(self.battle_field)
         if is_move:
-            await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+            await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number,
+                                  self.battle_field.active_pokemon_bot.can_mega,
+                                  self.battle_field.active_pokemon_bot.moves[move].is_Z)
         else:
             await sender.sendswitch(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
@@ -434,7 +436,7 @@ class GameLoop:
             self.oppo_volatile.append(StatusType[vol_status])
 
     async def _handle_end_vol(self, current):
-        #TODO parsing is different if is cast by us or by them
+        # TODO parsing is different if is cast by us or by them
         if self.battle_field.player_id in current[2]:
             Status.remove_volatile_status(StatusType[current[3].strip().capitalize()],
                                           self.battle_field.active_pokemon_bot)

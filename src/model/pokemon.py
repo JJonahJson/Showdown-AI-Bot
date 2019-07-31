@@ -40,6 +40,7 @@ class Pokemon:
         self.damage_input_multiplier = 1
         self.bad_poison_turn = 0
         self.blocked = False
+        self.can_mega = False
 
     def get_usable_moves(self):
         """Methods that returns all usable moves"""
