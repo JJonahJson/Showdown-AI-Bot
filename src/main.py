@@ -24,11 +24,14 @@ async def main(password):
                         required=True, choices={"searching", "challenging"})
     parser.add_argument("-g", "--gen", type=int, help="The pokemon generation chosen for the random battle", default=7,
                         choices={1, 2, 3, 4, 5, 6, 7})
+    parser.add_argument("-s", "--sex", type=str, help="The sex choosen for your account", default="m",
+                        choices={"m", "f"})
     args = parser.parse_args()
     websocket = create_connection('ws://sim.smogon.com:8000/showdown/websocket')
 
-    gl = game_control.GameLoop(websocket, args.username, password, args.gen, args.difficulty, args.mode,
+    gl = game_control.GameLoop(websocket, args.username, password, args.sex, args.gen, args.difficulty, args.mode,
                                args.opponent_name)
+
     print("Starting bot of {} with opponent {}".format(args.username, args.opponent_name))
     while True:
         message = websocket.recv()

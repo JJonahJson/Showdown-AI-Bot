@@ -24,10 +24,11 @@ logger = logging.getLogger("GameLoop")
 class GameLoop:
     """Main control class"""
 
-    def __init__(self, ws, user_name, password, gen, difficulty, mode, opponent_name):
+    def __init__(self, ws, user_name, password, sex, gen, difficulty, mode, opponent_name):
         self.ws = ws
         self.user_name = user_name
         self.password = password
+        self.sex = sex
         self.gen = gen
         self.mode = mode
         self.opponent_name = opponent_name
@@ -126,7 +127,7 @@ class GameLoop:
         :return:
         """
         logging.info("Login Successfull")
-        await login.log_in(self.ws, self.user_name, self.password, string_tab[2], string_tab[3])
+        await login.log_in(self.ws, self.user_name, self.password, self.sex, string_tab[2], string_tab[3])
 
     async def _handle_update_user(self, string_tab):
         """When we receive an updateuser means that we're ready to fight an opponent, so send the challenge
