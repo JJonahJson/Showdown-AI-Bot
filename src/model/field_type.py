@@ -17,8 +17,6 @@ class Weather(Enum):
     Primordialsea = auto()
     Desolateland = auto()
 
-    # TODO: Primordial and desolate multipliers needs to be reworked
-
 
 class Field(Enum):
     """Enum for the possible fields in game"""

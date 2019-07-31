@@ -52,6 +52,9 @@ class Pokemon:
         if target.stats.get_actual_hp() <= 0:
             Status.apply_non_volatile_status(target, StatusType.Fnt)
 
+    def __repr__(self):
+        return self.name
+
     def to_string(self):
         """Method used to pretty print a pokemon
         :return: string

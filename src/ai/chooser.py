@@ -1,9 +1,13 @@
+import logging
+
 from ai.chooser_type import Difficulty
 from model.damage_calculator import DamageCalculator, StatusType
 from model.field_type import Weather
 from model.move_type import MoveCategory
 from model.stats_type import StatsType
 from model.status import immune
+
+logger = logging.getLogger("Chooser")
 
 
 class Chooser:
@@ -64,6 +68,8 @@ class Chooser:
                         valid_switch[index_pkmn] -= 2
 
         choosen_switch_index = max(valid_switch.keys(), key=lambda x: valid_switch[x])
+        logger.info("Easy-Switch {} with {}!".format(field.active_pokemon_bot, field.all_pkmns_bot[
+            choosen_switch_index]))
         return choosen_switch_index
 
     @staticmethod
@@ -77,8 +83,15 @@ class Chooser:
 
         max_damage_move_index = max(damage.keys(), key=lambda x: damage[x])
 
-        print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name, str(damage[
-                                                                                                                 max_damage_move_index])))
+        print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name,
+                                                                 str(damage[max_damage_move_index])))
+        logger.info("{} selected move {} with predicted damage {} against {}".format(field.active_pokemon_bot,
+                                                                                          moves[
+                                                                                              max_damage_move_index].move_name,
+                                                                                          str(damage[
+                                                                                                  max_damage_move_index]),
+                                                                                          field.active_pokemon_oppo))
+
         return max_damage_move_index, True
 
     @staticmethod
@@ -103,21 +116,42 @@ class Chooser:
                                          immune[
                                              moves[
                                                  index_move].non_volatile_status[1]])):
+                        logger.info("{} selected move {} with non volatile status {} against {}".format(
+                            field.active_pokemon_bot,
+                            moves[index_move].move_name,
+                            moves[index_move].non_volatile_status[1].name,
+                            field.active_pokemon_oppo))
                         return index_move, True
+
                 elif moves[index_move].volatile_status[1]:
                     if not moves[index_move].volatile_status[1] in field.active_pokemon_oppo.volatile_status:
                         print("Selected move {}".format(moves[index_move].move_name))
+                        logger.info("{} selected move {} with volatile status {} against {}".format(
+                            field.active_pokemon_bot,
+                            moves[index_move].move_name,
+                            moves[index_move].volatile_status[1].name,
+                            field.active_pokemon_oppo))
                         return index_move, True
 
                 else:
                     for stat, boost in moves[index_move].on_user_stats:
                         if field.active_pokemon_bot.stats.mul_stats[stat] == 0:
                             print("Selected move {}".format(moves[index_move].move_name))
+                            logger.info("{} selected move {} with self-boost on {} of {} stages".format(
+                                field.active_pokemon_bot,
+                                moves[index_move].move_name,
+                                stat.value,
+                                str(boost)))
                             return index_move, True
 
                     for stat, boost in moves[index_move].on_target_stats:
                         if field.active_pokemon_oppo.stats.mul_stats[stat] == 0:
                             print("Selected move {}".format(moves[index_move].move_name))
+                            logger.info("{} selected move {} with enemy-unboost on {} of {} stages".format(
+                                field.active_pokemon_bot,
+                                moves[index_move].move_name,
+                                stat.name,
+                                str(boost)))
                             return index_move, True
 
             damage[index_move] = DamageCalculator.calculate(field.weather, field.field, field.active_pokemon_bot,
@@ -146,6 +180,7 @@ class Chooser:
                                                                                                        field.active_pokemon_bot)) <= 0
 
         if oppo_is_damaging and bot_may_die and bot_has_protect and opponent_faster:
+            logger.info("Selected Protect against {}".format(field.active_pokemon_oppo))
             return protect_index, True
 
         bench_bot = field.all_pkmns_bot
@@ -157,16 +192,26 @@ class Chooser:
                                                                                       bench_bot[pkmn],
                                                                                       moves_actual[move],
                                                                                       field.active_pokemon_oppo):
+                        logger.info("MoreDamage Switch {} with {}".format(field.active_pokemon_bot,
+                                                                                 field.all_pkmns_bot[pkmn]))
                         return pkmn, False
 
         if bot_may_die and opponent_faster and not bot_has_protect and len(
                 dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
                                       field.active_pokemon_bot.name != x[1].name,
                             field.all_pkmns_bot.items()))) > 1:
+            logging.info("MayDieFasterSwitch")
             return Chooser.__handle_normal_switch__(field), False
 
         print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name, str(damage[
                                                                                                                  max_damage_move_index])))
+
+        logger.info("{} selected move {} with predicted damage {} against {}".format(field.active_pokemon_bot,
+                                                                                            moves[
+                                                                                                max_damage_move_index].move_name,
+                                                                                            str(damage[
+                                                                                                    max_damage_move_index]),
+                                                                                            field.active_pokemon_oppo))
         return max_damage_move_index, True
 
     @staticmethod
@@ -210,6 +255,7 @@ class Chooser:
                         valid_switch[index_pkmn] -= 1
 
         choosen_switch_index = max(valid_switch.keys(), key=lambda x: valid_switch[x])
+        logging.info("Switch {} with {}".format(field.active_pokemon_bot, field.all_pkmns_bot[choosen_switch_index]))
         return choosen_switch_index
 
     @staticmethod
