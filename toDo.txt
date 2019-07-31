@@ -1,11 +1,10 @@
 -Controllare i punti di vittoria (che vengano aggiunti)
 -Modificare Dockerfile perché non cresca la memoria di un quintale
 -Fare il container dell'intero progetto
--Aggiungere commenti  nel codice, soprattutto in file complessi di protocol o costruttori pesanti in model
 -Vedere se aggiungere come category weather
 -reversare damage tracker per correggere la statistica penalizzata
 
--Implementare metodi per medium e hard
+-Implementare metodi per hard
 -Fare i log
 -Fare il Readme del progetto
 -Aggiungere modalità sfida/listener, di conseguenza cambiano i parametri (se sei in modalità sfida specifichi opponent)
@@ -13,7 +12,6 @@
 Hard:
     Aggiungere min-max
 
--Controllare che le modifiche di stat volatile tipo dovute dalla bruciatura permangano
 -Aggiungere sesso parametrizzato così che si cambia l'avatar oppure lasciare che ognuno usi il proprio essendo un account già esistente
 -Aggiungere sfide random delle vecchie gen
 -Aggiungere mega e zmove

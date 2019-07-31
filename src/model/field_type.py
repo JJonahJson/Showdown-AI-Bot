@@ -22,7 +22,7 @@ class Field(Enum):
     """Enum for the possible fields in game"""
     Electric = auto()
     Psychic = auto()
-    Grass = auto()
+    Grassy = auto()
     Misty = auto()
     Normal = auto()
 
