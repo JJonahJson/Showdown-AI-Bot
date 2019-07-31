@@ -86,11 +86,11 @@ class Chooser:
         print("Selected move:{} with predicted damage:{}".format(moves[max_damage_move_index].move_name,
                                                                  str(damage[max_damage_move_index])))
         logger.info("{} selected move {} with predicted damage {} against {}".format(field.active_pokemon_bot,
-                                                                                          moves[
-                                                                                              max_damage_move_index].move_name,
-                                                                                          str(damage[
-                                                                                                  max_damage_move_index]),
-                                                                                          field.active_pokemon_oppo))
+                                                                                     moves[
+                                                                                         max_damage_move_index].move_name,
+                                                                                     str(damage[
+                                                                                             max_damage_move_index]),
+                                                                                     field.active_pokemon_oppo))
 
         return max_damage_move_index, True
 
@@ -98,6 +98,11 @@ class Chooser:
     def __handle_normal_move__(field, is_trapped=False):
         bot_may_die = False
         bot_has_protect = False
+
+        if StatusType.Encore in field.active_pokemon_bot.volatile_status:
+            for move in field.active_pokemon_bot.get_usable_moves():
+                return move, True
+
         # determine if the opponent is faster
         opponent_faster = field.active_pokemon_bot.stats.get_actual(StatsType.Spe) < \
                           field.active_pokemon_oppo.stats.get_actual(StatsType.Spe)
@@ -108,14 +113,22 @@ class Chooser:
         for index_move in moves:
             if moves[index_move].category == MoveCategory.Status:
                 if moves[index_move].non_volatile_status[1]:
-                    if field.active_pokemon_oppo.non_volatile_status == StatusType.Normal and \
-                            not ((field.active_pokemon_oppo.types[0] in immune[
-                                moves[index_move].non_volatile_status[1]]) or (
-                                         len(field.active_pokemon_oppo.types) > 1 and \
-                                         field.active_pokemon_oppo.types[1] in
-                                         immune[
-                                             moves[
-                                                 index_move].non_volatile_status[1]])):
+
+                    immune_to_move_type = DamageCalculator.immune_to(field.active_pokemon_oppo.types[0],
+                                                                     moves[index_move].move_type) or (len(
+                        field.active_pokemon_oppo.types) > 1 and DamageCalculator.immune_to(
+                        field.active_pokemon_oppo.types[1], moves[index_move].move_type))
+
+                    immune_status_type = ((field.active_pokemon_oppo.types[0] in immune[
+                        moves[index_move].non_volatile_status[1]]) or (
+                                                      len(field.active_pokemon_oppo.types) > 1 and \
+                                                      field.active_pokemon_oppo.types[1] in
+                                                      immune[
+                                                          moves[
+                                                              index_move].non_volatile_status[1]]))
+
+                    if field.active_pokemon_oppo.non_volatile_status == StatusType.Normal and not immune_status_type \
+                            and not immune_to_move_type:
                         logger.info("{} selected move {} with non volatile status {} against {}".format(
                             field.active_pokemon_bot,
                             moves[index_move].move_name,
@@ -123,15 +136,26 @@ class Chooser:
                             field.active_pokemon_oppo))
                         return index_move, True
 
-                elif moves[index_move].volatile_status[1]:
-                    if not moves[index_move].volatile_status[1] in field.active_pokemon_oppo.volatile_status:
-                        print("Selected move {}".format(moves[index_move].move_name))
-                        logger.info("{} selected move {} with volatile status {} against {}".format(
-                            field.active_pokemon_bot,
-                            moves[index_move].move_name,
-                            moves[index_move].volatile_status[1].name,
-                            field.active_pokemon_oppo))
-                        return index_move, True
+                elif moves[index_move].volatile_status[1] and moves[index_move].move_name != "Protect" \
+                        and moves[index_move].move_name != "Kingsshield":
+                    if moves[index_move].volatile_status[0] == "self":
+                        if not moves[index_move].volatile_status[1] in field.active_pokemon_bot.volatile_status:
+                            print("Selected move {}".format(moves[index_move].move_name))
+                            logger.info("{} selected move {} with volatile status {} for {}".format(
+                                field.active_pokemon_bot,
+                                moves[index_move].move_name,
+                                moves[index_move].volatile_status[1].name,
+                                field.active_pokemon_bot))
+                            return index_move, True
+                    else:
+                        if not moves[index_move].volatile_status[1] in field.active_pokemon_oppo.volatile_status:
+                            print("Selected move {}".format(moves[index_move].move_name))
+                            logger.info("{} selected move {} with volatile status {} against {}".format(
+                                field.active_pokemon_bot,
+                                moves[index_move].move_name,
+                                moves[index_move].volatile_status[1].name,
+                                field.active_pokemon_oppo))
+                            return index_move, True
 
                 else:
                     for stat, boost in moves[index_move].on_user_stats:
@@ -193,7 +217,7 @@ class Chooser:
                                                                                       moves_actual[move],
                                                                                       field.active_pokemon_oppo):
                         logger.info("MoreDamage Switch {} with {}".format(field.active_pokemon_bot,
-                                                                                 field.all_pkmns_bot[pkmn]))
+                                                                          field.all_pkmns_bot[pkmn]))
                         return pkmn, False
 
         if bot_may_die and opponent_faster and not bot_has_protect and len(
@@ -207,11 +231,11 @@ class Chooser:
                                                                                                                  max_damage_move_index])))
 
         logger.info("{} selected move {} with predicted damage {} against {}".format(field.active_pokemon_bot,
-                                                                                            moves[
-                                                                                                max_damage_move_index].move_name,
-                                                                                            str(damage[
-                                                                                                    max_damage_move_index]),
-                                                                                            field.active_pokemon_oppo))
+                                                                                     moves[
+                                                                                         max_damage_move_index].move_name,
+                                                                                     str(damage[
+                                                                                             max_damage_move_index]),
+                                                                                     field.active_pokemon_oppo))
         return max_damage_move_index, True
 
     @staticmethod
