@@ -15,4 +15,6 @@ Hard:
 -se si può usare un pochino ability diamo punteggio allo switch di chi ha intimidate ecc, per far vedere che lo usiamo
 -se si ha un item choice allora usare solo mosse damage
 -fixare unown che non ha il livello
+-utilizzare i randomsets
+-utilizzare zpower?
 
