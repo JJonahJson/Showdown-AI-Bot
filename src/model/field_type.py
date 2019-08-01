@@ -10,7 +10,7 @@ class Weather(Enum):
     """Enum for the possible weathers in game"""
     Raindance = auto()
     Sunnyday = auto()
-    Wind = auto()
+    Deltastream = auto()
     Hail = auto()
     Sandstorm = auto()
     Normal = auto()

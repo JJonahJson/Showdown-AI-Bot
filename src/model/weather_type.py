@@ -13,9 +13,9 @@ class WeatherModifiers:
         (t.Water, w.Sunnyday): 0.5,
         (t.Fire, w.Raindance): 0.5,
         (t.Fire, w.Sunnyday): 2,
-        (t.Electric, w.Wind): 0.5,
-        (t.Ice, w.Wind): 0.5,
-        (t.Rock, w.Wind): 0.5
+        (t.Electric, w.Deltastream): 0.5,
+        (t.Ice, w.Deltastream): 0.5,
+        (t.Rock, w.Deltastream): 0.5
     }
 
 
