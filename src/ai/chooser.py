@@ -6,6 +6,7 @@ from model.field_type import Weather
 from model.move_type import MoveCategory
 from model.stats_type import StatsType
 from model.status import immune
+from model.pokemon_type import PokemonType
 
 logger = logging.getLogger("Chooser")
 
@@ -121,11 +122,11 @@ class Chooser:
 
                     immune_status_type = ((field.active_pokemon_oppo.types[0] in immune[
                         moves[index_move].non_volatile_status[1]]) or (
-                                                      len(field.active_pokemon_oppo.types) > 1 and \
-                                                      field.active_pokemon_oppo.types[1] in
-                                                      immune[
-                                                          moves[
-                                                              index_move].non_volatile_status[1]]))
+                                                  len(field.active_pokemon_oppo.types) > 1 and \
+                                                  field.active_pokemon_oppo.types[1] in
+                                                  immune[
+                                                      moves[
+                                                          index_move].non_volatile_status[1]]))
 
                     if field.active_pokemon_oppo.non_volatile_status == StatusType.Normal and not immune_status_type \
                             and not immune_to_move_type:
@@ -289,3 +290,173 @@ class Chooser:
     @staticmethod
     def __handle_hard_switch__(field):
         pass
+
+    @staticmethod
+    def valuation_action(field):
+        valuation = 0
+        active_bot = field.active_pokemon_bot
+        active_oppo = field.active_pokemon_oppo
+        moves_bot = active_bot.moves
+        moves_oppo = active_oppo.moves
+        possible_moves_oppo = active_oppo.possible_moves
+        weather = field.weather
+        terrain = field.field
+        bench_bot = field.all_pkmns_bot
+        bench_oppo = field.all_pkmns_oppo
+
+        for pkmn in bench_bot:
+            # Number of bot pkmns fainted
+            if bench_bot[pkmn].status == StatusType.Fnt:
+                valuation -= 1
+            # Number of bot pkmns with status changed
+            elif bench_bot[pkmn].status != StatusType.Normal:
+                valuation -= 1
+            hp_left = (bench_bot[pkmn].stats.real_stats[StatsType.HP] / bench_bot[pkmn].stats.get_actual_hp()) * 100
+
+            if hp_left < 75:
+                valuation -= 1
+
+            if hp_left < 50:
+                valuation -= 1
+
+            if hp_left < 25:
+                valuation -= 1
+
+        # Points of mul_stats changed for active bot
+        for stat in active_bot.stats.mul_stats:
+            valuation += active_bot.stats.mul_stats[stat]
+
+        # Points of mul_stats changed for active oppo
+        for stat in active_oppo.stats.mul_stats:
+            valuation -= active_oppo.stats.mul_stats[stat]
+
+        # Number of opponent pkmns fainted
+        for pkmn in bench_oppo:
+            # Number of opponent pkmns fainted
+            if bench_oppo[pkmn].status == StatusType.Fnt:
+                valuation += 1
+            # Number of opponent pkmns with status changed
+            elif bench_oppo[pkmn].status != StatusType.Normal:
+                valuation -= 1
+            hp_left = (bench_oppo[pkmn].stats.real_stats[StatsType.HP] / bench_oppo[pkmn].stats.get_actual_hp()) * 100
+
+            if hp_left < 75:
+                valuation -= 1
+
+            if hp_left < 50:
+                valuation -= 1
+
+            if hp_left < 25:
+                valuation -= 1
+
+        # Points with  rain weather
+        if weather in [Weather.Raindance, Weather.Primordialsea]:
+
+            for move in moves_bot:
+                if moves_bot[move].move_type == PokemonType.Water:
+                    valuation += 1
+                elif moves_bot[move].move_type == PokemonType.Fire:
+                    valuation -= 1
+                if "Thunder" == moves_bot[move].move_name:
+                    valuation += 1
+
+            for move in moves_oppo:
+                if moves_oppo[move].move_type == PokemonType.Water:
+                    valuation -= 1
+                elif moves_oppo[move].move_type == PokemonType.Fire:
+                    valuation += 1
+                if "Thunder" == moves_oppo[move].move_name:
+                    valuation -= 1
+
+            for move in possible_moves_oppo:
+                if possible_moves_oppo[move].move_type == PokemonType.Water:
+                    valuation -= 1
+                elif possible_moves_oppo[move].move_type == PokemonType.Fire:
+                    valuation += 1
+                if "Thunder" == possible_moves_oppo[move].move_name:
+                    valuation -= 1
+
+        elif weather in [Weather.Sunnyday, Weather.Desolateland]:
+
+            for move in moves_bot:
+                if moves_bot[move].move_type == PokemonType.Water:
+                    valuation -= 1
+                elif moves_bot[move].move_type == PokemonType.Fire:
+                    valuation += 1
+                if "Solar Beam" == moves_bot[move].move_name:
+                    valuation += 1
+
+            for move in moves_oppo:
+                if moves_oppo[move].move_type == PokemonType.Water:
+                    valuation += 1
+                elif moves_oppo[move].move_type == PokemonType.Fire:
+                    valuation -= 1
+                if "Solar Beam" == moves_oppo[move].move_name:
+                    valuation -= 1
+
+            for move in possible_moves_oppo:
+                if possible_moves_oppo[move].move_type == PokemonType.Water:
+                    valuation += 1
+                elif possible_moves_oppo[move].move_type == PokemonType.Fire:
+                    valuation -= 1
+                if "Solar Beam" == possible_moves_oppo[move].move_name:
+                    valuation -= 1
+
+        for bot_pkmn_type in active_bot.types:
+            for oppo_pkmn_type in active_oppo.types:
+                if DamageCalculator.weak_to(oppo_pkmn_type, bot_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.resists_to(bot_pkmn_type, oppo_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.immune_to(bot_pkmn_type, oppo_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.weak_to(bot_pkmn_type, oppo_pkmn_type):
+                    valuation -= 1
+                if DamageCalculator.resists_to(oppo_pkmn_type, bot_pkmn_type):
+                    valuation -= 1
+                if DamageCalculator.immune_to(oppo_pkmn_type, bot_pkmn_type):
+                    valuation -= 1
+            for oppo_move in moves_oppo:
+                oppo_move_type = moves_oppo[oppo_move]
+                if DamageCalculator.weak_to(oppo_move_type, bot_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.resists_to(bot_pkmn_type, oppo_move_type):
+                    valuation += 1
+                if DamageCalculator.immune_to(bot_pkmn_type, oppo_move_type):
+                    valuation += 1
+                if DamageCalculator.weak_to(bot_pkmn_type, oppo_move_type):
+                    valuation -= 1
+                if DamageCalculator.resists_to(oppo_move_type, bot_pkmn_type):
+                    valuation -= 1
+                if DamageCalculator.immune_to(oppo_move_type, bot_pkmn_type):
+                    valuation -= 1
+            for oppo_move in possible_moves_oppo:
+                oppo_move_type = possible_moves_oppo[oppo_move]
+                if DamageCalculator.weak_to(oppo_move_type, bot_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.resists_to((bot_pkmn_type, oppo_move_type)):
+                    valuation += 1
+                if DamageCalculator.immune_to(bot_pkmn_type, oppo_move_type):
+                    valuation += 1
+                if DamageCalculator.weak_to(bot_pkmn_type, oppo_move_type):
+                    valuation -= 1
+                if DamageCalculator.resists_to(oppo_move_type, bot_pkmn_type):
+                    valuation -= 1
+                if DamageCalculator.immune_to(oppo_move_type, bot_pkmn_type):
+                    valuation -= 1
+
+        for oppo_pkmn_type in active_oppo.types:
+            for bot_move in moves_bot:
+                bot_move_type = moves_bot[bot_move].move_type
+                if DamageCalculator.weak_to(oppo_pkmn_type, bot_move_type):
+                    valuation += 1
+                if DamageCalculator.resists_to(bot_move_type, oppo_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.immune_to(bot_move_type, oppo_pkmn_type):
+                    valuation += 1
+                if DamageCalculator.weak_to(bot_move_type, oppo_pkmn_type):
+                    valuation -= 1
+                if DamageCalculator.resists_to(oppo_pkmn_type, bot_move_type):
+                    valuation -= 1
+                if DamageCalculator.immune_to(oppo_pkmn_type, bot_move_type):
+                    valuation -= 1
