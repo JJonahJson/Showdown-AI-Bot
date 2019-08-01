@@ -186,11 +186,13 @@ class DatabaseDataSource(AbstractDataSource):
         :param battle_type:
         :return:
         """
-        moves_set = []
+        moves_set = {}
+        index = 5
         cursor = self.db_connection.cursor(prepared=True)
         parametric_query = "SELECT move FROM Randomsets WHERE pokemon = %s and battle_type = %s"
         cursor.execute(parametric_query, (pkmn_name, battle_type))
         results = cursor.fetchall()
         for result in results:
-            moves_set.append(self.get_move_by_name(result[0]))
+            moves_set[index](self.get_move_by_name(result[0]))
+            index += 1
         return moves_set

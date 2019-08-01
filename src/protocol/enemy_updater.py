@@ -48,11 +48,17 @@ def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())
         if move:
             battle_field.active_pokemon_oppo.moves[1] = move
+            battle_field.active_pokemon_oppo.possible_moves = list(filter(lambda x: move.move_name != x[1].move_name,
+                                battle_field.active_pokemon_oppo.possible_moves))
+
     elif move_name not in list(map(lambda x: x[1].move_name, battle_field.active_pokemon_oppo.moves.items())):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())
         if move:
             current_index = max(battle_field.active_pokemon_oppo.moves.keys())
             battle_field.active_pokemon_oppo.moves[current_index + 1] = move
+
+            if len(battle_field.active_pokemon_oppo.possible_moves) == 4:
+                battle_field.active_pokemon_oppo.possible_moves.clear()
 
 
 22

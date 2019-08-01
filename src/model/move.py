@@ -1,8 +1,10 @@
-from model.status import Status
-from abc import ABC, abstractmethod
-from model.move_type import MoveStatus
+import copy
 import random
+from abc import ABC, abstractmethod
 
+from model.damage_calculator import DamageCalculator
+from model.move_type import MoveStatus
+from model.status import Status
 
 
 class Move(ABC):
@@ -113,8 +115,8 @@ class SingleMove(Move):
                          on_user_stats, on_target_stats, defends_on, chance, volatile_status, non_volatile_status)
 
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
-        #damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
-        #target_pokemon.stats.decrease_hp(damage)
+        damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
+        target_pokemon.stats.decrease_hp(damage)
         self.pp -= 1
 
         if random.randint(0, 100) <= self.chance:
@@ -124,15 +126,22 @@ class SingleMove(Move):
 
             for tupla in self.on_target_stats:
                 target_pokemon.stats.modify(tupla[0], tupla[1])
+            if self.volatile_status:
+                if self.volatile_status[1]:
+                    if self.volatile_status[0] == 'self':
+                        Status.add_volatile_status(self.volatile_status[1], caster_pokemon)
+                    else:
+                        Status.add_volatile_status(self.volatile_status[1], target_pokemon)
 
-            if self.volatile_status[1]:
-                if self.volatile_status[0] == 'self':
-                    Status.add_volatile_status(self.volatile_status[1], caster_pokemon)
-                else:
-                    Status.add_volatile_status(self.volatile_status[1], target_pokemon)
+            if self.non_volatile_status:
+                if self.non_volatile_status[1]:
+                    if self.non_volatile_status[0] == 'self':
+                        Status.apply_non_volatile_status(self.non_volatile_status[1], caster_pokemon)
+                    else:
+                        Status.apply_non_volatile_status(self.non_volatile_status[1], target_pokemon)
 
-            if self.non_volatile_status[1]:
-                if self.non_volatile_status[0] == 'self':
-                    Status.apply_non_volatile_status(self.non_volatile_status[1], caster_pokemon)
-                else:
-                    Status.apply_non_volatile_status(self.non_volatile_status[1], target_pokemon)
+    def deepcopy(self):
+        return SingleMove(self.move_name, self.accuracy, self.base_power, self.category, self.pp, self.priority,
+                          self.is_Z, self.crit_ratio, self.move_type, self.scale_with, copy.deepcopy(
+                self.on_user_stats), copy.deepcopy(self.on_target_stats), self.defends_on, self.chance,
+                          self.volatile_status, self.non_volatile_status)
