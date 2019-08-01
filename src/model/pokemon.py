@@ -24,7 +24,7 @@ class Pokemon:
     """
 
     def __init__(self, name: str, types: list, gender: str, stats, moves: Dict, abilities: list, weight: float,
-                 non_volatile_status, volatile_status: list, item: Item, level: int):
+                 non_volatile_status, volatile_status: list, item: Item, level: int, possible_moves=[]):
         self.name = name
         self.types = types
         self.gender = gender
@@ -41,6 +41,7 @@ class Pokemon:
         self.bad_poison_turn = 0
         self.blocked = False
         self.can_mega = False
+        self.possible_moves = possible_moves
 
     def get_usable_moves(self):
         """Methods that returns all usable moves"""

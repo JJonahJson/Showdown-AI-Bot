@@ -81,6 +81,9 @@ class Move(ABC):
     def __lt__(self, other_move):
         return self.priority > other_move.priority
 
+    def __eq__(self, other_move):
+        return self.move_name.lower().replace(" ", "").replace("'", "") == other_move.move_name
+
     def add_power_multiply(self, value: float):
         self.power_multiply = self.power_multiply * value
 

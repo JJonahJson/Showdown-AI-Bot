@@ -204,10 +204,19 @@ class GameLoop:
         """
         if self.battle_field.player_id not in current[2]:
             name = current[2].split(":")[1].strip()
-            level = int(current[3].split(",")[1].replace("L", "").strip())
-            if len(current[3].split(",")) == 3:
+            splitted = current[3].split(",")
+            # Parsing of details
+            if len(splitted) == 3:
+                level = int(splitted[1].replace("L", "").strip())
                 gender = current[3].split(",")[2].strip()
+            elif len(splitted) == 2 and "L" in splitted[1]:
+                level = int(splitted[1].replace("L", "").strip())
+                gender = ""
+            elif len(splitted) == 2 and "M" in splitted[1] or "F" in splitted[1]:
+                level = 80
+                gender = splitted[1].strip()
             else:
+                level = 80
                 gender = ""
             if self.battle_field.active_pokemon_oppo:
                 for stats in self.battle_field.active_pokemon_oppo.stats.mul_stats:

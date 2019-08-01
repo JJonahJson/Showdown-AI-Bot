@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 import mysql.connector
-
+import re
 from model.move import SingleMove
 from model.move_type import MoveCategory
 from model.pokemon import Pokemon
@@ -88,10 +88,11 @@ class DatabaseDataSource(AbstractDataSource):
         :return: The move object
         """
         cursor = self.db_connection.cursor(prepared=True)
+        has_numbers = re.search(r'\d+$', name)
         if "return102" in name:
             real_name = name[:len(name) - 3]
             real_power = int(name[-3:])
-        elif "hiddenpower" in name and len(name) > 11:
+        elif "hiddenpower" in name and len(name) > 11 and has_numbers:
             real_name = name[:len(name) - 2]
         else:
             real_name = name
@@ -178,3 +179,18 @@ class DatabaseDataSource(AbstractDataSource):
         cursor.execute(parametric_query, (name,))
         result = cursor.fetchall()
         return PokemonType[result[0][0]]
+
+    def get_possible_moves_by_name(self, pkmn_name, battle_type="Single"):
+        """Method that takes a pokemon name and returns the possible moveset of that pokemon
+        :param pkmn_name:
+        :param battle_type:
+        :return:
+        """
+        moves_set = []
+        cursor = self.db_connection.cursor(prepared=True)
+        parametric_query = "SELECT move FROM Randomsets WHERE pokemon = %s and battle_type = %s"
+        cursor.execute(parametric_query, (pkmn_name, battle_type))
+        results = cursor.fetchall()
+        for result in results:
+            moves_set.append(self.get_move_by_name(result[0]))
+        return moves_set
