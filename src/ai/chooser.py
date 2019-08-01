@@ -7,6 +7,7 @@ from model.move_type import MoveCategory
 from model.stats_type import StatsType
 from model.status import immune
 from model.pokemon_type import PokemonType
+from ai.iterative_search import IterativeDeepeningMinMax
 
 logger = logging.getLogger("Chooser")
 
@@ -30,7 +31,7 @@ class Chooser:
         self.handler_switch = {
             Difficulty.Easy: Chooser.__handle_easy_switch__,
             Difficulty.Normal: Chooser.__handle_normal_switch__,
-            Difficulty.Hard: Chooser.__handle_hard_switch__
+            Difficulty.Hard: Chooser.__handle_normal_switch__
         }
 
     def choose_move(self, field, is_trapped=False):
@@ -285,7 +286,8 @@ class Chooser:
 
     @staticmethod
     def __handle_hard_move__(field, is_trapped=False):
-        pass
+        result = IterativeDeepeningMinMax.make_decision(field, Chooser.valuation_action)
+        return result[1], result[2]
 
     @staticmethod
     def __handle_hard_switch__(field):
@@ -306,48 +308,48 @@ class Chooser:
 
         for pkmn in bench_bot:
             # Number of bot pkmns fainted
-            if bench_bot[pkmn].status == StatusType.Fnt:
-                valuation -= 1
+            if bench_bot[pkmn].non_volatile_status == StatusType.Fnt:
+                valuation -= 50
             # Number of bot pkmns with status changed
-            elif bench_bot[pkmn].status != StatusType.Normal:
-                valuation -= 1
-            hp_left = (bench_bot[pkmn].stats.real_stats[StatsType.HP] / bench_bot[pkmn].stats.get_actual_hp()) * 100
+            elif bench_bot[pkmn].non_volatile_status != StatusType.Normal:
+                valuation -= 5
+            hp_left = (bench_bot[pkmn].stats.get_actual_hp() / (bench_bot[pkmn].stats.real_stats[StatsType.HP])) * 100
 
             if hp_left < 75:
-                valuation -= 1
+                valuation -= 2
 
             if hp_left < 50:
-                valuation -= 1
+                valuation -= 4
 
             if hp_left < 25:
-                valuation -= 1
+                valuation -= 8
 
         # Points of mul_stats changed for active bot
         for stat in active_bot.stats.mul_stats:
-            valuation += active_bot.stats.mul_stats[stat]
+            valuation += active_bot.stats.mul_stats[stat]*2
 
         # Points of mul_stats changed for active oppo
         for stat in active_oppo.stats.mul_stats:
-            valuation -= active_oppo.stats.mul_stats[stat]
+            valuation -= active_oppo.stats.mul_stats[stat]*2
 
         # Number of opponent pkmns fainted
         for pkmn in bench_oppo:
             # Number of opponent pkmns fainted
-            if bench_oppo[pkmn].status == StatusType.Fnt:
-                valuation += 1
+            if bench_oppo[pkmn].non_volatile_status == StatusType.Fnt:
+                valuation += 20
             # Number of opponent pkmns with status changed
-            elif bench_oppo[pkmn].status != StatusType.Normal:
-                valuation -= 1
-            hp_left = (bench_oppo[pkmn].stats.real_stats[StatsType.HP] / bench_oppo[pkmn].stats.get_actual_hp()) * 100
+            elif bench_oppo[pkmn].non_volatile_status != StatusType.Normal:
+                valuation -= 20
+            hp_left = (bench_oppo[pkmn].stats.get_actual_hp() / bench_oppo[pkmn].stats.real_stats[StatsType.HP]) * 100
 
             if hp_left < 75:
-                valuation -= 1
+                valuation += 20
 
             if hp_left < 50:
-                valuation -= 1
+                valuation += 40
 
             if hp_left < 25:
-                valuation -= 1
+                valuation += 80
 
         # Points with  rain weather
         if weather in [Weather.Raindance, Weather.Primordialsea]:
@@ -405,51 +407,47 @@ class Chooser:
         for bot_pkmn_type in active_bot.types:
             for oppo_pkmn_type in active_oppo.types:
                 if DamageCalculator.weak_to(oppo_pkmn_type, bot_pkmn_type):
-                    valuation += 1
+                    valuation += 5
                 if DamageCalculator.resists_to(bot_pkmn_type, oppo_pkmn_type):
-                    valuation += 1
+                    valuation += 5
                 if DamageCalculator.immune_to(bot_pkmn_type, oppo_pkmn_type):
-                    valuation += 1
+                    valuation += 5
                 if DamageCalculator.weak_to(bot_pkmn_type, oppo_pkmn_type):
-                    valuation -= 1
+                    valuation -= 5
                 if DamageCalculator.resists_to(oppo_pkmn_type, bot_pkmn_type):
-                    valuation -= 1
+                    valuation -= 5
                 if DamageCalculator.immune_to(oppo_pkmn_type, bot_pkmn_type):
-                    valuation -= 1
+                    valuation -= 10
             for oppo_move in moves_oppo:
-                oppo_move_type = moves_oppo[oppo_move]
-                if DamageCalculator.weak_to(oppo_move_type, bot_pkmn_type):
-                    valuation += 1
+                oppo_move_type = moves_oppo[oppo_move].move_type
                 if DamageCalculator.resists_to(bot_pkmn_type, oppo_move_type):
-                    valuation += 1
+                    valuation += 10
                 if DamageCalculator.immune_to(bot_pkmn_type, oppo_move_type):
-                    valuation += 1
+                    valuation += 10
                 if DamageCalculator.weak_to(bot_pkmn_type, oppo_move_type):
-                    valuation -= 1
+                    valuation -= 5
                 if DamageCalculator.resists_to(oppo_move_type, bot_pkmn_type):
-                    valuation -= 1
+                    valuation -= 5
                 if DamageCalculator.immune_to(oppo_move_type, bot_pkmn_type):
-                    valuation -= 1
+                    valuation -= 5
             for oppo_move in possible_moves_oppo:
-                oppo_move_type = possible_moves_oppo[oppo_move]
-                if DamageCalculator.weak_to(oppo_move_type, bot_pkmn_type):
-                    valuation += 1
-                if DamageCalculator.resists_to((bot_pkmn_type, oppo_move_type)):
-                    valuation += 1
+                oppo_move_type = possible_moves_oppo[oppo_move].move_type
+                if DamageCalculator.resists_to(bot_pkmn_type, oppo_move_type):
+                    valuation += 10
                 if DamageCalculator.immune_to(bot_pkmn_type, oppo_move_type):
-                    valuation += 1
+                    valuation += 10
                 if DamageCalculator.weak_to(bot_pkmn_type, oppo_move_type):
-                    valuation -= 1
+                    valuation -= 5
                 if DamageCalculator.resists_to(oppo_move_type, bot_pkmn_type):
-                    valuation -= 1
+                    valuation -= 5
                 if DamageCalculator.immune_to(oppo_move_type, bot_pkmn_type):
-                    valuation -= 1
+                    valuation -= 5
 
         for oppo_pkmn_type in active_oppo.types:
             for bot_move in moves_bot:
                 bot_move_type = moves_bot[bot_move].move_type
                 if DamageCalculator.weak_to(oppo_pkmn_type, bot_move_type):
-                    valuation += 1
+                    valuation += 10
                 if DamageCalculator.resists_to(bot_move_type, oppo_pkmn_type):
                     valuation += 1
                 if DamageCalculator.immune_to(bot_move_type, oppo_pkmn_type):
@@ -460,3 +458,4 @@ class Chooser:
                     valuation -= 1
                 if DamageCalculator.immune_to(oppo_pkmn_type, bot_move_type):
                     valuation -= 1
+        return valuation

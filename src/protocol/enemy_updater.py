@@ -48,8 +48,8 @@ def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())
         if move:
             battle_field.active_pokemon_oppo.moves[1] = move
-            battle_field.active_pokemon_oppo.possible_moves = list(filter(lambda x: move.move_name != x[1].move_name,
-                                battle_field.active_pokemon_oppo.possible_moves))
+            battle_field.active_pokemon_oppo.possible_moves = dict(filter(lambda x: move.move_name != x[1].move_name,
+                                battle_field.active_pokemon_oppo.possible_moves.items()))
 
     elif move_name not in list(map(lambda x: x[1].move_name, battle_field.active_pokemon_oppo.moves.items())):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())

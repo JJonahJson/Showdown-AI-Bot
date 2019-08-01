@@ -193,6 +193,6 @@ class DatabaseDataSource(AbstractDataSource):
         cursor.execute(parametric_query, (pkmn_name, battle_type))
         results = cursor.fetchall()
         for result in results:
-            moves_set[index](self.get_move_by_name(result[0]))
+            moves_set[index] = self.get_move_by_name(result[0])
             index += 1
         return moves_set

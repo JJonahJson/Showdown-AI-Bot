@@ -2,7 +2,7 @@ import asyncio
 import argparse
 import getpass
 from websocket._core import create_connection
-from protocol import game_control
+from protocol.game_control import GameLoop
 import model.setup_logger
 import logging
 
@@ -29,7 +29,7 @@ async def main(password):
     args = parser.parse_args()
     websocket = create_connection('ws://sim.smogon.com:8000/showdown/websocket')
 
-    gl = game_control.GameLoop(websocket, args.username, password, args.sex, args.gen, args.difficulty, args.mode,
+    gl = GameLoop(websocket, args.username, password, args.sex, args.gen, args.difficulty, args.mode,
                                args.opponent_name)
 
     print("Starting bot of {} with opponent {}".format(args.username, args.opponent_name))

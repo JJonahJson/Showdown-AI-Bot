@@ -7,7 +7,8 @@ from model.move_type import MoveCategory
 from model.stats_type import StatsType
 from model.move import SingleMove
 from model.field import BattleFieldSingle
-from ai.IterativeDeepeningMinMax import IterativeDeepeningMinMax
+from ai.chooser import Chooser
+from ai.iterative_search import IterativeDeepeningMinMax
 
 
 def eval_fn(field):
@@ -54,7 +55,8 @@ class MinMaxTest(unittest.TestCase):
         self.search = IterativeDeepeningMinMax()
 
     def test_something(self):
-        move = self.search.make_decision(self.battleField, eval_fn)
+        move = self.search.make_decision(self.battleField, Chooser.valuation_action)
+        print(move)
 
 
 if __name__ == '__main__':

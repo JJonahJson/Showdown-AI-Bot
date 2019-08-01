@@ -116,7 +116,7 @@ class SingleMove(Move):
 
     def invoke_move(self, caster_pokemon, target_pokemon, weather, field):
         damage = DamageCalculator.calculate(weather, field, caster_pokemon, self, target_pokemon)
-        target_pokemon.stats.decrease_hp(damage)
+        target_pokemon.stats.decrease_hp(target_pokemon.stats.get_actual_hp()-damage)
         self.pp -= 1
 
         if random.randint(0, 100) <= self.chance:

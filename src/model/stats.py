@@ -131,10 +131,11 @@ class Stats:
         """Decreases the volatile multiplier of the specified stat by the given value"""
         self.volatile_mul[stats_type] /= value
 
-    def deepcoopy(self):
+    def deepcopy(self):
         new_stats = Stats(0, 0, 0, 0, 0, 0)
         new_stats.base_stats = copy.deepcopy(self.base_stats)
         new_stats.real_stats = copy.deepcopy(self.real_stats)
         new_stats.mul_stats = copy.deepcopy(self.mul_stats)
         new_stats.volatile_mul = copy.deepcopy(self.volatile_mul)
         new_stats.damage = self.damage
+        return new_stats
