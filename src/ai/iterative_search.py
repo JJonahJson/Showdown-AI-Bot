@@ -19,11 +19,17 @@ class IterativeDeepeningMinMax:
                 for oppo_moves in field.active_pokemon_oppo.moves:
                     new_state = IterativeDeepeningMinMax.create_state(field, bot_move, True, oppo_moves, True)
                     # BOTH MOVES
-                    value = (max(IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit), value[0]), bot_move, True)
+                    to_compare = IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit)
+
+                    if to_compare > value[0]:
+                        value = (to_compare, bot_move, True)
+
                 # For each not known move of the opponent
                 for possible_oppo_moves in field.active_pokemon_oppo.possible_moves:
                     new_state = IterativeDeepeningMinMax.create_state(field, bot_move, True, possible_oppo_moves, True)
-                    value = (max(IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit), value[0]), bot_move, True)
+                    to_compare = IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit)
+                    if to_compare > value[0]:
+                        value = (to_compare, bot_move, True)
 
             # All possibles switch WE SWITCH HE ATTACC
             for index_pkmn in dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
@@ -32,13 +38,19 @@ class IterativeDeepeningMinMax:
                 # For each kno
                 for oppo_moves in field.active_pokemon_oppo.moves:
                     new_state = IterativeDeepeningMinMax.create_state(field, index_pkmn, False, oppo_moves, True)
-                    value = (max(IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit), value[0]), index_pkmn, False)
+                    to_compare = IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit)
+
+                    if to_compare > value[0]:
+                        value = (to_compare, index_pkmn, False)
+
                 # For each not known move of the opponent
                 for possible_oppo_moves in field.active_pokemon_oppo.possible_moves:
                     new_state = IterativeDeepeningMinMax.create_state(field, index_pkmn, False, possible_oppo_moves, True)
-                    value = (max(IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit), value[0]), index_pkmn, False)
-        else:
+                    to_compare = IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit)
 
+                    if to_compare > value[0]:
+                        value = (to_compare, index_pkmn, False)
+        else:
             # HE SWITCH AND WE ATTAC
             for index_pkmn in dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
                                                     field.active_pokemon_bot.name != x[1].name,
@@ -46,15 +58,22 @@ class IterativeDeepeningMinMax:
 
                 for bot_move in field.active_pokemon_bot.moves:
                     new_state = IterativeDeepeningMinMax.create_state(field, bot_move, True, index_pkmn, False)
-                    value = (max(IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit), value[0]), bot_move, True)
+
+                    to_compare = IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit)
+
+                    if to_compare > value[0]:
+                        value = (to_compare, bot_move, True)
 
                 # BOTH SWITCH
                 for index_bot_pkmn in dict(filter(lambda x: x[1].non_volatile_status is not StatusType.Fnt and
                                                             field.active_pokemon_bot.name != x[1].name,
                                                   field.all_pkmns_bot.items())):
                     new_state = IterativeDeepeningMinMax.create_state(field, index_bot_pkmn, False, index_pkmn, False)
-                    value = (max(IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit), value[0]),
-                             index_bot_pkmn, False)
+
+                    to_compare = IterativeDeepeningMinMax.max_value(new_state, eval_fn, curr_depth_limit)
+
+                    if to_compare > value[0]:
+                        value = (to_compare, index_bot_pkmn, False)
         return value
 
     @staticmethod
@@ -143,3 +162,5 @@ class IterativeDeepeningMinMax:
                 else:
                     new_field.do_move(1, move1)
         return new_field
+
+
