@@ -4,7 +4,7 @@ The bot can play on the pokémon showdown platform in the following formats of b
 <p>Gen 1, 2, 3, 4, 5, 6, 7 random battle
 <p>It can play also in 3 different modes: Easy, Normal, Hard
 
-##How to install
+## How to install
 Install the repository:
 ```
 git clone https://github.com/JJonahJson/Showdown-AI-Bot.git
@@ -19,7 +19,7 @@ Install docker to use the database needed by the bot:
 sudo apt update
 sudo apt install docker
 ```
-##Launch the bot
+## Launch the bot
 Start docker:
 ```
 sudo docker pull errevas/showdown_db:latest
