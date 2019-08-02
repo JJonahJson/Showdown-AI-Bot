@@ -1,8 +1,9 @@
 # Showdown AI Bot
-#### A bot player for Pokémon Showdown
-The bot can play on the pokémon showdown platform in the following formats of battle:
+### A bot player for Pokémon Showdown
+The bot can play on the pokémon showdown platform in the following battle formats:
 <p>Gen 1, 2, 3, 4, 5, 6, 7 random battle
 <p>It can play also in 3 different modes: Easy, Normal, Hard
+<p>You could use it to improve your skills in pokemon battles, the Normal mode is much better than the Easy mode, the Hard mode is different from the Normal one only as far as implementation is concerned, the Hard mode uses a depth limited search algorithm.
 
 ## How to install
 Install the repository:
