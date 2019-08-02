@@ -37,7 +37,7 @@ class BattleField(ABC):
         pass
 
     @abstractmethod
-    def do_move(self, player: int, pokemon_caster: int, move_index: int, pokemon_target: int):
+    def do_move(self, player: int, move_index: int):
         pass
 
     @abstractmethod
@@ -73,16 +73,31 @@ class BattleFieldSingle(BattleField):
         self.active_selector_side = {1: self.active_pokemon_bot, 2: self.active_pokemon_oppo}
         self.bench_selector_side = {1: self.all_pkmns_bot, 2: self.all_pkmns_oppo}
 
+
+    def deepcopy(self):
+        bot_bench = {}
+        oppo_bench = {}
+        for element in self.all_pkmns_bot:
+            bot_bench[element] = self.all_pkmns_bot[element].deepcopy()
+        for element in self.all_pkmns_oppo:
+            oppo_bench[element] = self.all_pkmns_oppo[element].deepcopy()
+        return BattleFieldSingle(bot_bench[1], oppo_bench[1], bot_bench, oppo_bench)
+
     def update_turn(self, value=2):
         self.turn_number += value
         print(self.turn_number)
 
     def get_pokemon_index_by_name(self, side, pkmn_name):
-        for item in self.bench_selector_side[side]:
-            if pkmn_name in self.bench_selector_side[side][item].name:
-                return item
+        if side == 1:
+            for index in self.all_pkmns_bot:
+                if self.all_pkmns_bot[index].name == pkmn_name:
+                    return index
+        else:
+            for index in self.all_pkmns_oppo:
+                if self.all_pkmns_bot[index].name == pkmn_name:
+                    return index
 
-    def do_move(self, player: int, pokemon_caster: int, move_index: int, pokemon_target):
+    def do_move(self, player: int, move_index: int):
         """Apply move to the target
         :param player: player id
         :param pokemon_caster:
@@ -95,6 +110,7 @@ class BattleFieldSingle(BattleField):
             self.active_pokemon_bot.use_move(move_index, self.active_pokemon_oppo,
                                              self.weather, self.field)
         else:
+
             self.active_pokemon_oppo.use_move(move_index, self.active_pokemon_bot,
                                               self.weather, self.field)
 
@@ -104,7 +120,7 @@ class BattleFieldSingle(BattleField):
         :param pokemon_in:
         :return:
         """
-        active_index = self.get_pokemon_index_by_name(player, self.active_selector_side[player].name)
+        active_index = 1
         if player == 1:
             to_replace = self.active_pokemon_bot
             self.active_pokemon_bot = self.all_pkmns_bot[pokemon_in]
@@ -152,7 +168,7 @@ class BattleFieldSingle(BattleField):
         :param terrain: The terrain to be set
         :return:
         """
-        self.field = Field[terrain.capitalize()]
+        self.field = terrain
 
     def update_damage(self, side, remaining_hp):
         """Updates the damage

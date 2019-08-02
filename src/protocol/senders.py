@@ -10,7 +10,6 @@ async def sender(websocket, room, message1, message2=None):
         string = room + '|' + message1 + '|' + message2
     else:
         string = room + '|' + message1
-    print("Sent: {}".format(string))
     websocket.send(string)
 
 
@@ -43,7 +42,7 @@ async def sendmessage(websocket, battletag, message):
     await sender(websocket, battletag, message)
 
 
-async def sendmove(websocket, battletag, move, turn):
+async def sendmove(websocket, battletag, move, turn, can_mega, is_Z):
     """
     Format move choice websocket, call sender function.
     :param websocket: Websocket stream.
@@ -51,7 +50,14 @@ async def sendmove(websocket, battletag, move, turn):
     :param move: Move id (1, 2, 3, 4).
     :param turn: Battle turn (1, 2, ...). Different from the one sent by server.
     """
-    await sender(websocket, battletag, "/choose move " + str(move), str(turn))
+    if can_mega:
+        await sender(websocket, battletag, "/choose move " + str(move) + " mega", str(turn))
+
+    elif is_Z:
+        await sender(websocket, battletag, "/choose move " + str(move) + " zmove", str(turn))
+
+    else:
+        await sender(websocket, battletag, "/choose move " + str(move), str(turn))
     #websocket.send("/choose move {} {}".format(str(move), str(turn)))
 
 async def sendswitch(websocket, battletag, pokemon, turn):

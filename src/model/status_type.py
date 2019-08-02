@@ -62,3 +62,6 @@ class StatusType(Enum):
     Torment = auto(),
     Yawn = auto()
 
+    def __repr__(self):
+        return self.name
+

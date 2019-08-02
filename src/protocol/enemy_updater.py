@@ -14,6 +14,8 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
     if not battle_field.all_pkmns_oppo:
         # Add the pokemon
         pokemon = db_con.get_pokemon_by_name(pokemon_name, level)
+        possible_moves = db_con.get_possible_moves_by_name(pokemon_name.lower().replace(" ", "").replace("'", ""))
+        pokemon.possible_moves = possible_moves
         pokemon.gender = gender
         battle_field.active_pokemon_oppo = pokemon
         battle_field.active_selector_side[2] = pokemon
@@ -23,6 +25,8 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
         if pokemon_name not in list(map(lambda x: x[1].name, battle_field.all_pkmns_oppo.items())):
             # add the pokemon
             pokemon = db_con.get_pokemon_by_name(pokemon_name, level)
+            possible_moves = db_con.get_possible_moves_by_name(pokemon_name.lower().replace(" ", "").replace("'", ""))
+            pokemon.possible_moves = possible_moves
             current_index = max(battle_field.all_pkmns_oppo.keys())
             battle_field.all_pkmns_oppo[current_index + 1] = pokemon
             battle_field.switch_pokemon(2, current_index + 1)
@@ -44,11 +48,17 @@ def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())
         if move:
             battle_field.active_pokemon_oppo.moves[1] = move
+            battle_field.active_pokemon_oppo.possible_moves = dict(filter(lambda x: move.move_name != x[1].move_name,
+                                battle_field.active_pokemon_oppo.possible_moves.items()))
+
     elif move_name not in list(map(lambda x: x[1].move_name, battle_field.active_pokemon_oppo.moves.items())):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())
         if move:
             current_index = max(battle_field.active_pokemon_oppo.moves.keys())
             battle_field.active_pokemon_oppo.moves[current_index + 1] = move
+
+            if len(battle_field.active_pokemon_oppo.possible_moves) == 4:
+                battle_field.active_pokemon_oppo.possible_moves.clear()
 
 
 22

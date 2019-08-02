@@ -24,7 +24,7 @@ class Pokemon:
     """
 
     def __init__(self, name: str, types: list, gender: str, stats, moves: Dict, abilities: list, weight: float,
-                 non_volatile_status, volatile_status: list, item: Item, level: int):
+                 non_volatile_status, volatile_status: list, item: Item, level: int, possible_moves={}):
         self.name = name
         self.types = types
         self.gender = gender
@@ -40,6 +40,8 @@ class Pokemon:
         self.damage_input_multiplier = 1
         self.bad_poison_turn = 0
         self.blocked = False
+        self.can_mega = False
+        self.possible_moves = possible_moves
 
     def get_usable_moves(self):
         """Methods that returns all usable moves"""
@@ -47,9 +49,17 @@ class Pokemon:
 
     def use_move(self, move_index: int, target, weather, field):
         """Methods that apply a move"""
-        self.moves[move_index].invoke_move(self, target, weather, field)
-        if target.stats.get_actual_hp() <= 0:
-            Status.apply_non_volatile_status(target, StatusType.Fnt)
+        if move_index < 5:
+            self.moves[move_index].invoke_move(self, target, weather, field)
+            if target.stats.get_actual_hp() <= 0:
+                Status.apply_non_volatile_status(StatusType.Fnt, target)
+        else:
+            self.possible_moves[move_index].invoke_move(self, target, weather, field)
+            if target.stats.get_actual_hp() <= 0:
+                Status.apply_non_volatile_status(StatusType.Fnt, target)
+
+    def __repr__(self):
+        return self.name
 
     def to_string(self):
         """Method used to pretty print a pokemon
@@ -69,7 +79,14 @@ class Pokemon:
                                                                                               StatsType.Spd),
                                                                                           self.stats.get_actual(
                                                                                               StatsType.Spe),
+
                                                                                           self.moves)
+    def deepcopy(self):
+        new_moves = {}
+        for move in self.moves:
+            new_moves[move] = self.moves[move].deepcopy()
+        return Pokemon(self.name, self.types, self.gender, self.stats.deepcopy(), new_moves, self.abilities, self.weight,
+                       self.non_volatile_status, self.volatile_status, self.item, self.level, self.possible_moves)
 
     def __eq__(self, other_pokemon):
         return self.name == other_pokemon.name

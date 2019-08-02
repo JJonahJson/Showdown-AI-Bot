@@ -10,19 +10,19 @@ class Weather(Enum):
     """Enum for the possible weathers in game"""
     Raindance = auto()
     Sunnyday = auto()
-    Wind = auto()
+    Deltastream = auto()
     Hail = auto()
     Sandstorm = auto()
     Normal = auto()
-
-    # TODO: Primordial and desolate multipliers needs to be reworked
+    Primordialsea = auto()
+    Desolateland = auto()
 
 
 class Field(Enum):
     """Enum for the possible fields in game"""
     Electric = auto()
     Psychic = auto()
-    Grass = auto()
+    Grassy = auto()
     Misty = auto()
     Normal = auto()
 

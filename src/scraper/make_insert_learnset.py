@@ -9,7 +9,7 @@ tupler = "({}),\n".format
 result = ""
 result += top_string
 
-json_file = open("learnset.json")
+json_file = open("learnsets.json")
 learnset_dict = json.load(json_file)
 json_file.close()
 

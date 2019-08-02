@@ -20,7 +20,7 @@ class UpdateEnemyTest(unittest.TestCase):
         update_enemy_pokemon(self.bf, self.ds, "Garchomp", 89, "M")
         self.assertEqual(len(self.bf.bench_selector_side[2]), 2)
         self.assertEqual(self.bf.active_pokemon_oppo.name, "Garchomp", "M")
-        update_enemy_pokemon(self.bf, self.ds, "Sunflora", 89)
+        update_enemy_pokemon(self.bf, self.ds, "Sunflora", 89, "M")
         self.assertEqual(len(self.bf.bench_selector_side[2]), 2)
         self.assertEqual(self.bf.active_pokemon_oppo.name, "Sunflora", "M")
 

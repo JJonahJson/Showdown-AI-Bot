@@ -1,9 +1,11 @@
 -Controllare i punti di vittoria (che vengano aggiunti)
--Modificare Dockerfile perché non cresca la memoria di un quintale
--Fare il Readme del progetto
 -Fare il container dell'intero progetto
--Aggiungere commenti  nel codice, soprattutto in file complessi di protocol o costruttori pesanti in model
--Aggiungere al branch master una prima versione stabile
--Fare i log
--Vedere se aggiungere come category weather
 -reversare damage tracker per correggere la statistica penalizzata
+
+-Aggiungere heal?
+-Aggiungere stealthrock e quelle di quel genere
+
+-se si può usare un pochino ability diamo punteggio allo switch di chi ha intimidate ecc, per far vedere che lo usiamo
+-se si ha un item choice allora usare solo mosse damage
+-utilizzare zpower?
+

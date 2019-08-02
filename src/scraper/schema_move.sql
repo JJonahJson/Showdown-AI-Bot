@@ -1,0 +1,28 @@
+USE showdown_db;
+
+CREATE TABLE Moves (
+    num INT(5) NOT NULL,
+    name VARCHAR(30) NOT NULL,
+	id_name VARCHAR(30) PRIMARY KEY,
+    accuracy INT(3) NOT NULL,
+    base_power INT(4) NOT NULL,
+    category VARCHAR(10) NOT NULL,
+    pp INT(3) NOT NULL,
+    priority INT(2) NOT NULL,
+    chance INT(3),
+    volatile_status VARCHAR(20),
+    non_volatile_status VARCHAR(20),
+    boost_atk INT(2) NOT NULL,
+    boost_def INT(2) NOT NULL,
+    boost_spa INT(2) NOT NULL,
+    boost_spd INT(2) NOT NULL,
+    boost_spe INT(2) NOT NULL,
+    boost_acc INT(2) NOT NULL,
+    boost_eva INT(2) NOT NULL,
+    target VARCHAR(20) NOT NULL,
+    move_type VARCHAR(20) NOT NULL,
+    weather VARCHAR(20),
+    side_condition VARCHAR(20),
+    flag_powder BIT,
+    flag_heal BIT,
+    z_move_power INT(3));

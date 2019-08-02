@@ -9,5 +9,5 @@ class StatsType(Enum):
     Spa = auto()
     Spd = auto()
     Spe = auto()
-    Acc = auto()
-    Eva = auto()
+    Accuracy = auto()
+    Evasion = auto()

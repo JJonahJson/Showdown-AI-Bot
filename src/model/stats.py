@@ -1,4 +1,5 @@
 from model.stats_type import StatsType
+import copy
 
 
 class Stats:
@@ -48,8 +49,8 @@ class Stats:
             StatsType.Spa: special_attack,
             StatsType.Spd: special_defense,
             StatsType.Spe: speed,
-            StatsType.Acc: 1,
-            StatsType.Eva: 1
+            StatsType.Accuracy: 1,
+            StatsType.Evasion: 1
         }
 
         if is_base:
@@ -60,8 +61,8 @@ class Stats:
                 StatsType.Spa: round(((31 + (2 * special_attack) + 0) * level / 100) + 5) + 18,
                 StatsType.Spd: round(((31 + (2 * special_defense) + 0) * level / 100) + 5) + 18,
                 StatsType.Spe: round((((31 + (2 * speed) + ev_speed / 4) * level / 100) + 5)) + 18,
-                StatsType.Acc: 1,
-                StatsType.Eva: 1
+                StatsType.Accuracy: 1,
+                StatsType.Evasion: 1
             }
         else:
             self.real_stats = self.base_stats
@@ -73,8 +74,8 @@ class Stats:
             StatsType.Spa: 0,
             StatsType.Spd: 0,
             StatsType.Spe: 0,
-            StatsType.Acc: 0,
-            StatsType.Eva: 0
+            StatsType.Accuracy: 0,
+            StatsType.Evasion: 0
         }
         # Initial value of each statistics' volatile multiplier
         self.volatile_mul = {
@@ -83,8 +84,8 @@ class Stats:
             StatsType.Spa: 1,
             StatsType.Spd: 1,
             StatsType.Spe: 1,
-            StatsType.Acc: 1,
-            StatsType.Eva: 1
+            StatsType.Accuracy: 1,
+            StatsType.Evasion: 1
         }
         # Initial value of the damage
         self.damage = 0
@@ -111,7 +112,7 @@ class Stats:
 
     def get_actual(self, stat_type: StatsType) -> int:
         """Returns the requested statistic eventually modified"""
-        if stat_type is StatsType.Acc or stat_type is StatsType.Eva:
+        if stat_type is StatsType.Accuracy or stat_type is StatsType.Evasion:
             return round(self.real_stats[stat_type] * self.multipliersAE[self.mul_stats[stat_type]] * self.volatile_mul[
                 stat_type])
         else:
@@ -129,3 +130,12 @@ class Stats:
     def decrease_volatile_mul(self, stats_type: StatsType, value: float):
         """Decreases the volatile multiplier of the specified stat by the given value"""
         self.volatile_mul[stats_type] /= value
+
+    def deepcopy(self):
+        new_stats = Stats(0, 0, 0, 0, 0, 0)
+        new_stats.base_stats = copy.deepcopy(self.base_stats)
+        new_stats.real_stats = copy.deepcopy(self.real_stats)
+        new_stats.mul_stats = copy.deepcopy(self.mul_stats)
+        new_stats.volatile_mul = copy.deepcopy(self.volatile_mul)
+        new_stats.damage = self.damage
+        return new_stats

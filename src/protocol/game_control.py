@@ -6,22 +6,31 @@ import protocol.login as login
 import protocol.request_parser as rp
 import protocol.senders as sender
 from ai.chooser import Chooser
+from ai.chooser_type import Difficulty
 from ai.damage_tracker import DamageTracker
 from model.field import BattleFieldSingle
 from model.field_type import Field
+from model.stats_type import StatsType
 from model.status import Status
 from model.status_type import StatusType
 from protocol.data_source import DatabaseDataSource
 from protocol.enemy_updater import update_enemy_move, update_enemy_pokemon
+import model.setup_logger
+import logging
+
+logger = logging.getLogger("GameLoop")
 
 
 class GameLoop:
     """Main control class"""
 
-    def __init__(self, ws, user_name, password, opponent_name):
+    def __init__(self, ws, user_name, password, sex, gen, difficulty, mode, opponent_name):
         self.ws = ws
         self.user_name = user_name
         self.password = password
+        self.sex = sex
+        self.gen = gen
+        self.mode = mode
         self.opponent_name = opponent_name
         self.battle_field = BattleFieldSingle(None, None, {}, {})
         with open("standard_answers", "r") as file:
@@ -30,7 +39,28 @@ class GameLoop:
         self.damage_tracker = DamageTracker()
         self.last_move = ""
         self.counter = 0
-        self.chooser = Chooser()
+        self.chooser = Chooser(difficulty)
+
+        self.bot_volatile = []
+        self.oppo_volatile = []
+        self.mul_stats_bot = {
+            StatsType.Atk: 0,
+            StatsType.Def: 0,
+            StatsType.Spa: 0,
+            StatsType.Spd: 0,
+            StatsType.Spe: 0,
+            StatsType.Accuracy: 0,
+            StatsType.Evasion: 0
+        }
+        self.mul_stats_oppo = {
+            StatsType.Atk: 0,
+            StatsType.Def: 0,
+            StatsType.Spa: 0,
+            StatsType.Spd: 0,
+            StatsType.Spe: 0,
+            StatsType.Accuracy: 0,
+            StatsType.Evasion: 0
+        }
 
         # Dict of handlers for the challenge section
         self.handler_challenge = {
@@ -60,7 +90,9 @@ class GameLoop:
             "-unboost": self._handle_unboost,
             "-weather": self._handle_weather,
             "-fieldstart": self._handle_field_start,
-            "-fieldend": self._handle_field_end
+            "-fieldend": self._handle_field_end,
+            "-start": self._handle_start_vol,
+            "-end": self._handle_end_vol
 
         }
 
@@ -94,7 +126,8 @@ class GameLoop:
         :param string_tab: message
         :return:
         """
-        await login.log_in(self.ws, self.user_name, self.password, string_tab[2], string_tab[3])
+        logging.info("Login Successfull")
+        await login.log_in(self.ws, self.user_name, self.password, self.sex, string_tab[2], string_tab[3])
 
     async def _handle_update_user(self, string_tab):
         """When we receive an updateuser means that we're ready to fight an opponent, so send the challenge
@@ -102,7 +135,10 @@ class GameLoop:
         :return:
         """
         if self.user_name in string_tab[2]:
-            await sender.challenge(self.ws, self.opponent_name, "gen7randombattle")
+            if self.mode == "challenging":
+                await sender.challenge(self.ws, self.opponent_name, "gen"+str(self.gen)+"randombattle")
+            elif self.mode == "searching":
+                await sender.searching(self.ws, "gen"+str(self.gen)+"randombattle")
 
     async def _handle_update_search(self, string_tab):
         """Method that handles the creation of battle room and saves the room id and prints the link to watch the battle
@@ -122,10 +158,13 @@ class GameLoop:
         :param current:
         :return:
         """
+        logging.info("NEW BATTLE STARTING")
         num_answer = random.randint(0, len(self.standard_answers) - 1)
         await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
         time.sleep(3)
-        await sender.sender(self.ws, self.battle_field.room_name, "/timer on")
+        await sender.sender(self.ws, self.battle_field.room_name, "Send go {difficulty} if you want to change "
+                                                                  "difficulty. Available difficulties are: easy, "
+                                                                  "normal, hard!\n/timer on")
 
     async def _handle_player(self, current):
         """Method that handles the player message that saves our id and the opponent id
@@ -165,12 +204,33 @@ class GameLoop:
         """
         if self.battle_field.player_id not in current[2]:
             name = current[2].split(":")[1].strip()
-            level = int(current[3].split(",")[1].replace("L", "").strip())
-            if len(current[3].split(",")) == 3:
+            splitted = current[3].split(",")
+            # Parsing of details
+            if len(splitted) == 3:
+                level = int(splitted[1].replace("L", "").strip())
                 gender = current[3].split(",")[2].strip()
-            else:
+            elif len(splitted) == 2 and "L" in splitted[1]:
+                level = int(splitted[1].replace("L", "").strip())
                 gender = ""
+            elif len(splitted) == 2 and "M" in splitted[1] or "F" in splitted[1]:
+                level = 80
+                gender = splitted[1].strip()
+            else:
+                level = 80
+                gender = ""
+            if self.battle_field.active_pokemon_oppo:
+                for stats in self.battle_field.active_pokemon_oppo.stats.mul_stats:
+                    self.battle_field.active_pokemon_oppo.stats.mul_stats[stats] = 0
+
             update_enemy_pokemon(self.battle_field, self.db, name, level, gender)
+            for key in self.mul_stats_oppo:
+                self.mul_stats_oppo[key] = 0
+            self.oppo_volatile.clear()
+            self.battle_field.active_pokemon_oppo.volatile_status.clear()
+        else:
+            for key in self.mul_stats_bot:
+                self.mul_stats_bot[key] = 0
+            self.bot_volatile.clear()
 
     async def _handle_move(self, current):
         """Method that handles the message move and updates the current moveset of the enemy
@@ -180,6 +240,8 @@ class GameLoop:
         if self.battle_field.player_id not in current[2]:
             move_name = current[3].strip()
             self.last_move = move_name
+            logging.info("{} received {} from {}".format(self.battle_field.active_pokemon_bot, move_name,
+                                                         self.battle_field.active_pokemon_oppo))
             update_enemy_move(self.battle_field, self.db, move_name)
 
     async def _handle_request(self, current):
@@ -208,6 +270,10 @@ class GameLoop:
                 self.battle_field.all_pkmns_bot = bench
                 self.battle_field.bench_selector_side[1] = bench
                 self.battle_field.active_selector_side[1] = active
+                for element in self.bot_volatile:
+                    Status.add_volatile_status(element, self.battle_field.active_pokemon_bot)
+                for key in self.mul_stats_bot:
+                    self.battle_field.active_pokemon_bot.stats.mul_stats[key] = self.mul_stats_bot[key]
                 print(self.battle_field.active_pokemon_bot.to_string())
             except KeyError as e:
                 print(e)
@@ -220,6 +286,10 @@ class GameLoop:
             self.battle_field.turn_number = number
             self.battle_field.bench_selector_side[1] = bench
             self.battle_field.active_selector_side[1] = active
+            for element in self.bot_volatile:
+                Status.add_volatile_status(element, self.battle_field.active_pokemon_bot)
+            for key in self.mul_stats_bot:
+                self.battle_field.active_pokemon_bot.stats.mul_stats[key] = self.mul_stats_bot[key]
             print(self.battle_field.active_pokemon_bot.to_string())
 
     async def _handle_team_preview(self, current):
@@ -235,8 +305,13 @@ class GameLoop:
         :return:
         """
         # An action is a move or a switch
-        move = self.chooser.choose_move(self.battle_field)
-        await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+        move, is_move = self.chooser.choose_move(self.battle_field)
+        if is_move:
+            await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number,
+                                  self.battle_field.active_pokemon_bot.can_mega,
+                                  self.battle_field.active_pokemon_bot.moves[move].is_Z)
+        else:
+            await sender.sendswitch(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
     async def _handle_callback(self, current):
         """Method that handles the trapped state of the pokemon that cannot switch so he must do a move
@@ -244,7 +319,7 @@ class GameLoop:
         :return:
         """
         if current[2] == "trapped":
-            move = self.chooser.choose_move(self.battle_field)
+            move = self.chooser.choose_move(self.battle_field, True)
             await sender.sendmove(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
 
     async def _handle_win(self, current):
@@ -259,8 +334,21 @@ class GameLoop:
     async def _handle_chat(self, current):
         """Method that replies to the chat"""
         if self.user_name not in current[2]:
-            num_answer = random.randint(0, len(self.standard_answers) - 1)
-            await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
+            if "go" in current[3]:
+                try:
+                    new_difficulty = Difficulty[current[3].split(" ")[1].capitalize()]
+                    self.chooser.difficulty = new_difficulty
+                    logger.info("Difficulty is now set on {}".format(new_difficulty.name))
+                    await sender.sender(self.ws, self.battle_field.room_name, "Difficulty is now set on: {}".format(
+                        new_difficulty.name))
+
+                except:
+                    await sender.sender(self.ws, self.battle_field.room_name, "That difficulty is not supported "
+                                                                              "yet!\nTry easy, normal or hard")
+
+            else:
+                num_answer = random.randint(0, len(self.standard_answers) - 1)
+                await sender.sender(self.ws, self.battle_field.room_name, self.standard_answers[num_answer])
 
     async def _handle_faint(self, current):
         """Method that handles the fainting of a pokemon
@@ -268,9 +356,12 @@ class GameLoop:
         :return:
         """
         """faint"""
+
         if self.battle_field.player_id not in current[1]:
+            logger.info("{} fainted".format(self.battle_field.active_pokemon_bot))
             Status.apply_non_volatile_status(StatusType.Fnt, self.battle_field.active_pokemon_bot)
         else:
+            logger.info("{} fainted".format(self.battle_field.active_pokemon_oppo))
             Status.apply_non_volatile_status(StatusType.Fnt, self.battle_field.active_pokemon_oppo)
 
     async def _handle_heal(self, current):
@@ -310,10 +401,12 @@ class GameLoop:
         :return:
         """
         """-boost"""
-        if self.battle_field.player_id in current[1]:
+        if self.battle_field.player_id in current[2]:
             self.battle_field.update_buff(1, current[3], int(current[4]))
+            self.mul_stats_bot[StatsType[current[3].strip().capitalize()]] += int(current[4])
         else:
             self.battle_field.update_buff(2, current[3], int(current[4]))
+            self.mul_stats_oppo[StatsType[current[3].strip().capitalize()]] += int(current[4])
 
     async def _handle_unboost(self, current):
         """Method that handles the boost of the negative pokemons' stats
@@ -321,10 +414,12 @@ class GameLoop:
         :return:
         """
         """-unboost"""
-        if self.battle_field.player_id in current[1]:
+        if self.battle_field.player_id in current[2]:
             self.battle_field.update_buff(1, current[3], - int(current[4]))
+            self.mul_stats_bot[StatsType[current[3].strip().capitalize()]] -= int(current[4])
         else:
             self.battle_field.update_buff(2, current[3], - int(current[4]))
+            self.mul_stats_oppo[StatsType[current[3].strip().capitalize()]] -= int(current[4])
 
     async def _handle_weather(self, current):
         """Method that handles the weather message and updates the battlefield
@@ -333,8 +428,10 @@ class GameLoop:
         """
         """-weather"""
         if current[2] == 'none':
+            logger.info("Weather set to Normal")
             self.battle_field.update_weather("Normal")
         else:
+            logger.info("Weather set to {}".format(current[2]))
             self.battle_field.update_weather(current[2])
 
     async def _handle_field_start(self, current):
@@ -343,7 +440,9 @@ class GameLoop:
         :return:
         """
         """-fieldstart"""
-        self.battle_field.update_field(current[2])
+        terrain = current[2].split(":")[1].strip().split(" ")[0]
+        logger.info("Terrain set to {}".format(terrain))
+        self.battle_field.update_field(Field[terrain])
 
     async def _handle_field_end(self, current):
         """Method that resets the terrain
@@ -351,4 +450,37 @@ class GameLoop:
         :return:
         """
         """-fieldend"""
+        logger.info("Terrain set to Normal")
         self.battle_field.update_field(Field.Normal)
+
+    async def _handle_start_vol(self, current):
+        """|-start|p2a: Toxicroak|move: Taunt"""
+        if "move" in current[3]:
+            vol_status = current[3].split(":")[1].strip().replace(" ", "")
+        else:
+            vol_status = current[3].strip().capitalize().replace(" ", "")
+
+        if self.battle_field.player_id in current[2]:
+            Status.add_volatile_status(StatusType[vol_status],
+                                       self.battle_field.active_pokemon_bot)
+            self.bot_volatile.append(StatusType[vol_status])
+        else:
+            Status.add_volatile_status(StatusType[vol_status],
+                                       self.battle_field.active_pokemon_oppo)
+            self.oppo_volatile.append(StatusType[vol_status])
+
+    async def _handle_end_vol(self, current):
+        """|-end|p2a: Toxicroak|move: Taunt"""
+        if "move" in current[3]:
+            vol_status = current[3].split(":")[1].strip()
+        else:
+            vol_status = current[3].strip().capitalize()
+
+        if self.battle_field.player_id in current[2]:
+            Status.remove_volatile_status(StatusType[vol_status],
+                                          self.battle_field.active_pokemon_bot)
+            self.bot_volatile.remove(StatusType[vol_status])
+        else:
+            Status.remove_volatile_status(StatusType[vol_status],
+                                          self.battle_field.active_pokemon_oppo)
+            self.oppo_volatile.remove(StatusType[vol_status])
