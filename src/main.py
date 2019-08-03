@@ -32,7 +32,8 @@ async def main(password):
     gl = GameLoop(websocket, args.username, password, args.sex, args.gen, args.difficulty, args.mode,
                                args.opponent_name)
 
-    print("Starting bot of {} with opponent {}".format(args.username, args.opponent_name))
+    print("Starting bot with username {} vs {}".format(args.username, args.opponent_name))
+    print("-----------------------------------------------------------------------")
     while True:
         message = websocket.recv()
         logger.debug(message)

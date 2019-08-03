@@ -14,7 +14,9 @@ def update_enemy_pokemon(battle_field: BattleFieldSingle, db_con, pokemon_name: 
     if not battle_field.all_pkmns_oppo:
         # Add the pokemon
         pokemon = db_con.get_pokemon_by_name(pokemon_name, level)
-        possible_moves = db_con.get_possible_moves_by_name(pokemon_name.lower().replace(" ", "").replace("'", ""))
+        possible_moves = db_con.get_possible_moves_by_name(pokemon_name.lower().replace(" ", "")
+                                                                                .replace("'", "")
+                                                                                .replace("-", ""))
         pokemon.possible_moves = possible_moves
         pokemon.gender = gender
         battle_field.active_pokemon_oppo = pokemon
@@ -49,7 +51,7 @@ def update_enemy_move(battle_field: BattleFieldSingle, db_con, move_name):
         if move:
             battle_field.active_pokemon_oppo.moves[1] = move
             battle_field.active_pokemon_oppo.possible_moves = dict(filter(lambda x: move.move_name != x[1].move_name,
-                                battle_field.active_pokemon_oppo.possible_moves.items()))
+                                                                          battle_field.active_pokemon_oppo.possible_moves.items()))
 
     elif move_name not in list(map(lambda x: x[1].move_name, battle_field.active_pokemon_oppo.moves.items())):
         move = db_con.get_move_by_name(move_name.replace(" ", "").replace("-", "").replace(".", "").lower())

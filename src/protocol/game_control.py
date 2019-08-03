@@ -150,8 +150,8 @@ class GameLoop:
             for k in to_parse["games"]:
                 if "battle" in k:
                     self.battle_field.room_name = k
-        print("If you want to follow the match go to this link https://play.pokemonshowdown.com/{}".format(
-            self.battle_field.room_name))
+                    print("If you want to follow the match go to this link https://play.pokemonshowdown.com/{}".format(
+                        self.battle_field.room_name))
 
     async def _handle_init(self, current):
         """Method that handles the first message of the communication with the showdown server
@@ -165,6 +165,7 @@ class GameLoop:
         await sender.sender(self.ws, self.battle_field.room_name, "Send go {difficulty} if you want to change "
                                                                   "difficulty. Available difficulties are: easy, "
                                                                   "normal, hard!\n/timer on")
+        print("-----------------------------------------------------------------------")
 
     async def _handle_player(self, current):
         """Method that handles the player message that saves our id and the opponent id
@@ -312,6 +313,9 @@ class GameLoop:
                                   self.battle_field.active_pokemon_bot.moves[move].is_Z)
         else:
             await sender.sendswitch(self.ws, self.battle_field.room_name, move, self.battle_field.turn_number)
+
+        print(self.battle_field.active_pokemon_oppo.oppo_to_string())
+        print("-----------------------------------------------------------------------")
 
     async def _handle_callback(self, current):
         """Method that handles the trapped state of the pokemon that cannot switch so he must do a move

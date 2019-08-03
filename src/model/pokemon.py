@@ -2,8 +2,7 @@ from typing import Dict
 
 from model.item import Item
 from model.stats_type import StatsType
-from model.status import StatusType
-from model.status import Status
+from model.status import StatusType, Status
 
 
 class Pokemon:
@@ -65,27 +64,49 @@ class Pokemon:
         """Method used to pretty print a pokemon
         :return: string
         """
-        return "{}, L{}, {}\nHP:{} ATK:{} DEF:{} SPA:{} SPD:{} SPE:{}\nMOVES:\n{}".format(self.name,
-                                                                                          str(self.level),
-                                                                                          self.non_volatile_status,
-                                                                                          self.stats.get_actual_hp(),
-                                                                                          self.stats.get_actual(
-                                                                                              StatsType.Atk),
-                                                                                          self.stats.get_actual(
-                                                                                              StatsType.Def),
-                                                                                          self.stats.get_actual(
-                                                                                              StatsType.Spa),
-                                                                                          self.stats.get_actual(
-                                                                                              StatsType.Spd),
-                                                                                          self.stats.get_actual(
-                                                                                              StatsType.Spe),
+        return "BOT POKEMON:\n{}, L{}, {}\nHP:{} ATK:{} DEF:{} SPA:{} SPD:{} SPE:{}\nMOVES:{}".format(
+            self.name,
+            str(self.level),
+            self.non_volatile_status,
+            self.stats.get_actual_hp(),
+            self.stats.get_actual(
+                StatsType.Atk),
+            self.stats.get_actual(
+                StatsType.Def),
+            self.stats.get_actual(
+                StatsType.Spa),
+            self.stats.get_actual(
+                StatsType.Spd),
+            self.stats.get_actual(
+                StatsType.Spe),
+            list(map(lambda x: x[1],
+                     self.moves.items())))
 
-                                                                                          self.moves)
+    def oppo_to_string(self):
+        return "OPPONENT:\n{}, L{}, {}\nHP:{} ATK:{} DEF:{} SPA:{} SPD:{} SPE:{}\nMOVES:{}\nPOSSIBLE MOVES:{}".format(
+            self.name,
+            str(self.level),
+            self.non_volatile_status,
+            self.stats.get_actual_hp(),
+            self.stats.get_actual(
+                StatsType.Atk),
+            self.stats.get_actual(
+                StatsType.Def),
+            self.stats.get_actual(
+                StatsType.Spa),
+            self.stats.get_actual(
+                StatsType.Spd),
+            self.stats.get_actual(
+                StatsType.Spe),
+            list(map(lambda x: x[1], self.moves.items())),
+            list(map(lambda x: x[1], self.possible_moves.items())))
+
     def deepcopy(self):
         new_moves = {}
         for move in self.moves:
             new_moves[move] = self.moves[move].deepcopy()
-        return Pokemon(self.name, self.types, self.gender, self.stats.deepcopy(), new_moves, self.abilities, self.weight,
+        return Pokemon(self.name, self.types, self.gender, self.stats.deepcopy(), new_moves, self.abilities,
+                       self.weight,
                        self.non_volatile_status, self.volatile_status, self.item, self.level, self.possible_moves)
 
     def __eq__(self, other_pokemon):
