@@ -5,6 +5,7 @@ from websocket._core import create_connection
 from protocol.game_control import GameLoop
 import model.setup_logger
 import logging
+import printer
 
 logger = logging.getLogger("Main")
 
@@ -41,5 +42,7 @@ async def main(password):
 
 
 if __name__ == "__main__":
+    printer.print_title()
     password = getpass.getpass(prompt="Insert your Pokemon Showdown password\n")
+    printer.print_rattata()
     asyncio.get_event_loop().run_until_complete(main(password))
