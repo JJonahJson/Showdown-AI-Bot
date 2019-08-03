@@ -1,3 +1,2 @@
-mysql
 mysql-connector-python
 websocket-client
