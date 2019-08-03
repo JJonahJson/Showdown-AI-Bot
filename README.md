@@ -11,9 +11,15 @@ Clone the repository:
 git clone https://github.com/JJonahJson/Showdown-AI-Bot.git
 cd /path/to/Showdown-AI-Bot
 ```
+Install python3 and pip3
+```bash
+sudo apt update
+sudo apt install python3
+sudo apt install python3-pip
+```
 Install the requirements to launch the bot:
 ```bash
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --user
 ```
 Install docker to use the database required by the bot:
 ```bash
