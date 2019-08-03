@@ -313,16 +313,18 @@ class Chooser:
             # Number of bot pkmns with status changed
             elif bench_bot[pkmn].non_volatile_status != StatusType.Normal:
                 valuation -= 5
-            hp_left = (bench_bot[pkmn].stats.get_actual_hp() / (bench_bot[pkmn].stats.real_stats[StatsType.HP])) * 100
 
-            if hp_left < 75:
-                valuation -= 2
+            if bench_bot[pkmn].non_volatile_status != StatusType.Fnt:
+                hp_left = (bench_bot[pkmn].stats.get_actual_hp() / (bench_bot[pkmn].stats.real_stats[StatsType.HP])) * 100
 
-            if hp_left < 50:
-                valuation -= 4
+                if hp_left < 75:
+                    valuation -= 2
 
-            if hp_left < 25:
-                valuation -= 8
+                if hp_left < 50:
+                    valuation -= 4
+
+                if hp_left < 25:
+                    valuation -= 8
 
         # Points of mul_stats changed for active bot
         for stat in active_bot.stats.mul_stats:

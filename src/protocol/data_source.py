@@ -38,9 +38,10 @@ class DatabaseDataSource(AbstractDataSource):
     def __init__(self):
         super().__init__()
         self.db_connection = mysql.connector.connect(
-            host="172.17.0.2",
+            host="127.0.0.1",
             user="user",
             passwd="user",
+            port=38928,
             database="showdown_db",
             use_pure=True
         )
