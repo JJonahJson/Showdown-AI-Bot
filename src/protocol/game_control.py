@@ -126,7 +126,7 @@ class GameLoop:
         :param string_tab: message
         :return:
         """
-        logging.info("Login Successfull")
+        logging.info("Login Successful")
         await login.log_in(self.ws, self.user_name, self.password, self.sex, string_tab[2], string_tab[3])
 
     async def _handle_update_user(self, string_tab):

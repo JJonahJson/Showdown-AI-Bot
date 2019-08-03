@@ -1,3 +1,14 @@
+import datetime
 import logging
-logging.basicConfig(filename="bot.log", format='%(levelname)s:%(message)s', level=logging.INFO)
+import os
+
+filename = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
+
+if not os.path.exists("../logs"):
+    os.mkdir("../logs")
+
+logging.basicConfig(filename="../logs/{}.log".format(filename),
+                    format='%(message)s',
+                    level=logging.INFO)
+
 logger = logging.getLogger("ShowdownBot")
