@@ -287,6 +287,14 @@ class Chooser:
     @staticmethod
     def __handle_hard_move__(field, is_trapped=False):
         result = IterativeDeepeningMinMax.make_decision(field, Chooser.valuation_action)
+        if result[2]:
+            logger.info("{} selected move {} with predicted damage {} against {}".format(field.active_pokemon_bot,
+                                                                                     field.active_pokemon_bot.moves[
+                                                                                         result[1]].move_name,
+                                                                                     field.active_pokemon_oppo))
+        else:
+            logging.info("Switch {} with {}".format(field.active_pokemon_bot, field.all_pkmns_bot[result[1]]))
+
         return result[1], result[2]
 
     @staticmethod
