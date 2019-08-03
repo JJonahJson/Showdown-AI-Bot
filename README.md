@@ -18,13 +18,13 @@ pip3 install -r requirements.txt
 Install docker to use the database required by the bot:
 ```bash
 sudo apt update
-sudo apt install docker
+sudo apt install docker.io
 ```
 ## Launch the bot
 Start docker:
 ```bash
 sudo docker pull errevas/showdown_db:latest
-sudo docker run --name=showdown_db -d errevas/showdown_db:latest
+sudo docker run --name=showdown_db -p 38928:3306 -d errevas/showdown_db:latest
 ```
 Everytime you want to launch the bot be sure docker is running, you can check the
 running container with `sudo docker ps -a`.
@@ -33,7 +33,7 @@ If it's not running you have to digit `sudo docker start showdown_db`
 
 Possible arguments for launching the bot:
 
-```bash
+```
 -u username     where username is your Pokémon Showdown username    [REQUIRED]
 -m mode         mode can be "searching" or "challenging", if you use "challenging" you must specify the opponent    [DEFAULT "searching"]
 -o opponent     where opponent is the Pokémon Showdown username of the opponent
