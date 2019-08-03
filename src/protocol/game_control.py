@@ -292,6 +292,8 @@ class GameLoop:
             for key in self.mul_stats_bot:
                 self.battle_field.active_pokemon_bot.stats.mul_stats[key] = self.mul_stats_bot[key]
             print(self.battle_field.active_pokemon_bot.to_string())
+            if number < 3:
+                logger.info("Team: {}".format(list(map(lambda x: x[1], self.battle_field.all_pkmns_bot.items()))))
 
     async def _handle_team_preview(self, current):
         """Method that handles the team preview message
@@ -333,6 +335,10 @@ class GameLoop:
         """
         await sender.sendmessage(self.ws, self.battle_field.room_name, "Well done, have a nice day!")
         await sender.leaving(self.ws, self.battle_field.room_name)
+        if self.user_name in current[2]:
+            logger.info("BATTLE WON!")
+        else:
+            logger.info("BATTLE LOST!")
         exit(1)
 
     async def _handle_chat(self, current):

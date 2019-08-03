@@ -166,7 +166,7 @@ class Chooser:
                             logger.info("{} selected move {} with self-boost on {} of {} stages".format(
                                 field.active_pokemon_bot,
                                 moves[index_move].move_name,
-                                stat.value,
+                                stat.name,
                                 str(boost)))
                             return index_move, True
 
