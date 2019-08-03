@@ -2,12 +2,6 @@
 -Fare il container dell'intero progetto
 -reversare damage tracker per correggere la statistica penalizzata
 
--Implementare metodi per hard
--Fare il Readme del progetto
-
-Hard:
-    Aggiungere min-max
-
 -Aggiungere heal?
 -Aggiungere stealthrock e quelle di quel genere
 
