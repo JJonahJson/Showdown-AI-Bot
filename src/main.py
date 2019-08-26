@@ -3,6 +3,7 @@ import argparse
 import getpass
 from websocket._core import create_connection
 from protocol.game_control import GameLoop
+import ssl
 import model.setup_logger
 import logging
 import printer
@@ -28,8 +29,8 @@ async def main(password):
     parser.add_argument("-s", "--sex", type=str, help="The sex choosen for your account", default="m",
                         choices={"m", "f"})
     args = parser.parse_args()
-    websocket = create_connection('ws://sim.smogon.com:8000/showdown/websocket')
-
+    # websocket = create_connection('ws://sim.smogon.com:8000/showdown/websocket')
+    websocket = create_connection('wss://sim.smogon.com/showdown/websocket', sslopt={"cert_reqs": ssl.CERT_NONE})
     gl = GameLoop(websocket, args.username, password, args.sex, args.gen, args.difficulty, args.mode,
                                args.opponent_name)
 
